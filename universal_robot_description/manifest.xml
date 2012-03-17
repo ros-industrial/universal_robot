@@ -1,0 +1,15 @@
+<package>
+  <description brief="universal_robot_description">
+
+     universal_robot_description
+
+  </description>
+  <author>wim</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/universal_robot_description</url>
+  <depend package="urdf"/>
+
+</package>
+
+
