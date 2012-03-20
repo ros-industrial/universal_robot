@@ -5,12 +5,15 @@
 
   <property name="shoulder_height" value="0.1" />
   <property name="shoulder_offset" value="0.1" />
+  <property name="shoulder_radius" value="0.1" />
   <property name="upper_arm_length" value="0.5" />
+  <property name="upper_arm_radius" value="0.05" />
   <property name="forearm_length" value="0.5" />
+  <property name="forearm_radius" value="0.03" />
   <property name="wrist_1_length" value="0.1" />
   <property name="wrist_2_length" value="0.1" />
   <property name="wrist_3_length" value="0.1" />
-
+  <property name="wrist_radius" value="0.03" />
 
   <link name="base_link" />
 
@@ -20,15 +23,26 @@
     <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 0.0 1.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.1"/>
   </joint>
   
   <link name="shoulder_link">
     <visual>
       <geometry>
-        <cylinder length="${shoulder_height}" radius="0.1"/>
+        <cylinder length="${shoulder_height}" radius="${shoulder_radius}"/>
       </geometry>
       <origin xyz="0.0 0.0 ${-shoulder_height/2.0}" rpy="0.0 0.0 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${shoulder_height}" radius="${shoulder_radius}"/>
+      </geometry>
+      <origin xyz="0.0 0.0 ${-shoulder_height/2.0}" rpy="0.0 0.0 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
 
   <joint name="shoulder_lift_joint" type="revolute">
@@ -37,15 +51,26 @@
     <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 0.0 0.0" />    
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <link name="upper_arm_link">
     <visual>
       <geometry>
-        <cylinder length="${upper_arm_length}" radius="0.05"/>
+        <cylinder length="${upper_arm_length}" radius="${upper_arm_radius}"/>
       </geometry>
       <origin xyz="0.0 0.0 ${upper_arm_length/2.0}" rpy="0.0 0.0 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${upper_arm_length}" radius="${upper_arm_radius}"/>
+      </geometry>
+      <origin xyz="0.0 0.0 ${upper_arm_length/2.0}" rpy="0.0 0.0 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
 
   <joint name="elbow_joint" type="revolute">
@@ -54,15 +79,26 @@
     <origin xyz="0.0 ${-shoulder_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 -1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <link name="forearm_link">
     <visual>
       <geometry>
-        <cylinder length="${forearm_length}" radius="0.05"/>
+        <cylinder length="${forearm_length}" radius="${forearm_radius}"/>
       </geometry>
       <origin xyz="0.0 0.0 ${forearm_length/2.0}" rpy="0.0 0.0 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${forearm_length}" radius="${forearm_radius}"/>
+      </geometry>
+      <origin xyz="0.0 0.0 ${forearm_length/2.0}" rpy="0.0 0.0 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
 
   <joint name="wrist_1_joint" type="revolute">
@@ -71,15 +107,26 @@
     <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <link name="wrist_1_link">
     <visual>
       <geometry>
-        <cylinder length="${wrist_1_length}" radius="0.05"/>
+        <cylinder length="${wrist_1_length}" radius="${wrist_radius}"/>
       </geometry>
       <origin xyz="0.0 ${wrist_1_length/2.0} 0.0" rpy="-${pi/2.0} 0.0 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${wrist_1_length}" radius="${wrist_radius}"/>
+      </geometry>
+      <origin xyz="0.0 ${wrist_1_length/2.0} 0.0" rpy="-${pi/2.0} 0.0 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
 
   <joint name="wrist_2_joint" type="revolute">
@@ -88,15 +135,26 @@
     <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 0.0 1.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <link name="wrist_2_link">
     <visual>
       <geometry>
-        <cylinder length="${wrist_2_length}" radius="0.05"/>
+        <cylinder length="${wrist_2_length}" radius="${wrist_radius}"/>
       </geometry>
       <origin xyz="0.0 0.0 ${wrist_2_length/2.0}" rpy="0.0 0.0 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${wrist_2_length}" radius="${wrist_radius}"/>
+      </geometry>
+      <origin xyz="0.0 0.0 ${wrist_2_length/2.0}" rpy="0.0 0.0 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
 
   <joint name="wrist_3_joint" type="revolute">
@@ -105,15 +163,26 @@
     <origin xyz="0.0 0.0 ${wrist_3_length}" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
   <link name="wrist_3_link">
     <visual>
       <geometry>
-        <cylinder length="${wrist_3_length}" radius="0.05"/>
+        <cylinder length="${wrist_3_length}" radius="${wrist_radius}"/>
       </geometry>
       <origin xyz="0.0 ${wrist_3_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${wrist_3_length}" radius="${wrist_radius}"/>
+      </geometry>
+      <origin xyz="0.0 ${wrist_3_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
   
   <joint name="ee_fixed_joint" type="fixed">
@@ -129,6 +198,16 @@
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.01" radius="0.06"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
+    </collision>
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
   </link>
   
 </robot>
