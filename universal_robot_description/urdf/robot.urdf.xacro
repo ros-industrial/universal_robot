@@ -15,7 +15,12 @@
   <property name="wrist_3_length" value="0.1" />
   <property name="wrist_radius" value="0.03" />
 
-  <link name="base_link" />
+  <link name="base_link" >
+    <inertial>
+      <mass value="10" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
 
   <joint name="shoulder_pan_joint" type="revolute">
     <parent link="base_link" />
@@ -210,6 +215,10 @@
     </inertial>
   </link>
   
+  <gazebo reference="universal_robot">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
 </robot>
 
 
