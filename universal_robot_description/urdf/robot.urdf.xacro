@@ -80,7 +80,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <joint name="shoulder_lift_joint" type="revolute">
     <parent link="shoulder_link" />
     <child link = "upper_arm_link" />
-    <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 0.0 0.0" />    
+    <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
     <dynamics damping="0.1" friction="0.1"/>
@@ -110,7 +110,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     <parent link="upper_arm_link" />
     <child link = "forearm_link" />
     <origin xyz="0.0 ${-shoulder_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
-    <axis xyz="0.0 -1.0 0.0" />
+    <axis xyz="0.0 1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
@@ -138,7 +138,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <joint name="wrist_1_joint" type="revolute">
     <parent link="forearm_link" />
     <child link = "wrist_1_link" />
-    <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 0.0 0.0" />
+    <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="-${pi}" upper="${pi}" effort="10.0" velocity="1.0"/>
     <dynamics damping="0.1" friction="0.1"/>
