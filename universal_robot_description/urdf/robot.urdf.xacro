@@ -1,18 +1,43 @@
 <?xml version="1.0"?>
+<!--
+DH for UR5:
+a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
+d = [0.089159,  0.00000,  0.00000,  0.10915,  0.09465,  0.0823]
+alpha = [ 1.570796327, 0, 0, 1.570796327, -1.570796327, 0 ]
+q_home_offset = [0, -1.570796327, 0, -1.570796327, 0, 0]
+joint_direction = [-1, -1, 1, 1, 1, 1]
+mass = [3.7000, 8.3930, 2.2750, 1.2190, 1.2190, 0.1879]
+center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 0.0265], [0, -0.0018, 0.01634], [0, 0.0018,0.01634], [0, 0, -0.001159] ]
+-->
 <robot name="universal_robot">
 
-  <property name="pi" value="3.14" />
+  <property name="pi" value="3.14159265" />
+
+  <property name="shoulder_mass" value="3.7000" />
+  <property name="upper_arm_mass" value="8.3930" />
+  <property name="forearm_mass" value="2.2750" />
+  <property name="wrist_1_mass" value="1.2190" />
+  <property name="wrist_2_mass" value="1.2190" />
+  <property name="wrist_3_mass" value="0.1879" />
+
+  <property name="shoulder_cog" value="0.0 0.00193 -0.02561" />
+  <property name="upper_arm_cog" value="0.0 -0.024201 0.2125" /> <!-- 0.11336 - 0.089159 =  -->
+  <property name="forearm_cog" value="0.0 0.0265 0.11993" /> <!-- 0.119 is not half of 0.39225 ?? -->
+  <property name="wrist_1_cog" value="0.0 0.110949 0.01634" /> <!-- 0.0018 + 0.10915 = 0.110949 -->
+  <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />  <!-- 0.01634 + 0.09465 = 0.11099-->
+  <property name="wrist_3_cog" value="0.0 0.001159 0.0" />
 
   <property name="shoulder_height" value="0.1" />
-  <property name="shoulder_offset" value="0.1" />
+  <property name="shoulder_offset" value="0.089159" />
+  <property name="upper_arm_length" value="0.42500" />
+  <property name="forearm_length" value="0.39225" />
+  <property name="wrist_1_length" value="0.10915" />
+  <property name="wrist_2_length" value="0.09465" />
+  <property name="wrist_3_length" value="0.0823" />
+
   <property name="shoulder_radius" value="0.1" />
-  <property name="upper_arm_length" value="0.5" />
   <property name="upper_arm_radius" value="0.05" />
-  <property name="forearm_length" value="0.5" />
   <property name="forearm_radius" value="0.03" />
-  <property name="wrist_1_length" value="0.1" />
-  <property name="wrist_2_length" value="0.1" />
-  <property name="wrist_3_length" value="0.1" />
   <property name="wrist_radius" value="0.03" />
 
   <link name="base_link" >
@@ -45,8 +70,9 @@
       <origin xyz="0.0 0.0 ${-shoulder_height/2.0}" rpy="0.0 0.0 0.0" />
     </collision>
     <inertial>
-      <mass value="10" />
+      <mass value="${shoulder_mass}" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <origin xyz="${shoulder_cog}" rpy="0.0 0.0 0.0" />
     </inertial>
   </link>
 
@@ -73,8 +99,9 @@
       <origin xyz="0.0 0.0 ${upper_arm_length/2.0}" rpy="0.0 0.0 0.0" />
     </collision>
     <inertial>
-      <mass value="10" />
+      <mass value="${upper_arm_mass}" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <origin xyz="${upper_arm_cog}" rpy="0.0 0.0 0.0" />
     </inertial>
   </link>
 
@@ -101,7 +128,8 @@
       <origin xyz="0.0 0.0 ${forearm_length/2.0}" rpy="0.0 0.0 0.0" />
     </collision>
     <inertial>
-      <mass value="10" />
+      <mass value="${forearm_mass}" />
+      <origin xyz="${forearm_cog}" rpy="0.0 0.0 0.0" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
@@ -129,7 +157,8 @@
       <origin xyz="0.0 ${wrist_1_length/2.0} 0.0" rpy="-${pi/2.0} 0.0 0.0" />
     </collision>
     <inertial>
-      <mass value="10" />
+      <mass value="${wrist_1_mass}" />
+      <origin xyz="${wrist_1_cog}" rpy="0.0 0.0 0.0" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
@@ -157,7 +186,8 @@
       <origin xyz="0.0 0.0 ${wrist_2_length/2.0}" rpy="0.0 0.0 0.0" />
     </collision>
     <inertial>
-      <mass value="10" />
+      <mass value="${wrist_2_mass}" />
+      <origin xyz="${wrist_2_cog}" rpy="0.0 0.0 0.0" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
@@ -185,7 +215,8 @@
       <origin xyz="0.0 ${wrist_3_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
     </collision>
     <inertial>
-      <mass value="10" />
+      <mass value="${wrist_3_mass}" />
+      <origin xyz="${wrist_3_cog}" rpy="0.0 0.0 0.0" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
@@ -209,10 +240,6 @@
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
     </collision>
-    <inertial>
-      <mass value="10" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
   </link>
   
   <gazebo reference="universal_robot">
