@@ -13,6 +13,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
   <property name="pi" value="3.14159265" />
 
+  <property name="base_mass" value="10.0" /> <!-- not form spec -->
   <property name="shoulder_mass" value="3.7000" />
   <property name="upper_arm_mass" value="8.3930" />
   <property name="forearm_mass" value="2.2750" />
@@ -27,7 +28,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />  <!-- 0.01634 + 0.09465 = 0.11099-->
   <property name="wrist_3_cog" value="0.0 0.001159 0.0" />
 
-  <property name="shoulder_height" value="0.1" />
+  <property name="shoulder_height" value="0.1" />  <!-- not form spec -->
   <property name="shoulder_offset" value="0.089159" />
   <property name="upper_arm_length" value="0.42500" />
   <property name="forearm_length" value="0.39225" />
@@ -35,14 +36,14 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <property name="wrist_2_length" value="0.09465" />
   <property name="wrist_3_length" value="0.0823" />
 
-  <property name="shoulder_radius" value="0.1" />
-  <property name="upper_arm_radius" value="0.05" />
-  <property name="forearm_radius" value="0.03" />
-  <property name="wrist_radius" value="0.03" />
+  <property name="shoulder_radius" value="0.1" />  <!-- not form spec -->
+  <property name="upper_arm_radius" value="0.05" />  <!-- not form spec -->
+  <property name="forearm_radius" value="0.03" />  <!-- not form spec -->
+  <property name="wrist_radius" value="0.03" />  <!-- not form spec -->
 
   <link name="base_link" >
     <inertial>
-      <mass value="10" />
+      <mass value="${base_mass}" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
@@ -230,13 +231,13 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="ee_link">
     <visual>
       <geometry>
-        <cylinder length="0.01" radius="0.06"/>
+        <cylinder length="0.01" radius="${wrist_radius * 1.25}"/>
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.01" radius="0.06"/>
+        <cylinder length="0.01" radius="${wrist_radius * 1.25}"/>
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
     </collision>
