@@ -13,7 +13,8 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
   <property name="pi" value="3.14159265" />
 
-  <property name="base_mass" value="10.0" /> <!-- not form spec -->
+<!-- Inertia parameters -->
+  <property name="base_mass" value="4.0.0" /> <!-- Invented number, only matters for simulator -->
   <property name="shoulder_mass" value="3.7000" />
   <property name="upper_arm_mass" value="8.3930" />
   <property name="forearm_mass" value="2.2750" />
@@ -22,32 +23,36 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <property name="wrist_3_mass" value="0.1879" />
 
   <property name="shoulder_cog" value="0.0 0.00193 -0.02561" />
-  <property name="upper_arm_cog" value="0.0 -0.024201 0.2125" /> <!-- 0.11336 - 0.089159 =  -->
-  <property name="forearm_cog" value="0.0 0.0265 0.11993" /> <!-- 0.119 is not half of 0.39225 ?? -->
-  <property name="wrist_1_cog" value="0.0 0.110949 0.01634" /> <!-- 0.0018 + 0.10915 = 0.110949 -->
-  <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />  <!-- 0.01634 + 0.09465 = 0.11099-->
+  <property name="upper_arm_cog" value="0.0 -0.024201 0.2125" />   <!-- 0.11336 - 0.089159 =  -->
+  <property name="forearm_cog" value="0.0 0.0265 0.11993" />       <!-- 0.119 is not half of 0.39225, is this really correct? -->
+  <property name="wrist_1_cog" value="0.0 0.110949 0.01634" />     <!-- 0.0018 + 0.10915 = 0.110949 -->
+  <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />       <!-- 0.01634 + 0.09465 = 0.11099-->
   <property name="wrist_3_cog" value="0.0 0.001159 0.0" />
 
+<!-- Kinematic model -->
   <property name="shoulder_height" value="0.089159" />  
-  <property name="shoulder_offset" value="0.13915" />  <!-- sh_off - el_off + wr_1_off = 0.10915 -->
+  <property name="shoulder_offset" value="0.13915" />  <!-- shoulder_offset - elbow_offset + wrrist_1_offset = 0.10915 -->
   <property name="upper_arm_length" value="0.42500" />
-  <property name="elbow_offset" value="0.130" />  <!-- manually measured -->
+  <property name="elbow_offset" value="0.130" />       <!-- CAD measured -->
   <property name="forearm_length" value="0.39225" />
-  <property name="wrist_1_length" value="0.100" /> <!-- manually measured -->
+  <property name="wrist_1_length" value="0.100" />     <!-- CAD measured -->
   <property name="wrist_2_length" value="0.09465" />
   <property name="wrist_3_length" value="0.0823" />
 
-  <property name="shoulder_radius" value="0.060" />  <!-- manually measured -->
+  <property name="shoulder_radius" value="0.060" />   <!-- manually measured -->
   <property name="upper_arm_radius" value="0.054" />  <!-- manually measured -->
-  <property name="elbow_radius" value="0.060" />  <!-- manually measured -->
-  <property name="forearm_radius" value="0.038" />  <!-- manually measured -->
-  <property name="wrist_radius" value="0.035" />  <!-- manually measured -->
+  <property name="elbow_radius" value="0.060" />      <!-- manually measured -->
+  <property name="forearm_radius" value="0.038" />    <!-- manually measured -->
+  <property name="wrist_radius" value="0.035" />      <!-- manually measured -->
 
-  <property name="base_collision_length" value="0.160" />  <!-- manually measured -->
+<!-- Collision model -->
+  <property name="base_collision_length" value="0.160" />      <!-- manually measured -->
   <property name="shoulder_collision_length" value="0.200" />  <!-- manually measured -->
   <property name="shoulder_collision_offset" value="0.035" />  <!-- manually measured -->
-  <property name="elbow_collision_length" value="0.200" />  <!-- manually measured -->
-  <property name="elbow_collision_offset" value="0.035" />  <!-- manually measured -->
+  <property name="elbow_collision_length" value="0.200" />     <!-- manually measured -->
+  <property name="elbow_collision_offset" value="0.035" />     <!-- manually measured -->
+
+
 
 
   <link name="base_link" >
@@ -254,7 +259,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   
 
 
-
+  <!-- Extra links for collision model -->
   <joint name="shoulder_collision_joint" type="fixed">
     <parent link="upper_arm_link" />
     <child link = "shoulder_collision_link" />
