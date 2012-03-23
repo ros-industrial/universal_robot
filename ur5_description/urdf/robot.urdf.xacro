@@ -14,7 +14,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <property name="pi" value="3.14159265" />
 
 <!-- Inertia parameters -->
-  <property name="base_mass" value="4.0.0" /> <!-- Invented number, only matters for simulator -->
+  <property name="base_mass" value="4.0" /> <!-- Invented number, only matters for simulator -->
   <property name="shoulder_mass" value="3.7000" />
   <property name="upper_arm_mass" value="8.3930" />
   <property name="forearm_mass" value="2.2750" />
