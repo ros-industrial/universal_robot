@@ -28,18 +28,27 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />  <!-- 0.01634 + 0.09465 = 0.11099-->
   <property name="wrist_3_cog" value="0.0 0.001159 0.0" />
 
-  <property name="shoulder_height" value="0.1" />  <!-- not form spec -->
-  <property name="shoulder_offset" value="0.089159" />
+  <property name="shoulder_height" value="0.089159" />  
+  <property name="shoulder_offset" value="0.13915" />  <!-- sh_off - el_off + wr_1_off = 0.10915 -->
   <property name="upper_arm_length" value="0.42500" />
+  <property name="elbow_offset" value="0.130" />  <!-- manually measured -->
   <property name="forearm_length" value="0.39225" />
-  <property name="wrist_1_length" value="0.10915" />
+  <property name="wrist_1_length" value="0.100" /> <!-- manually measured -->
   <property name="wrist_2_length" value="0.09465" />
   <property name="wrist_3_length" value="0.0823" />
 
-  <property name="shoulder_radius" value="0.1" />  <!-- not form spec -->
-  <property name="upper_arm_radius" value="0.05" />  <!-- not form spec -->
-  <property name="forearm_radius" value="0.03" />  <!-- not form spec -->
-  <property name="wrist_radius" value="0.03" />  <!-- not form spec -->
+  <property name="shoulder_radius" value="0.060" />  <!-- manually measured -->
+  <property name="upper_arm_radius" value="0.054" />  <!-- manually measured -->
+  <property name="elbow_radius" value="0.060" />  <!-- manually measured -->
+  <property name="forearm_radius" value="0.038" />  <!-- manually measured -->
+  <property name="wrist_radius" value="0.035" />  <!-- manually measured -->
+
+  <property name="base_collision_length" value="0.160" />  <!-- manually measured -->
+  <property name="shoulder_collision_length" value="0.200" />  <!-- manually measured -->
+  <property name="shoulder_collision_offset" value="0.035" />  <!-- manually measured -->
+  <property name="elbow_collision_length" value="0.200" />  <!-- manually measured -->
+  <property name="elbow_collision_offset" value="0.035" />  <!-- manually measured -->
+
 
   <link name="base_link" >
     <inertial>
@@ -60,9 +69,9 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="shoulder_link">
     <visual>
       <geometry>
-        <cylinder length="${shoulder_height}" radius="${shoulder_radius}"/>
+        <cylinder length="${base_collision_length}" radius="${shoulder_radius}"/>
       </geometry>
-      <origin xyz="0.0 0.0 ${-shoulder_height/2.0}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${base_collision_length / 2.0 - shoulder_height}" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
@@ -89,9 +98,9 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="upper_arm_link">
     <visual>
       <geometry>
-        <cylinder length="${upper_arm_length}" radius="${upper_arm_radius}"/>
+       <mesh filename="package://universal_robot_description/meshes/UpperArm.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${upper_arm_length/2.0}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
@@ -109,7 +118,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <joint name="elbow_joint" type="revolute">
     <parent link="upper_arm_link" />
     <child link = "forearm_link" />
-    <origin xyz="0.0 ${-shoulder_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
+    <origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="0.1" friction="0.1"/>
@@ -243,6 +252,35 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </collision>
   </link>
   
+
+
+
+  <joint name="shoulder_collision_joint" type="fixed">
+    <parent link="upper_arm_link" />
+    <child link = "shoulder_collision_link" />
+  </joint>
+  <link name="shoulder_collision_link">
+    <collision>
+      <geometry>
+        <cylinder length="${shoulder_collision_length}" radius="${shoulder_radius}"/>
+      </geometry>
+      <origin xyz="0.0 ${-shoulder_collision_offset} 0.0" rpy="${-pi / 2.0} 0.0 0.0" />
+    </collision>
+  </link>
+
+  <joint name="elbow_collision_joint" type="fixed">
+    <parent link="upper_arm_link" />
+    <child link = "elbow_collision_link" />
+  </joint>
+  <link name="elbow_collision_link">
+    <collision>
+      <geometry>
+        <cylinder length="${elbow_collision_length}" radius="${elbow_radius}"/>
+      </geometry>
+      <origin xyz="0.0 ${-elbow_collision_offset} ${upper_arm_length}" rpy="${pi / 2.0} 0.0 0.0" />
+    </collision>
+  </link>
+
   <gazebo reference="universal_robot">
     <material>Gazebo/Blue</material>
   </gazebo>
