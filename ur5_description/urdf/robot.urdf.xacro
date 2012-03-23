@@ -98,7 +98,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="upper_arm_link">
     <visual>
       <geometry>
-       <mesh filename="package://universal_robot_description/meshes/UpperArm.dae" />
+       <mesh filename="package://ur5_description/meshes/UpperArm.dae" />
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </visual>
