@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('ur5_driver')
-import time, sys
+import time, sys, threading
 import socket
 import struct
 import SocketServer
@@ -16,6 +16,53 @@ MULT_jointstate = 1000.0
 
 class EOF(Exception): pass
 
+# Only handles JOINT_STATES messages.
+class StateTCPHandler(SocketServer.BaseRequestHandler):
+    def recv_more(self):
+        more = self.request.recv(4096)
+        if not more:
+            raise EOF()
+        return more
+
+    def handle(self):
+        print "Handling a joint states connection"
+        try:
+            buf = self.recv_more()
+            if not buf: return
+
+            while True:
+                print "Buf:", [ord(b) for b in buf]
+
+                # Unpacks the message type
+                mtype = struct.unpack_from("!i", buf, 0)[0]
+                buf = buf[4:]
+                print "Message type:", mtype
+
+                if mtype == MSG_OUT:
+                    # Unpacks string message, terminated by tilde
+                    i = buf.find("~")
+                    while i < 0:
+                        buf = buf + self.recv_more()
+                        i = buf.find("~")
+                        if len(buf) > 2000:
+                            raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
+                    s, buf = buf[:i], buf[i+1:]
+                    print "Out: %s" % s
+                elif mtype == MSG_JOINT_STATES:
+                    while len(buf) < 3*(6*4):
+                        buf = buf + self.recv_more()
+                    state_mult = struct.unpack_from("!" + ("i"*3*6), buf, 0)
+                    buf = buf[3*6*4:]
+                    state = [s / MULT_jointstate for s in state_mult]
+                    print "Joint state:", state
+                else:
+                    raise Exception("Unknown message type: %i" % mtype)
+
+                if not buf:
+                    buf = buf + self.recv_more()
+        except EOF:
+            print "Connection closed"
+    
 class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def recv_more(self):
         more = self.request.recv(4096)
@@ -80,7 +127,24 @@ def main():
         sock.sendall(fin.read())
 
     server = TCPServer(("", 50001), CommanderTCPHandler)
-    server.handle_request()
+    server2 = TCPServer(("", 50002), StateTCPHandler)
+
+    thread_commander = threading.Thread(name="CommanderHandler", target=server.handle_request)
+    thread_state = threading.Thread(name="StateHandler", target=server2.handle_request)
+    thread_state.daemon = True
+    thread_commander.start()
+    thread_state.start()
+    thread_commander.join()
+    thread_state.join()
+    
+    print "Dump"
+    print "="*70
+    o = ""
+    while len(o) < 4096:
+        r = sock.recv(1024)
+        if not r: break
+        o = o + r
+    print o
         
 
 if __name__ == '__main__': main()

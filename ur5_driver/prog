@@ -1,41 +1,51 @@
 def driverProg():
+  HOSTNAME = "10.0.2.97"
   MSG_OUT = 1
   MSG_QUIT = 2
   MSG_JOINT_STATES = 3
   MULT_jointstate = 1000
-
-  def send_joint_state():
-    q = get_joint_positions()
-    qdot = get_joint_speeds()
-    tau = get_joint_torques()
-    socket_send_int(MSG_JOINT_STATES)
-    socket_send_int(floor(MULT_jointstate * q[0]))
-    socket_send_int(floor(MULT_jointstate * q[1]))
-    socket_send_int(floor(MULT_jointstate * q[2]))
-    socket_send_int(floor(MULT_jointstate * q[3]))
-    socket_send_int(floor(MULT_jointstate * q[4]))
-    socket_send_int(floor(MULT_jointstate * q[5]))
-    socket_send_int(floor(MULT_jointstate * qdot[0]))
-    socket_send_int(floor(MULT_jointstate * qdot[1]))
-    socket_send_int(floor(MULT_jointstate * qdot[2]))
-    socket_send_int(floor(MULT_jointstate * qdot[3]))
-    socket_send_int(floor(MULT_jointstate * qdot[4]))
-    socket_send_int(floor(MULT_jointstate * qdot[5]))
-    socket_send_int(floor(MULT_jointstate * tau[0]))
-    socket_send_int(floor(MULT_jointstate * tau[1]))
-    socket_send_int(floor(MULT_jointstate * tau[2]))
-    socket_send_int(floor(MULT_jointstate * tau[3]))
-    socket_send_int(floor(MULT_jointstate * tau[4]))
-    socket_send_int(floor(MULT_jointstate * tau[5]))
-  end
+    
   
-  socket_open("10.0.2.97", 50001)
+  thread statePublisherThread():
+    def send_joint_state():
+      q = get_joint_positions()
+      qdot = get_joint_speeds()
+      tau = get_joint_torques()
+      socket_send_int(MSG_JOINT_STATES)
+      socket_send_int(floor(MULT_jointstate * q[0]))
+      socket_send_int(floor(MULT_jointstate * q[1]))
+      socket_send_int(floor(MULT_jointstate * q[2]))
+      socket_send_int(floor(MULT_jointstate * q[3]))
+      socket_send_int(floor(MULT_jointstate * q[4]))
+      socket_send_int(floor(MULT_jointstate * q[5]))
+      socket_send_int(floor(MULT_jointstate * qdot[0]))
+      socket_send_int(floor(MULT_jointstate * qdot[1]))
+      socket_send_int(floor(MULT_jointstate * qdot[2]))
+      socket_send_int(floor(MULT_jointstate * qdot[3]))
+      socket_send_int(floor(MULT_jointstate * qdot[4]))
+      socket_send_int(floor(MULT_jointstate * qdot[5]))
+      socket_send_int(floor(MULT_jointstate * tau[0]))
+      socket_send_int(floor(MULT_jointstate * tau[1]))
+      socket_send_int(floor(MULT_jointstate * tau[2]))
+      socket_send_int(floor(MULT_jointstate * tau[3]))
+      socket_send_int(floor(MULT_jointstate * tau[4]))
+      socket_send_int(floor(MULT_jointstate * tau[5]))
+    end
+    socket_open(HOSTNAME, 50002)
+    send_joint_state()
+    while True:
+      send_joint_state()
+      sync()
+    end
+    sync()
+  end
+
+  socket_open(HOSTNAME, 50001)
   socket_send_int(1)
   socket_send_string("hello~")
-  send_joint_state()
-  #socket_send_int(q[0]
-  #M = 1000
 
+  thread_state = run statePublisherThread()
+  
   movej([2.2,0,-1.57,0,0,0],2)
   movej([1.5,0,-1.57,0,0,0],2)
   
@@ -46,6 +56,8 @@ def driverProg():
   #  i = i + 1
   #end
 
+  sleep(1)
+  kill thread_state
   socket_send_int(2)
 end
 driverProg()
