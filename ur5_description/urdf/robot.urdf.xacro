@@ -31,19 +31,19 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
 <!-- Kinematic model -->
   <property name="shoulder_height" value="0.089159" />  
-  <property name="shoulder_offset" value="0.13915" />  <!-- shoulder_offset - elbow_offset + wrrist_1_offset = 0.10915 -->
+  <property name="shoulder_offset" value="0.13585" />  <!-- shoulder_offset - elbow_offset + wrist_1_length = 0.10915 -->
   <property name="upper_arm_length" value="0.42500" />
-  <property name="elbow_offset" value="0.130" />       <!-- CAD measured -->
+  <property name="elbow_offset" value="0.1197" />       <!-- CAD measured -->
   <property name="forearm_length" value="0.39225" />
-  <property name="wrist_1_length" value="0.100" />     <!-- CAD measured -->
-  <property name="wrist_2_length" value="0.09465" />
+  <property name="wrist_1_length" value="0.093" />     <!-- CAD measured -->
+  <property name="wrist_2_length" value="0.09465" />   <!-- In CAD this distance is 0.930, but in the spec it is 0.09465 -->
   <property name="wrist_3_length" value="0.0823" />
 
   <property name="shoulder_radius" value="0.060" />   <!-- manually measured -->
   <property name="upper_arm_radius" value="0.054" />  <!-- manually measured -->
   <property name="elbow_radius" value="0.060" />      <!-- manually measured -->
-  <property name="forearm_radius" value="0.038" />    <!-- manually measured -->
-  <property name="wrist_radius" value="0.035" />      <!-- manually measured -->
+  <property name="forearm_radius" value="0.040" />    <!-- manually measured -->
+  <property name="wrist_radius" value="0.045" />      <!-- manually measured -->
 
 <!-- Collision model -->
   <property name="base_collision_length" value="0.160" />      <!-- manually measured -->
@@ -56,6 +56,12 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
 
   <link name="base_link" >
+    <visual>
+      <geometry>
+        <mesh filename="package://ur5_description/meshes/Base.dae" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
+    </visual>
     <inertial>
       <mass value="${base_mass}" />
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
@@ -74,15 +80,14 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="shoulder_link">
     <visual>
       <geometry>
-        <cylinder length="${base_collision_length}" radius="${shoulder_radius}"/>
+        <mesh filename="package://ur5_description/meshes/Shoulder.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${base_collision_length / 2.0 - shoulder_height}" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${shoulder_height}" radius="${shoulder_radius}"/>
+        <cylinder length="${base_collision_length}" radius="${shoulder_radius}"/>
       </geometry>
-      <origin xyz="0.0 0.0 ${-shoulder_height/2.0}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${-shoulder_height + (base_collision_length/2.0)}" rpy="0.0 0.0 0.0" />
     </collision>
     <inertial>
       <mass value="${shoulder_mass}" />
@@ -103,7 +108,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="upper_arm_link">
     <visual>
       <geometry>
-       <mesh filename="package://ur5_description/meshes/UpperArm.dae" />
+        <mesh filename="package://ur5_description/meshes/UpperArm.dae" />
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </visual>
@@ -132,9 +137,8 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="forearm_link">
     <visual>
       <geometry>
-        <cylinder length="${forearm_length}" radius="${forearm_radius}"/>
+        <mesh filename="package://ur5_description/meshes/Forearm.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${forearm_length/2.0}" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
@@ -161,15 +165,15 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="wrist_1_link">
     <visual>
       <geometry>
-        <cylinder length="${wrist_1_length}" radius="${wrist_radius}"/>
+        <mesh filename="package://ur5_description/meshes/Wrist1.dae" />
       </geometry>
-      <origin xyz="0.0 ${wrist_1_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
+      <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${wrist_1_length}" radius="${wrist_radius}"/>
+        <cylinder length="${1.6*wrist_1_length}" radius="${wrist_radius}"/>
       </geometry>
-      <origin xyz="0.0 ${wrist_1_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
+      <origin xyz="0.0 ${0.25*wrist_1_length} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
     </collision>
     <inertial>
       <mass value="${wrist_1_mass}" />
@@ -190,15 +194,15 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="wrist_2_link">
     <visual>
       <geometry>
-        <cylinder length="${wrist_2_length}" radius="${wrist_radius}"/>
+        <mesh filename="package://ur5_description/meshes/Wrist2.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${wrist_2_length/2.0}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${wrist_2_length}" radius="${wrist_radius}"/>
+        <cylinder length="${1.6*wrist_2_length}" radius="${wrist_radius}"/>
       </geometry>
-      <origin xyz="0.0 0.0 ${wrist_2_length/2.0}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${0.25*wrist_2_length}" rpy="0.0 0.0 0.0" />
     </collision>
     <inertial>
       <mass value="${wrist_2_mass}" />
@@ -210,7 +214,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <joint name="wrist_3_joint" type="revolute">
     <parent link="wrist_2_link" />
     <child link = "wrist_3_link" />
-    <origin xyz="0.0 0.0 ${wrist_3_length}" rpy="0.0 0.0 0.0" />
+    <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
     <axis xyz="0.0 1.0 0.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="0.1" friction="0.1"/>
@@ -219,15 +223,14 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <link name="wrist_3_link">
     <visual>
       <geometry>
-        <cylinder length="${wrist_3_length}" radius="${wrist_radius}"/>
+        <mesh filename="package://ur5_description/meshes/Wrist3.dae" />
       </geometry>
-      <origin xyz="0.0 ${wrist_3_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${wrist_3_length}" radius="${wrist_radius}"/>
+        <cylinder length="${1.65*wrist_3_length}" radius="${wrist_radius}"/>
       </geometry>
-      <origin xyz="0.0 ${wrist_3_length/2.0} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
+      <origin xyz="0.0 ${0.15 * wrist_3_length} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
     </collision>
     <inertial>
       <mass value="${wrist_3_mass}" />
@@ -242,20 +245,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />    
   </joint>
 
-  <link name="ee_link">
-    <visual>
-      <geometry>
-        <cylinder length="0.01" radius="${wrist_radius * 1.25}"/>
-      </geometry>
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.01" radius="${wrist_radius * 1.25}"/>
-      </geometry>
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} 0.0" />
-    </collision>
-  </link>
+  <link name="ee_link" />
   
 
 
