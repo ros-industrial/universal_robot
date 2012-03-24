@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('universal_robot_driver')
+import roslib; roslib.load_manifest('ur5_driver')
 import time, sys
 import socket
 import struct
