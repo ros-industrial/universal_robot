@@ -1,0 +1,14 @@
+<package>
+  <description brief="universal_robot_driver">
+
+     universal_robot_driver
+
+  </description>
+  <author>Stuart Glaser</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/universal_robot_driver</url>
+
+</package>
+
+
