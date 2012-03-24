@@ -1,5 +1,5 @@
 <package>
-  <description brief="universal_robot_driver">
+  <description brief="ur5_driver">
 
      universal_robot_driver
 
@@ -7,7 +7,7 @@
   <author>Stuart Glaser</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/universal_robot_driver</url>
+  <url>http://ros.org/wiki/ur5_driver</url>
 
 </package>
 
