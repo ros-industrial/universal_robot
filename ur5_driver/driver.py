@@ -19,14 +19,30 @@ MULT_jointstate = 1000.0
 JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
                'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
 
+connected_robot = None
+connected_robot_lock = threading.Lock()
+connected_robot_cond = threading.Condition(connected_robot_lock)
 pub_joint_states = rospy.Publisher('joint_states', JointState)
+dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
 
-dump_state = open('dump_state', 'wb')
+def setConnectedRobot(r):
+    global connected_robot, connected_robot_lock
+    with connected_robot_lock:
+        connected_robot = r
+        connected_robot_cond.notify()
+
+def getConnectedRobot(wait=False):
+    with connected_robot_lock:
+        if wait:
+            while not connected_robot:
+                connected_robot_cond.wait()
+        return connected_robot
 
 # Receives messages from the robot over the socket
 class CommanderTCPHandler(SocketServer.BaseRequestHandler):
+        
     def recv_more(self):
         more = self.request.recv(4096)
         if not more:
@@ -34,7 +50,9 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         return more
     
     def handle(self):
-        print "Handling a request"
+        self.socket_lock = threading.Lock()
+        setConnectedRobot(self)
+        #print "Handling a request"
         try:
             buf = self.recv_more()
             if not buf: return
@@ -73,7 +91,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     pub_joint_states.publish(msg)
                 elif mtype == MSG_QUIT:
                     print "Quitting"
-                    sys.exit(0)
+                    raise EOF()
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
@@ -81,10 +99,14 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     buf = buf + self.recv_more()
         except EOF:
             print "Connection closed (command)"
+
+    def send_quit(self):
+        with self.socket_lock:
+            self.request.send(struct.pack("!i", MSG_QUIT))
             
 
 class TCPServer(SocketServer.TCPServer):
-    allow_reuse_address = True
+    allow_reuse_address = True  # Allows the program to restart gracefully on crash
     timeout = 5
 
 
@@ -92,7 +114,7 @@ class TCPServer(SocketServer.TCPServer):
 def joinAll(threads):
     while any(t.isAlive() for t in threads):
         for t in threads:
-            t.join(0.1)
+            t.join(0.2)
 
 sock = None
 def main():
@@ -109,6 +131,13 @@ def main():
     thread_commander = threading.Thread(name="CommanderHandler", target=server.handle_request)
     thread_commander.daemon = True
     thread_commander.start()
+
+    r = getConnectedRobot(wait=True)
+    print "Robot connected"
+
+    time.sleep(1)
+    print "Sending quit"
+    r.send_quit()
 
     # Waits for the threads to finish
     joinAll([thread_commander])
