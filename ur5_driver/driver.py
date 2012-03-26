@@ -23,61 +23,9 @@ pub_joint_states = rospy.Publisher('joint_states', JointState)
 
 class EOF(Exception): pass
 
-# Only handles JOINT_STATES messages.
-class StateTCPHandler(SocketServer.BaseRequestHandler):
-    def recv_more(self):
-        more = self.request.recv(4096)
-        if not more:
-            raise EOF()
-        return more
+dump_state = open('dump_state', 'wb')
 
-    def handle(self):
-        print "Handling a joint states connection"
-        try:
-            buf = self.recv_more()
-            if not buf: return
-
-            while True:
-                print "Buf:", [ord(b) for b in buf]
-
-                # Unpacks the message type
-                mtype = struct.unpack_from("!i", buf, 0)[0]
-                buf = buf[4:]
-                print "Message type:", mtype
-
-                if mtype == MSG_OUT:
-                    # Unpacks string message, terminated by tilde
-                    i = buf.find("~")
-                    while i < 0:
-                        buf = buf + self.recv_more()
-                        i = buf.find("~")
-                        if len(buf) > 2000:
-                            raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
-                    s, buf = buf[:i], buf[i+1:]
-                    print "Out: %s" % s
-                elif mtype == MSG_JOINT_STATES:
-                    while len(buf) < 3*(6*4):
-                        buf = buf + self.recv_more()
-                    state_mult = struct.unpack_from("!" + ("i"*3*6), buf, 0)
-                    buf = buf[3*6*4:]
-                    state = [s / MULT_jointstate for s in state_mult]
-                    print "Joint state:", state
-
-                    msg = JointState()
-                    msg.header.stamp = rospy.get_rostime()
-                    msg.name = JOINT_NAMES
-                    msg.position = state[:6]
-                    msg.velocity = state[6:12]
-                    msg.effort = state[12:18]
-                    pub_joint_states.publish(msg)
-                else:
-                    raise Exception("Unknown message type: %i" % mtype)
-
-                if not buf:
-                    buf = buf + self.recv_more()
-        except EOF:
-            print "Connection closed"
-    
+# Receives messages from the robot over the socket
 class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def recv_more(self):
         more = self.request.recv(4096)
@@ -92,12 +40,12 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
             if not buf: return
 
             while True:
-                print "Buf:", [ord(b) for b in buf]
+                #print "Buf:", [ord(b) for b in buf]
 
                 # Unpacks the message type
                 mtype = struct.unpack_from("!i", buf, 0)[0]
                 buf = buf[4:]
-                print "Message type:", mtype
+                #print "Message type:", mtype
 
                 if mtype == MSG_OUT:
                     # Unpacks string message, terminated by tilde
@@ -109,28 +57,42 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                             raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
                     s, buf = buf[:i], buf[i+1:]
                     print "Out: %s" % s
-                elif mtype == MSG_QUIT:
-                    print "Quitting"
-                    sys.exit(0)
                 elif mtype == MSG_JOINT_STATES:
                     while len(buf) < 3*(6*4):
                         buf = buf + self.recv_more()
                     state_mult = struct.unpack_from("!" + ("i"*3*6), buf, 0)
                     buf = buf[3*6*4:]
                     state = [s / MULT_jointstate for s in state_mult]
-                    print "Joint state:", state
+
+                    msg = JointState()
+                    msg.header.stamp = rospy.get_rostime()
+                    msg.name = JOINT_NAMES
+                    msg.position = state[:6]
+                    msg.velocity = state[6:12]
+                    msg.effort = state[12:18]
+                    pub_joint_states.publish(msg)
+                elif mtype == MSG_QUIT:
+                    print "Quitting"
+                    sys.exit(0)
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
                 if not buf:
                     buf = buf + self.recv_more()
         except EOF:
-            print "Connection closed"
+            print "Connection closed (command)"
             
 
 class TCPServer(SocketServer.TCPServer):
     allow_reuse_address = True
     timeout = 5
+
+
+# Waits until all threads have completed.  Allows KeyboardInterrupt to occur
+def joinAll(threads):
+    while any(t.isAlive() for t in threads):
+        for t in threads:
+            t.join(0.1)
 
 sock = None
 def main():
@@ -143,16 +105,13 @@ def main():
         sock.sendall(fin.read())
 
     server = TCPServer(("", 50001), CommanderTCPHandler)
-    server_state = TCPServer(("", 50002), StateTCPHandler)
 
     thread_commander = threading.Thread(name="CommanderHandler", target=server.handle_request)
-    thread_state = threading.Thread(name="StateHandler", target=server_state.handle_request)
     thread_commander.daemon = True
-    thread_state.daemon = True
     thread_commander.start()
-    thread_state.start()
-    thread_commander.join()
-    thread_state.join()
+
+    # Waits for the threads to finish
+    joinAll([thread_commander])
     
     print "Dump"
     print "="*70
