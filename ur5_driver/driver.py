@@ -4,6 +4,8 @@ import time, sys, threading
 import socket
 import struct
 import SocketServer
+import rospy
+from sensor_msgs.msg import JointState
 
 HOSTNAME='ur-xx'
 HOSTNAME="10.0.1.20"
@@ -13,6 +15,11 @@ MSG_OUT = 1
 MSG_QUIT = 2
 MSG_JOINT_STATES = 3
 MULT_jointstate = 1000.0
+
+JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+               'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+
+pub_joint_states = rospy.Publisher('joint_states', JointState)
 
 class EOF(Exception): pass
 
@@ -55,6 +62,14 @@ class StateTCPHandler(SocketServer.BaseRequestHandler):
                     buf = buf[3*6*4:]
                     state = [s / MULT_jointstate for s in state_mult]
                     print "Joint state:", state
+
+                    msg = JointState()
+                    msg.header.stamp = rospy.get_rostime()
+                    msg.name = JOINT_NAMES
+                    msg.position = state[:6]
+                    msg.velocity = state[6:12]
+                    msg.effort = state[12:18]
+                    pub_joint_states.publish(msg)
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
@@ -120,6 +135,7 @@ class TCPServer(SocketServer.TCPServer):
 sock = None
 def main():
     global sock
+    rospy.init_node('ur5_driver', disable_signals=True)
 
     # Sends the program to the robot
     sock = socket.create_connection((HOSTNAME, PORT))
@@ -127,10 +143,11 @@ def main():
         sock.sendall(fin.read())
 
     server = TCPServer(("", 50001), CommanderTCPHandler)
-    server2 = TCPServer(("", 50002), StateTCPHandler)
+    server_state = TCPServer(("", 50002), StateTCPHandler)
 
     thread_commander = threading.Thread(name="CommanderHandler", target=server.handle_request)
-    thread_state = threading.Thread(name="StateHandler", target=server2.handle_request)
+    thread_state = threading.Thread(name="StateHandler", target=server_state.handle_request)
+    thread_commander.daemon = True
     thread_state.daemon = True
     thread_commander.start()
     thread_state.start()
