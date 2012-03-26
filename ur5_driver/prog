@@ -38,8 +38,8 @@ def driverProg():
       socket_send_int(floor(MULT_jointstate * tau[2]))
       socket_send_int(floor(MULT_jointstate * tau[3]))
       socket_send_int(floor(MULT_jointstate * tau[4]))
-      #socket_send_int(floor(MULT_jointstate * tau[5]))
-      socket_send_int(7895160)  # Recognizable  ".xxx" or 00787878
+      socket_send_int(floor(MULT_jointstate * tau[5]))
+      #socket_send_int(7895160)  # Recognizable  ".xxx" or 00787878
       exit_critical
     end
     #socket_open(HOSTNAME, 50002)
@@ -64,12 +64,19 @@ def driverProg():
   while i < 5:
     send_out("Listening")
     ll = socket_read_binary_integer(1)
-    mtype = ll[1]
-    if mtype == MSG_QUIT:
-      send_out("Received QUIT")
-      break
+
+    if ll[0] == 0:
+      send_out("Received nothing")
+    elif ll[0] > 1:
+      send_out("Received too many things")
     else:
-      send_out("Received unknown message type")
+      mtype = ll[1]
+      if mtype == MSG_QUIT:
+        send_out("Received QUIT")
+        break
+      else:
+        send_out("Received unknown message type")
+      end
     end
     #movej([2.2,0,-1.57,0,0,0],2)
     #movej([1.5,0,-1.57,0,0,0],2)
