@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('ur5_driver')
 import time, sys, threading
+import datetime
 import socket
 import struct
 import SocketServer
@@ -15,6 +16,7 @@ MSG_OUT = 1
 MSG_QUIT = 2
 MSG_JOINT_STATES = 3
 MSG_MOVEJ = 4
+MSG_WAYPOINT_FINISHED = 5
 MULT_jointstate = 1000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
@@ -33,6 +35,9 @@ pub_joint_states = rospy.Publisher('joint_states', JointState)
 dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
+
+def log(s):
+    print "[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s)
 
 def setConnectedRobot(r):
     global connected_robot, connected_robot_lock
@@ -81,7 +86,8 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                         if len(buf) > 2000:
                             raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
                     s, buf = buf[:i], buf[i+1:]
-                    print "Out: %s" % s
+                    log("Out: %s" % s)
+
                 elif mtype == MSG_JOINT_STATES:
                     while len(buf) < 3*(6*4):
                         buf = buf + self.recv_more()
@@ -99,6 +105,12 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                 elif mtype == MSG_QUIT:
                     print "Quitting"
                     raise EOF()
+                elif mtype == MSG_WAYPOINT_FINISHED:
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    waypoint_id = struct.unpack_from("!i", buf, 0)[0]
+                    buf = buf[4:]
+                    log("Waypoint finished: %i" % waypoint_id)
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
@@ -111,9 +123,9 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(struct.pack("!i", MSG_QUIT))
             
-    def send_movej(self, q, a=3, v=0.75, t=0, r=0):
+    def send_movej(self, waypoint_id, q, a=3, v=0.75, t=0, r=0):
         assert(len(q) == 6)
-        buf = ''.join([struct.pack("!i", MSG_MOVEJ),
+        buf = ''.join([struct.pack("!ii", MSG_MOVEJ, waypoint_id),
                        struct.pack("!iiiiii", *[MULT_jointstate * qq for qq in q]),
                        struct.pack("!ii", MULT_jointstate * a, MULT_jointstate * v),
                        struct.pack("!ii", MULT_time * t, MULT_blend * r)])
@@ -150,9 +162,10 @@ def main():
     r = getConnectedRobot(wait=True)
     print "Robot connected"
 
-    r.send_movej(Q1)
-    time.sleep(2)
-    r.send_movej(Q2)
+    log("movej Q1")
+    r.send_movej(1, Q1, t=2.0)
+    log("movej Q2")
+    r.send_movej(2, Q2, t=1.0)
     time.sleep(3)
     
     print "Sending quit"
@@ -160,7 +173,8 @@ def main():
 
     # Waits for the threads to finish
     joinAll([thread_commander])
-    
+
+    '''
     print "Dump"
     print "="*70
     o = ""
@@ -169,6 +183,7 @@ def main():
         if not r: break
         o = o + r
     print o
+    '''
         
 
 if __name__ == '__main__': main()

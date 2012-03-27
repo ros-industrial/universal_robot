@@ -4,18 +4,25 @@ def driverProg():
   MSG_QUIT = 2
   MSG_JOINT_STATES = 3
   MSG_MOVEJ = 4
+  MSG_WAYPOINT_FINISHED = 5
   MULT_jointstate = 1000
   MULT_time = 1000000.0
   MULT_blend = 1000.0
   
   def send_out(msg):
     enter_critical
-    socket_send_int(1)
+    socket_send_int(MSG_OUT)
     socket_send_string(msg)
     socket_send_string("~")
     exit_critical
   end
-    
+  
+  def send_waypoint_finished(waypoint_id):
+    enter_critical
+    socket_send_int(MSG_WAYPOINT_FINISHED)
+    socket_send_int(waypoint_id)
+    exit_critical
+  end
   
   thread statePublisherThread():
     def send_joint_state():
@@ -79,25 +86,29 @@ def driverProg():
         break
       elif mtype == MSG_MOVEJ:
         send_out("Received movej")
-	params_mult = socket_read_binary_integer(6+4)
+	params_mult = socket_read_binary_integer(1+6+4)
 	if params_mult[0] == 0:
 	  send_out("Received no parameters for movej message")
 	end
 
 	# Unpacks the parameters
-	q = [params_mult[1] / MULT_jointstate,
-             params_mult[2] / MULT_jointstate,
+	waypoint_id = params_mult[1]
+	q = [params_mult[2] / MULT_jointstate,
              params_mult[3] / MULT_jointstate,
              params_mult[4] / MULT_jointstate,
              params_mult[5] / MULT_jointstate,
-             params_mult[6] / MULT_jointstate]
-	a = params_mult[7] / MULT_jointstate
-	v = params_mult[8] / MULT_jointstate
-	t = params_mult[9] / MULT_time
-	r = params_mult[10] / MULT_blend
+             params_mult[6] / MULT_jointstate,
+             params_mult[7] / MULT_jointstate]
+	a = params_mult[8] / MULT_jointstate
+	v = params_mult[9] / MULT_jointstate
+	t = params_mult[10] / MULT_time
+	r = params_mult[11] / MULT_blend
 
 	# Sends the command
+	send_out("movej started")
 	movej(q, a, v, t, r)
+	send_waypoint_finished(waypoint_id)
+	send_out("movej finished")
       else:
         send_out("Received unknown message type")
       end
