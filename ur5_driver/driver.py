@@ -21,6 +21,7 @@ MSG_QUIT = 2
 MSG_JOINT_STATES = 3
 MSG_MOVEJ = 4
 MSG_WAYPOINT_FINISHED = 5
+MSG_STOPJ = 6
 MULT_jointstate = 1000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
@@ -138,6 +139,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(buf)
 
+    def send_stopj(self):
+        with self.socket_lock:
+            self.request.send(struct.pack("!i", MSG_STOPJ))
+
     def set_waypoint_finished_cb(self, cb):
         self.waypoint_finished_cb = cb
     
@@ -228,15 +233,25 @@ class UR5TrajectoryFollower(object):
             self.tracking_i = 0
             self.pending_i = 1
 
-    def on_cancel(self):
+    def on_cancel(self, goal_handle):
         log("on_cancel")
-        print "TODO: on_cancel"
+        if goal_handle == self.goal_handle:
+            with self.following_lock:
+                self.robot.send_stopj()
+                self.goal_handle.set_canceled()
+                self.first_waypoint_id += len(self.goal_handle.get_goal().trajectory.points)
+                self.goal_handle = None
+        else:
+            goal_handle.set_canceled()
 
     # The URScript program sends back waypoint_finished messages,
     # which trigger this callback.
     def on_waypoint_finished(self, waypoint_id):
         with self.following_lock:
             log("Waypoint finished: %i" % waypoint_id)
+            if not self.goal_handle:
+                return
+            
             index = waypoint_id - self.first_waypoint_id
             if index != self.tracking_i:
                 rospy.logerr("Completed waypoint %i (id=%i), but tracking %i (id=%i)" % \

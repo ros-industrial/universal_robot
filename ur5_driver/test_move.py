@@ -22,7 +22,11 @@ def move1():
         JointTrajectoryPoint(positions=Q2, velocities=[0]*6, time_from_start=rospy.Duration(3.0)),
         JointTrajectoryPoint(positions=Q3, velocities=[0]*6, time_from_start=rospy.Duration(4.0))]
     client.send_goal(g)
-    client.wait_for_result()
+    try:
+        client.wait_for_result()
+    except KeyboardInterrupt:
+        client.cancel_goal()
+        raise
 
 def move_disordered():
     order = [4, 2, 3, 1, 5, 0]
@@ -39,6 +43,30 @@ def move_disordered():
     client.send_goal(g)
     client.wait_for_result()
     
+def move_repeated():
+    g = FollowJointTrajectoryGoal()
+    g.trajectory = JointTrajectory()
+    g.trajectory.joint_names = JOINT_NAMES
+    
+    d = 2.0
+    g.trajectory.points = []
+    for i in range(10):
+        g.trajectory.points.append(
+            JointTrajectoryPoint(positions=Q1, velocities=[0]*6, time_from_start=rospy.Duration(d)))
+        d += 1
+        g.trajectory.points.append(
+            JointTrajectoryPoint(positions=Q2, velocities=[0]*6, time_from_start=rospy.Duration(d)))
+        d += 1
+        g.trajectory.points.append(
+            JointTrajectoryPoint(positions=Q3, velocities=[0]*6, time_from_start=rospy.Duration(d)))
+        d += 2
+    client.send_goal(g)
+    try:
+        client.wait_for_result()
+    except KeyboardInterrupt:
+        client.cancel_goal()
+        raise
+
 
 def main():
     global client
@@ -48,7 +76,7 @@ def main():
         print "Waiting for server..."
         client.wait_for_server()
         print "Connected to server"
-        move1()
+        move_repeated()
         #move_disordered()
     except KeyboardInterrupt:
         rospy.signal_shutdown("KeyboardInterrupt")
