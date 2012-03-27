@@ -5,8 +5,11 @@ import datetime
 import socket
 import struct
 import SocketServer
+
 import rospy
+import actionlib
 from sensor_msgs.msg import JointState
+from control_msgs.msg import FollowJointTrajectoryAction
 
 HOSTNAME='ur-xx'
 HOSTNAME="10.0.1.20"
@@ -60,9 +63,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         if not more:
             raise EOF()
         return more
-    
+
     def handle(self):
         self.socket_lock = threading.Lock()
+        self.waypoint_finished_cb = None
         setConnectedRobot(self)
         #print "Handling a request"
         try:
@@ -110,7 +114,8 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                         buf = buf + self.recv_more()
                     waypoint_id = struct.unpack_from("!i", buf, 0)[0]
                     buf = buf[4:]
-                    log("Waypoint finished: %i" % waypoint_id)
+                    if self.waypoint_finished_cb:
+                        self.waypoint_finished_cb(waypoint_id)
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
@@ -132,6 +137,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(buf)
 
+    def set_waypoint_finished_cb(self, cb):
+        self.waypoint_finished_cb = cb
+    
+
 class TCPServer(SocketServer.TCPServer):
     allow_reuse_address = True  # Allows the program to restart gracefully on crash
     timeout = 5
@@ -142,6 +151,92 @@ def joinAll(threads):
     while any(t.isAlive() for t in threads):
         for t in threads:
             t.join(0.2)
+
+# Returns the duration between moving from point (index-1) to point
+# index in the given JointTrajectory
+def get_segment_duration(traj, index):
+    if index == 0:
+        return traj.points[0].time_from_start.to_sec()
+    return (traj.points[index].time_from_start - traj.points[index-1].time_from_start).to_sec()
+
+class UR5TrajectoryFollower(object):
+    def __init__(self, robot):
+        self.robot = robot
+        self.server = actionlib.ActionServer("follow_joint_trajectory",
+                                             FollowJointTrajectoryAction,
+                                             self.on_goal, self.on_cancel, auto_start=False)
+        self.robot.set_waypoint_finished_cb(self.on_waypoint_finished)
+
+        self.goal_handle = None
+        self.first_waypoint_id = 10
+        self.tracking_i = 0
+        self.pending_i = 0
+        self.goal_start_time = rospy.Time(0)
+
+        self.following_lock = threading.Lock()
+
+    def start(self):
+        self.server.start()
+
+    def on_goal(self, goal_handle):
+        log("on_goal")
+        if self.goal_handle:
+            rospy.logerr("Already have a goal in progress!  Rejecting.  (TODO)")
+            goal_handle.set_rejected()
+            return
+
+        # TODO: Verify that the goal has the correct joints.  Reorder if necessary
+
+        with self.following_lock:
+            self.goal_handle = goal_handle
+            self.tracking_i = 0
+            self.pending_i = 0
+            self.goal_start_time = rospy.get_rostime()
+
+            # Sends a tracking point and a pending point to the robot
+            self.goal_handle.set_accepted()
+            traj = self.goal_handle.get_goal().trajectory
+            # TODO: joints may have a different order
+            self.robot.send_movej(self.first_waypoint_id, traj.points[0].positions,
+                                  t=get_segment_duration(traj, 0))
+            self.robot.send_movej(self.first_waypoint_id + 1, traj.points[1].positions,
+                                  t=get_segment_duration(traj, 1))
+            self.tracking_i = 0
+            self.pending_i = 1
+
+    def on_cancel(self):
+        log("on_cancel")
+        print "TODO: on_cancel"
+
+    # The URScript program sends back waypoint_finished messages,
+    # which trigger this callback.
+    def on_waypoint_finished(self, waypoint_id):
+        log("Waypoint finished: %i" % waypoint_id)
+        index = waypoint_id - self.first_waypoint_id
+        if index != self.tracking_i:
+            rospy.logerr("Completed waypoint %i (id=%i), but tracking %i (id=%i)" % \
+                         (index, waypoint_id, self.tracking_i,
+                          self.first_waypoint_id + self.tracking_i))
+            # TODO: Probably need to fail here
+
+        traj = self.goal_handle.get_goal().trajectory
+        traj_len = len(traj.points)
+        
+        # Checks if we've completed the trajectory
+        if index == traj_len - 1:
+            self.goal_handle.set_succeeded()
+            self.first_waypoint_id += traj_len
+            self.goal_handle = None
+
+        # Moves onto the next segment
+        self.tracking_i += 1
+        if self.pending_i + 1 < traj_len:
+            self.pending_i += 1
+            # TODO: reorder joint positions
+            self.robot.send_movej(self.first_waypoint_id + self.pending_i,
+                                  traj.points[self.pending_i],
+                                  t=get_segment_duration(traj, self.pending_i))
+        
 
 sock = None
 def main():
@@ -162,17 +257,25 @@ def main():
     r = getConnectedRobot(wait=True)
     print "Robot connected"
 
-    log("movej Q1")
-    r.send_movej(1, Q1, t=2.0)
-    log("movej Q2")
-    r.send_movej(2, Q2, t=1.0)
-    time.sleep(3)
-    
-    print "Sending quit"
-    r.send_quit()
+    action_server = UR5TrajectoryFollower(r)
+    action_server.start()
 
-    # Waits for the threads to finish
-    joinAll([thread_commander])
+    try:
+
+        #log("movej Q1")
+        #r.send_movej(1, Q1, t=2.0)
+        #log("movej Q2")
+        #r.send_movej(2, Q2, t=1.0)
+        #time.sleep(3)
+
+        #r.send_quit()
+
+        # Waits for the threads to finish
+        joinAll([thread_commander])
+    except KeyboardInterrupt:
+        r.send_quit()
+        rospy.signal_shutdown("KeyboardInterrupt")
+        raise
 
     '''
     print "Dump"

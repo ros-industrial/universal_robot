@@ -10,6 +10,8 @@
   <url>http://ros.org/wiki/ur5_driver</url>
 
   <depend package="rospy" />
+  <depend package="actionlib" />
+  <depend package="control_msgs" />
 
 </package>
 
