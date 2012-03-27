@@ -14,10 +14,17 @@ PORT=30001
 MSG_OUT = 1
 MSG_QUIT = 2
 MSG_JOINT_STATES = 3
+MSG_MOVEJ = 4
 MULT_jointstate = 1000.0
+MULT_time = 1000000.0
+MULT_blend = 1000.0
 
 JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
                'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+
+Q1 = [2.2,0,-1.57,0,0,0]
+Q2 = [1.5,0,-1.57,0,0,0]
+  
 
 connected_robot = None
 connected_robot_lock = threading.Lock()
@@ -104,6 +111,14 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(struct.pack("!i", MSG_QUIT))
             
+    def send_movej(self, q, a=3, v=0.75, t=0, r=0):
+        assert(len(q) == 6)
+        buf = ''.join([struct.pack("!i", MSG_MOVEJ),
+                       struct.pack("!iiiiii", *[MULT_jointstate * qq for qq in q]),
+                       struct.pack("!ii", MULT_jointstate * a, MULT_jointstate * v),
+                       struct.pack("!ii", MULT_time * t, MULT_blend * r)])
+        with self.socket_lock:
+            self.request.send(buf)
 
 class TCPServer(SocketServer.TCPServer):
     allow_reuse_address = True  # Allows the program to restart gracefully on crash
@@ -135,7 +150,11 @@ def main():
     r = getConnectedRobot(wait=True)
     print "Robot connected"
 
-    time.sleep(1)
+    r.send_movej(Q1)
+    time.sleep(2)
+    r.send_movej(Q2)
+    time.sleep(3)
+    
     print "Sending quit"
     r.send_quit()
 
