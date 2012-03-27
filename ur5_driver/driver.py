@@ -44,7 +44,7 @@ def getConnectedRobot(wait=False):
     with connected_robot_lock:
         if wait:
             while not connected_robot:
-                connected_robot_cond.wait()
+                connected_robot_cond.wait(0.5)
         return connected_robot
 
 # Receives messages from the robot over the socket
