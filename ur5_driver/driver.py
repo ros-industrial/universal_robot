@@ -214,9 +214,10 @@ class UR5TrajectoryFollower(object):
                 
         with self.following_lock:
             if self.goal_handle:
-                rospy.logerr("Already have a goal in progress!  Rejecting.  (TODO)")
-                goal_handle.set_rejected()
-                return
+                # Cancels the existing goal
+                self.goal_handle.set_canceled()
+                self.first_waypoint_id += len(self.goal_handle.get_goal().trajectory.points)
+                self.goal_handle = None
 
             self.goal_handle = goal_handle
             self.tracking_i = 0
@@ -250,6 +251,8 @@ class UR5TrajectoryFollower(object):
         with self.following_lock:
             log("Waypoint finished: %i" % waypoint_id)
             if not self.goal_handle:
+                return
+            if waypoint_id < self.first_waypoint_id:
                 return
             
             index = waypoint_id - self.first_waypoint_id
