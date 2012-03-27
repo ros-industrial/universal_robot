@@ -10,6 +10,7 @@ import rospy
 import actionlib
 from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
+from trajectory_msgs.msg import JointTrajectoryPoint
 
 HOSTNAME='ur-xx'
 HOSTNAME="10.0.1.20"
@@ -159,6 +160,21 @@ def get_segment_duration(traj, index):
         return traj.points[0].time_from_start.to_sec()
     return (traj.points[index].time_from_start - traj.points[index-1].time_from_start).to_sec()
 
+# Reorders the JointTrajectory traj according to the order in
+# joint_names.  Destructive.
+def reorder_traj_joints(traj, joint_names):
+    order = [traj.joint_names.index(j) for j in joint_names]
+
+    new_points = []
+    for p in traj.points:
+        new_points.append(JointTrajectoryPoint(
+            positions = [p.positions[i] for i in order],
+            velocities = [p.velocities[i] for i in order] if p.velocities else [],
+            accelerations = [p.accelerations[i] for i in order] if p.accelerations else [],
+            time_from_start = p.time_from_start))
+    traj.joint_names = joint_names
+    traj.points = new_points
+
 class UR5TrajectoryFollower(object):
     def __init__(self, robot):
         self.robot = robot
@@ -180,14 +196,23 @@ class UR5TrajectoryFollower(object):
 
     def on_goal(self, goal_handle):
         log("on_goal")
-        if self.goal_handle:
-            rospy.logerr("Already have a goal in progress!  Rejecting.  (TODO)")
+
+        # Checks if the joints are just incorrect
+        if set(goal_handle.get_goal().trajectory.joint_names) != set(JOINT_NAMES):
+            rospy.logerr("Received a goal with incorrect joint names: (%s)" % \
+                         ', '.join(goal_handle.get_goal().trajectory.joint_names))
             goal_handle.set_rejected()
             return
 
-        # TODO: Verify that the goal has the correct joints.  Reorder if necessary
-
+        # Orders the joints of the trajectory according to JOINT_NAMES
+        reorder_traj_joints(goal_handle.get_goal().trajectory, JOINT_NAMES)
+                
         with self.following_lock:
+            if self.goal_handle:
+                rospy.logerr("Already have a goal in progress!  Rejecting.  (TODO)")
+                goal_handle.set_rejected()
+                return
+
             self.goal_handle = goal_handle
             self.tracking_i = 0
             self.pending_i = 0
@@ -196,7 +221,6 @@ class UR5TrajectoryFollower(object):
             # Sends a tracking point and a pending point to the robot
             self.goal_handle.set_accepted()
             traj = self.goal_handle.get_goal().trajectory
-            # TODO: joints may have a different order
             self.robot.send_movej(self.first_waypoint_id, traj.points[0].positions,
                                   t=get_segment_duration(traj, 0))
             self.robot.send_movej(self.first_waypoint_id + 1, traj.points[1].positions,
@@ -211,32 +235,32 @@ class UR5TrajectoryFollower(object):
     # The URScript program sends back waypoint_finished messages,
     # which trigger this callback.
     def on_waypoint_finished(self, waypoint_id):
-        log("Waypoint finished: %i" % waypoint_id)
-        index = waypoint_id - self.first_waypoint_id
-        if index != self.tracking_i:
-            rospy.logerr("Completed waypoint %i (id=%i), but tracking %i (id=%i)" % \
-                         (index, waypoint_id, self.tracking_i,
-                          self.first_waypoint_id + self.tracking_i))
-            # TODO: Probably need to fail here
+        with self.following_lock:
+            log("Waypoint finished: %i" % waypoint_id)
+            index = waypoint_id - self.first_waypoint_id
+            if index != self.tracking_i:
+                rospy.logerr("Completed waypoint %i (id=%i), but tracking %i (id=%i)" % \
+                             (index, waypoint_id, self.tracking_i,
+                              self.first_waypoint_id + self.tracking_i))
+                # TODO: Probably need to fail here
 
-        traj = self.goal_handle.get_goal().trajectory
-        traj_len = len(traj.points)
-        
-        # Checks if we've completed the trajectory
-        if index == traj_len - 1:
-            self.goal_handle.set_succeeded()
-            self.first_waypoint_id += traj_len
-            self.goal_handle = None
+            traj = self.goal_handle.get_goal().trajectory
+            traj_len = len(traj.points)
 
-        # Moves onto the next segment
-        self.tracking_i += 1
-        if self.pending_i + 1 < traj_len:
-            self.pending_i += 1
-            # TODO: reorder joint positions
-            self.robot.send_movej(self.first_waypoint_id + self.pending_i,
-                                  traj.points[self.pending_i],
-                                  t=get_segment_duration(traj, self.pending_i))
-        
+            # Checks if we've completed the trajectory
+            if index == traj_len - 1:
+                self.goal_handle.set_succeeded()
+                self.first_waypoint_id += traj_len
+                self.goal_handle = None
+
+            # Moves onto the next segment
+            self.tracking_i += 1
+            if self.pending_i + 1 < traj_len:
+                self.pending_i += 1
+                self.robot.send_movej(self.first_waypoint_id + self.pending_i,
+                                      traj.points[self.pending_i].positions,
+                                      t=get_segment_duration(traj, self.pending_i))
+
 
 sock = None
 def main():
