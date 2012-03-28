@@ -6,9 +6,11 @@ def driverProg():
   MSG_MOVEJ = 4
   MSG_WAYPOINT_FINISHED = 5
   MSG_STOPJ = 6
+  MSG_SERVOJ = 7
   MULT_jointstate = 1000.0
   MULT_time = 1000000.0
   MULT_blend = 1000.0
+  pi = 3.14159265359
   
   def send_out(msg):
     enter_critical
@@ -62,15 +64,75 @@ def driverProg():
     sync()
   end
 
+  SERVO_IDLE = 0
+  SERVO_RUNNING = 1
+  cmd_servo_state = SERVO_IDLE
+  cmd_servo_id = 0  # 0 = idle, -1 = stop
+  cmd_servo_q = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  cmd_servo_dt = 0.0
+  def set_servo_setpoint(id, q, dt):
+    enter_critical
+    cmd_servo_state = SERVO_RUNNING
+    cmd_servo_id = id
+    cmd_servo_q = q
+    cmd_servo_dt = dt
+    exit_critical
+  end
+  thread servoThread():
+    state = SERVO_IDLE
+    while True:
+      # Latches the new command
+      enter_critical
+      q = cmd_servo_q
+      dt = cmd_servo_dt
+      id = cmd_servo_id
+      do_brake = False
+      if (state == SERVO_RUNNING) and (cmd_servo_state == SERVO_IDLE):
+        # No command pending
+        do_brake = True
+      end
+      state = cmd_servo_state
+      cmd_servo_state = SERVO_IDLE
+      exit_critical
+
+      #do_brake = False
+
+      # Executes the command
+      if do_brake:
+        #stopj(1.0)  # TODO
+        send_out("Braking")
+        sync()
+      elif state == SERVO_RUNNING:
+        servoj(q, 0, 0, dt)
+        send_out("Servoed")
+      else:
+        send_out("Idle")
+        sync()
+      end
+    end
+    
+  end
+
   socket_open(HOSTNAME, 50001)
-  socket_send_int(1)
-  socket_send_string("hello~")
+  send_out("hello")
 
   thread_state = run statePublisherThread()
-  
-  #movej([2.2,0,-1.57,0,0,0],2)
-  #movej([1.5,0,-1.57,0,0,0],2)
-  
+  thread_servo = run servoThread()
+
+  # Servoes in a circle
+  movej([1.5,-0.4,-1.57,0,0,0], 3, 0.75, 1.0)
+  t = 0
+  while True:
+    q = [1.5,0,-1.57,0,0,0]
+    q[0] = q[0] + 0.2 * sin(0.25 * t*(2*pi))
+    q[1] = q[1] - 0.2 + 0.2 * cos(0.25 * t*(2*pi))
+    #servoj(q, 3, 1, 0.08)
+    #send_out("servoed")
+    set_servo_setpoint(t, q, 0.08)
+    t = t + 0.08
+    sleep(0.08)
+  end
+
   while True:
     #send_out("Listening")
     ll = socket_read_binary_integer(1)
@@ -109,6 +171,28 @@ def driverProg():
 	movej(q, a, v, t, r)
 	send_waypoint_finished(waypoint_id)
 	send_out("movej finished")
+      elif mtype == MSG_SERVOJ:
+        send_out("Received servoj")
+
+        # Reads the parameters
+	params_mult = socket_read_binary_integer(1+6+1)
+	if params_mult[0] == 0:
+	  send_out("Received no parameters for movej message")
+	end
+
+	# Unpacks the parameters
+        waypoint_id = params_mult[1]
+	q = [params_mult[2] / MULT_jointstate,
+             params_mult[3] / MULT_jointstate,
+             params_mult[4] / MULT_jointstate,
+             params_mult[5] / MULT_jointstate,
+             params_mult[6] / MULT_jointstate,
+             params_mult[7] / MULT_jointstate]
+	t = params_mult[8] / MULT_time
+
+        # Servos
+        servoj(q, 3, 0.1, t)
+        send_waypoint_finished(waypoint_id)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
 	stopj(1.0)

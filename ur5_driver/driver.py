@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('ur5_driver')
-import time, sys, threading
+import time, sys, threading, math
 import datetime
 import socket
 import struct
@@ -22,6 +22,7 @@ MSG_JOINT_STATES = 3
 MSG_MOVEJ = 4
 MSG_WAYPOINT_FINISHED = 5
 MSG_STOPJ = 6
+MSG_SERVOJ = 7
 MULT_jointstate = 1000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
@@ -31,6 +32,7 @@ JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
 
 Q1 = [2.2,0,-1.57,0,0,0]
 Q2 = [1.5,0,-1.57,0,0,0]
+Q3 = [1.5,-0.2,-1.57,0,0,0]
   
 
 connected_robot = None
@@ -69,6 +71,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         self.socket_lock = threading.Lock()
         self.waypoint_finished_cb = None
+        self.last_joint_states = None
         setConnectedRobot(self)
         #print "Handling a request"
         try:
@@ -97,7 +100,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                 elif mtype == MSG_JOINT_STATES:
                     while len(buf) < 3*(6*4):
                         buf = buf + self.recv_more()
-                    state_mult = struct.unpack_from("!" + ("i"*3*6), buf, 0)
+                    state_mult = struct.unpack_from("!%ii" % (3*6), buf, 0)
                     buf = buf[3*6*4:]
                     state = [s / MULT_jointstate for s in state_mult]
 
@@ -108,6 +111,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     msg.velocity = state[6:12]
                     msg.effort = state[12:18]
                     pub_joint_states.publish(msg)
+                    self.last_joint_states = msg
                 elif mtype == MSG_QUIT:
                     print "Quitting"
                     raise EOF()
@@ -132,12 +136,22 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
             
     def send_movej(self, waypoint_id, q, a=3, v=0.75, t=0, r=0):
         assert(len(q) == 6)
-        buf = ''.join([struct.pack("!ii", MSG_MOVEJ, waypoint_id),
-                       struct.pack("!iiiiii", *[MULT_jointstate * qq for qq in q]),
-                       struct.pack("!ii", MULT_jointstate * a, MULT_jointstate * v),
-                       struct.pack("!ii", MULT_time * t, MULT_blend * r)])
+        params = [MSG_MOVEJ, waypoint_id] + \
+                 [MULT_jointstate * qq for qq in q] + \
+                 [MULT_jointstate * a, MULT_jointstate * v, MULT_time * t, MULT_blend * r]
+        buf = struct.pack("!%ii" % len(params), *params)
         with self.socket_lock:
             self.request.send(buf)
+
+    def send_servoj(self, waypoint_id, q, t):
+        assert(len(q) == 6)
+        params = [MSG_SERVOJ, waypoint_id] + \
+                 [MULT_jointstate * qq for qq in q] + \
+                 [MULT_time * t]
+        buf = struct.pack("!%ii" % len(params), *params)
+        with self.socket_lock:
+            self.request.send(buf)
+        
 
     def send_stopj(self):
         with self.socket_lock:
@@ -313,6 +327,15 @@ def main():
     with open('prog') as fin:
         sock.sendall(fin.read())
 
+    print "Dump"
+    print "="*70
+    o = ""
+    while len(o) < 4096:
+        r = sock.recv(1024)
+        if not r: break
+        o = o + r
+    print o
+        
     server = TCPServer(("", 50001), CommanderTCPHandler)
 
     thread_commander = threading.Thread(name="CommanderHandler", target=server.handle_request)
@@ -326,6 +349,27 @@ def main():
     action_server.start()
 
     try:
+
+        #r.send_servoj(1, Q1, 1.0)
+        #time.sleep(0.5)
+        #r.send_servoj(2, Q2, 1.0)
+        #time.sleep(0.2)
+        #r.send_servoj(3, Q3, 1.0)
+        r.send_servoj(4, Q2, 1.0)
+        time.sleep(0.5)
+
+        t0 = time.time()
+        waypoint_id = 100
+        while True:
+            t = time.time() - t0
+            q = Q2[:]
+            q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
+            q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
+            r.send_servoj(waypoint_id, q, 0.008)
+            waypoint_id += 1
+            #print "Servo:", t, q[0], q[1]
+            time.sleep(0.008)
+            
 
         #log("movej Q1")
         #r.send_movej(1, Q1, t=2.0)
@@ -341,17 +385,5 @@ def main():
         r.send_quit()
         rospy.signal_shutdown("KeyboardInterrupt")
         raise
-
-    '''
-    print "Dump"
-    print "="*70
-    o = ""
-    while len(o) < 4096:
-        r = sock.recv(1024)
-        if not r: break
-        o = o + r
-    print o
-    '''
-        
 
 if __name__ == '__main__': main()
