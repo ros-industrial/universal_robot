@@ -180,6 +180,26 @@ def reorder_traj_joints(traj, joint_names):
     traj.joint_names = joint_names
     traj.points = new_points
 
+MAX_BLEND = 0.1
+# Determines a blend for the given point that doesn't overlap with its neighbors.
+def compute_blend(traj, index):
+    # The first and last points have nothing to blend with.
+    if index == 0 or index == len(traj.points) - 1:
+        return 0.0
+
+    return 0.01
+
+    # The blend can take up to half the distance to the previous or
+    # next point.
+    min_diff = MAX_BLEND
+    q = traj.points[index].positions
+    qbefore = traj.points[index-1].positions
+    qafter = traj.points[index+1].positions
+    for j in range(len(traj.joint_names)):
+        min_diff = min(min_diff, abs(q[j] - qbefore[j]) / 2.0)
+        min_diff = min(min_diff, abs(q[j] - qafter[j]) / 2.0)
+    return min_diff
+
 class UR5TrajectoryFollower(object):
     def __init__(self, robot):
         self.robot = robot
@@ -230,7 +250,8 @@ class UR5TrajectoryFollower(object):
             self.robot.send_movej(self.first_waypoint_id, traj.points[0].positions,
                                   t=get_segment_duration(traj, 0))
             self.robot.send_movej(self.first_waypoint_id + 1, traj.points[1].positions,
-                                  t=get_segment_duration(traj, 1))
+                                  t=get_segment_duration(traj, 1),
+                                  r=compute_blend(traj, 1))
             self.tracking_i = 0
             self.pending_i = 1
 
@@ -277,7 +298,9 @@ class UR5TrajectoryFollower(object):
                 self.pending_i += 1
                 self.robot.send_movej(self.first_waypoint_id + self.pending_i,
                                       traj.points[self.pending_i].positions,
-                                      t=get_segment_duration(traj, self.pending_i))
+                                      t=get_segment_duration(traj, self.pending_i),
+                                      r=compute_blend(traj, self.pending_i))
+                print "New blend radius:", compute_blend(traj, self.pending_i)
 
 
 sock = None
