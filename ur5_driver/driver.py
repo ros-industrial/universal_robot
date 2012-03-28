@@ -215,7 +215,10 @@ def compute_blend(traj, index):
     return min_diff
 
 class UR5TrajectoryFollower(object):
+    RATE = 0.01
     def __init__(self, robot):
+        self.following_lock = threading.Lock()
+        self.T0 = time.time()
         self.robot = robot
         self.server = actionlib.ActionServer("follow_joint_trajectory",
                                              FollowJointTrajectoryAction,
@@ -228,7 +231,7 @@ class UR5TrajectoryFollower(object):
         self.pending_i = 0
         self.goal_start_time = rospy.Time(0)
 
-        self.following_lock = threading.Lock()
+        self.update_timer = rospy.Timer(rospy.Duration(self.RATE), self._update)
 
     def start(self):
         self.server.start()
@@ -280,6 +283,14 @@ class UR5TrajectoryFollower(object):
         else:
             goal_handle.set_canceled()
 
+    def _update(self, event):
+        t = time.time() - self.T0
+        q = Q2[:]
+        q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
+        q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
+        self.robot.send_servoj(999, q, 0.016)
+
+
     # The URScript program sends back waypoint_finished messages,
     # which trigger this callback.
     def on_waypoint_finished(self, waypoint_id):
@@ -327,14 +338,15 @@ def main():
     with open('prog') as fin:
         sock.sendall(fin.read())
 
-    print "Dump"
-    print "="*70
-    o = ""
-    while len(o) < 4096:
-        r = sock.recv(1024)
-        if not r: break
-        o = o + r
-    print o
+    if False:
+        print "Dump"
+        print "="*70
+        o = ""
+        while len(o) < 4096:
+            r = sock.recv(1024)
+            if not r: break
+            o = o + r
+        print o
         
     server = TCPServer(("", 50001), CommanderTCPHandler)
 
@@ -355,20 +367,20 @@ def main():
         #r.send_servoj(2, Q2, 1.0)
         #time.sleep(0.2)
         #r.send_servoj(3, Q3, 1.0)
-        r.send_servoj(4, Q2, 1.0)
-        time.sleep(0.5)
-
-        t0 = time.time()
-        waypoint_id = 100
-        while True:
-            t = time.time() - t0
-            q = Q2[:]
-            q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
-            q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
-            r.send_servoj(waypoint_id, q, 0.016)
-            waypoint_id += 1
-            #print "Servo:", t, q[0], q[1]
-            time.sleep(0.008)
+        #r.send_servoj(4, Q2, 1.0)
+        #time.sleep(0.5)
+        
+        #t0 = time.time()
+        #waypoint_id = 100
+        #while True:
+        #    t = time.time() - t0
+        #    q = Q2[:]
+        #    q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
+        #    q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
+        #    r.send_servoj(waypoint_id, q, 0.016)
+        #    waypoint_id += 1
+        #    #print "Servo:", t, q[0], q[1]
+        #    time.sleep(0.008)
             
 
         #log("movej Q1")

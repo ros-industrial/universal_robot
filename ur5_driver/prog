@@ -199,12 +199,10 @@ def driverProg():
         send_out("Received unknown message type")
       end
     end
-    #movej([2.2,0,-1.57,0,0,0],2)
-    #movej([1.5,0,-1.57,0,0,0],2)
   end
 
   #sleep(1)
   kill thread_state
-  socket_send_int(2)
+  socket_send_int(MSG_QUIT)
 end
 driverProg()
