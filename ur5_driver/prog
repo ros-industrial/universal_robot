@@ -104,7 +104,7 @@ def driverProg():
         sync()
       elif state == SERVO_RUNNING:
         servoj(q, 0, 0, dt)
-        send_out("Servoed")
+        #send_out("Servoed")
       else:
         send_out("Idle")
         sync()
@@ -120,18 +120,18 @@ def driverProg():
   thread_servo = run servoThread()
 
   # Servoes in a circle
-  movej([1.5,-0.4,-1.57,0,0,0], 3, 0.75, 1.0)
-  t = 0
-  while True:
-    q = [1.5,0,-1.57,0,0,0]
-    q[0] = q[0] + 0.2 * sin(0.25 * t*(2*pi))
-    q[1] = q[1] - 0.2 + 0.2 * cos(0.25 * t*(2*pi))
-    #servoj(q, 3, 1, 0.08)
-    #send_out("servoed")
-    set_servo_setpoint(t, q, 0.08)
-    t = t + 0.08
-    sleep(0.08)
-  end
+  #movej([1.5,-0.4,-1.57,0,0,0], 3, 0.75, 1.0)
+  #t = 0
+  #while True:
+  #  q = [1.5,0,-1.57,0,0,0]
+  #  q[0] = q[0] + 0.2 * sin(0.25 * t*(2*pi))
+  #  q[1] = q[1] - 0.2 + 0.2 * cos(0.25 * t*(2*pi))
+  #  #servoj(q, 3, 1, 0.08)
+  #  #send_out("servoed")
+  #  set_servo_setpoint(t, q, 0.08)
+  #  t = t + 0.08
+  #  sleep(0.08)
+  #end
 
   while True:
     #send_out("Listening")
@@ -172,8 +172,6 @@ def driverProg():
 	send_waypoint_finished(waypoint_id)
 	send_out("movej finished")
       elif mtype == MSG_SERVOJ:
-        send_out("Received servoj")
-
         # Reads the parameters
 	params_mult = socket_read_binary_integer(1+6+1)
 	if params_mult[0] == 0:
@@ -191,8 +189,9 @@ def driverProg():
 	t = params_mult[8] / MULT_time
 
         # Servos
-        servoj(q, 3, 0.1, t)
-        send_waypoint_finished(waypoint_id)
+        #servoj(q, 3, 0.1, t)
+        #send_waypoint_finished(waypoint_id)
+        set_servo_setpoint(waypoint_id, q, t)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
 	stopj(1.0)

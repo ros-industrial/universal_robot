@@ -365,7 +365,7 @@ def main():
             q = Q2[:]
             q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
             q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
-            r.send_servoj(waypoint_id, q, 0.008)
+            r.send_servoj(waypoint_id, q, 0.016)
             waypoint_id += 1
             #print "Servo:", t, q[0], q[1]
             time.sleep(0.008)
