@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<robot name="ur5">
+  <include filename="$(find ur5_description)/urdf/model.urdf.xacro" />
+</robot>

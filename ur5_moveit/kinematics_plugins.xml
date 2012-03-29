@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='ASCII'?>
+<library path="lib/libuniversal_robot_kinematics_lib">
+  <class name="universal_robot_arm_kinematics/IKFastKinematicsPlugin" type="universal_robot_arm_kinematics::IKFastKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>A plugin created by using OpenRAVE's IK Fast component</description>
+  </class>
+</library>
