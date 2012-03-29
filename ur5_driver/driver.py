@@ -65,13 +65,14 @@ def setConnectedRobot(r):
         connected_robot = r
         connected_robot_cond.notify()
 
-def getConnectedRobot(wait=False):
+def getConnectedRobot(wait=False, timeout=-1):
+    started = time.time()
     with connected_robot_lock:
         if wait:
             while not connected_robot:
-                connected_robot_cond.wait(0.5)
-                #print "Threads:"
-                #dumpstacks()
+                if timeout >= 0 and time.time() > started + timeout:
+                    break
+                connected_robot_cond.wait(0.2)
         return connected_robot
 
 # Receives messages from the robot over the socket
@@ -404,27 +405,28 @@ def main():
                 if action_server:
                     action_server.set_robot(None)
 
-
+                rospy.loginfo("Programming the robot")
+                while True:
                 # Sends the program to the robot
-                sock = socket.create_connection((HOSTNAME, PORT))
-                with open('prog') as fin:
-                    program = fin.read()
-                    sock.sendall(program % {"driver_hostname": socket.getfqdn()})
+                    sock = socket.create_connection((HOSTNAME, PORT))
+                    with open('prog') as fin:
+                        program = fin.read()
+                        sock.sendall(program % {"driver_hostname": socket.getfqdn()})
 
-                # Useful for determining if the robot failed to compile the program
-                if False:
-                    print "Dump"
-                    print "="*70
-                    o = ""
-                    while len(o) < 4096:
-                        r = sock.recv(1024)
-                        if not r: break
-                        o = o + r
-                    print o
+                    # Useful for determining if the robot failed to compile the program
+                    if False:
+                        print "Dump"
+                        print "="*70
+                        o = ""
+                        while len(o) < 4096:
+                            r = sock.recv(1024)
+                            if not r: break
+                            o = o + r
+                        print o
 
-                rospy.loginfo("Waiting for the robot to connect back to the driver")
-                print "Commander thread:", thread_commander.is_alive()
-                r = getConnectedRobot(wait=True)
+                    r = getConnectedRobot(wait=True, timeout=1.0)
+                    if r:
+                        break
                 rospy.loginfo("Robot connected")
 
                 if action_server:
