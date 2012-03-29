@@ -3,8 +3,9 @@ import roslib; roslib.load_manifest('ur5_driver')
 import time, sys, threading, math
 import copy
 import datetime
-import socket
+import socket, select
 import struct
+import traceback, code
 import SocketServer
 
 import rospy
@@ -44,6 +45,17 @@ dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
 
+def dumpstacks():
+    id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
+    code = []
+    for threadId, stack in sys._current_frames().items():
+        code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
+        for filename, lineno, name, line in traceback.extract_stack(stack):
+            code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+            if line:
+                code.append("  %s" % (line.strip()))
+    print "\n".join(code)
+
 def log(s):
     print "[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s)
 
@@ -58,23 +70,32 @@ def getConnectedRobot(wait=False):
         if wait:
             while not connected_robot:
                 connected_robot_cond.wait(0.5)
+                #print "Threads:"
+                #dumpstacks()
         return connected_robot
 
 # Receives messages from the robot over the socket
 class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         
     def recv_more(self):
-        more = self.request.recv(4096)
-        if not more:
-            raise EOF()
-        return more
+        while True:
+            r, _, _ = select.select([self.request], [], [], 0.2)
+            if r:
+                more = self.request.recv(4096)
+                if not more:
+                    raise EOF()
+                return more
+            else:
+                if self.last_joint_states and \
+                        self.last_joint_states.header.stamp.to_sec() < time.time() + 1.0:
+                    rospy.logerr("Stopped hearing from robot.  Disconnected")
+                    raise EOF()
 
     def handle(self):
         self.socket_lock = threading.Lock()
-        self.waypoint_finished_cb = None
         self.last_joint_states = None
         setConnectedRobot(self)
-        #print "Handling a request"
+        print "Handling a request"
         try:
             buf = self.recv_more()
             if not buf: return
@@ -121,8 +142,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                         buf = buf + self.recv_more()
                     waypoint_id = struct.unpack_from("!i", buf, 0)[0]
                     buf = buf[4:]
-                    if self.waypoint_finished_cb:
-                        self.waypoint_finished_cb(waypoint_id)
+                    print "Waypoint finished (not handled)"
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
@@ -130,6 +150,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     buf = buf + self.recv_more()
         except EOF:
             print "Connection closed (command)"
+            setConnectedRobot(None)
 
     def send_quit(self):
         with self.socket_lock:
@@ -232,26 +253,6 @@ def sample_traj(traj, t):
         i += 1
     return interp_cubic(traj.points[i], traj.points[i+1], t)
 
-MAX_BLEND = 0.1
-# Determines a blend for the given point that doesn't overlap with its neighbors.
-def compute_blend(traj, index):
-    # The first and last points have nothing to blend with.
-    if index == 0 or index == len(traj.points) - 1:
-        return 0.0
-
-    return 0.01
-
-    # The blend can take up to half the distance to the previous or
-    # next point.
-    min_diff = MAX_BLEND
-    q = traj.points[index].positions
-    qbefore = traj.points[index-1].positions
-    qafter = traj.points[index+1].positions
-    for j in range(len(traj.joint_names)):
-        min_diff = min(min_diff, abs(q[j] - qbefore[j]) / 2.0)
-        min_diff = min(min_diff, abs(q[j] - qafter[j]) / 2.0)
-    return min_diff
-
 class UR5TrajectoryFollower(object):
     RATE = 0.02
     def __init__(self, robot):
@@ -261,7 +262,6 @@ class UR5TrajectoryFollower(object):
         self.server = actionlib.ActionServer("follow_joint_trajectory",
                                              FollowJointTrajectoryAction,
                                              self.on_goal, self.on_cancel, auto_start=False)
-        self.robot.set_waypoint_finished_cb(self.on_waypoint_finished)
 
         self.goal_handle = None
         self.traj = None
@@ -272,7 +272,20 @@ class UR5TrajectoryFollower(object):
 
         self.update_timer = rospy.Timer(rospy.Duration(self.RATE), self._update)
 
+    def set_robot(self, robot):
+        # Cancels any goals in progress
+        if self.goal_handle:
+            self.goal_handle.set_canceled()
+            self.goal_handle = None
+        self.traj = None
+        self.robot = robot
+        if self.robot:
+            self.init_traj_from_robot()
+
+    # Sets the trajectory to remain stationary at the current position
+    # of the robot.
     def init_traj_from_robot(self):
+        if not self.robot: raise Exception("No robot connected")
         # Busy wait (avoids another mutex)
         state = self.robot.get_joint_states()
         while not state:
@@ -293,6 +306,12 @@ class UR5TrajectoryFollower(object):
 
     def on_goal(self, goal_handle):
         log("on_goal")
+
+        # Checks that the robot is connected
+        if not self.robot:
+            rospy.logerr("Received a goal, but the robot is not connected")
+            goal_handle.set_rejected()
+            return
 
         # Checks if the joints are just incorrect
         if set(goal_handle.get_goal().trajectory.joint_names) != set(JOINT_NAMES):
@@ -323,14 +342,11 @@ class UR5TrajectoryFollower(object):
             self.traj = goal_handle.get_goal().trajectory
             self.goal_handle.set_accepted()
 
-            print "New trajectory:"
-            print self.traj
-
     def on_cancel(self, goal_handle):
         log("on_cancel")
         if goal_handle == self.goal_handle:
             with self.following_lock:
-                # Uses the next 100ms of trajectory to slow to a stop
+                # Uses the next little bit of trajectory to slow to a stop
                 STOP_DURATION = 0.5
                 now = time.time()
                 point0 = sample_traj(self.traj, now - self.traj_t0)
@@ -350,130 +366,79 @@ class UR5TrajectoryFollower(object):
             goal_handle.set_canceled()
 
     def _update(self, event):
-        #t = time.time() - self.T0
-        #q = Q2[:]
-        #q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
-        #q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
-        #self.robot.send_servoj(999, q, 0.016)
-
-        if self.traj:
+        if self.robot and self.traj:
             now = time.time()
             if (now - self.traj_t0) <= self.traj.points[-1].time_from_start.to_sec():
                 setpoint = sample_traj(self.traj, now - self.traj_t0)
-                self.robot.send_servoj(999, setpoint.positions, 2 * self.RATE)
+                try:
+                    self.robot.send_servoj(999, setpoint.positions, 2 * self.RATE)
+                except socket.error:
+                    pass
             else:  # Off the end
                 if self.goal_handle:
                     self.goal_handle.set_succeeded()
                     self.goal_handle = None
 
-
-    # The URScript program sends back waypoint_finished messages,
-    # which trigger this callback.
-    def on_waypoint_finished(self, waypoint_id):
-        return
-        with self.following_lock:
-            log("Waypoint finished: %i" % waypoint_id)
-            if not self.goal_handle:
-                return
-            if waypoint_id < self.first_waypoint_id:
-                return
-            
-            index = waypoint_id - self.first_waypoint_id
-            if index != self.tracking_i:
-                rospy.logerr("Completed waypoint %i (id=%i), but tracking %i (id=%i)" % \
-                             (index, waypoint_id, self.tracking_i,
-                              self.first_waypoint_id + self.tracking_i))
-                # TODO: Probably need to fail here
-
-            traj = self.goal_handle.get_goal().trajectory
-            traj_len = len(traj.points)
-
-            # Checks if we've completed the trajectory
-            if index == traj_len - 1:
-                self.goal_handle.set_succeeded()
-                self.first_waypoint_id += traj_len
-                self.goal_handle = None
-
-            # Moves onto the next segment
-            self.tracking_i += 1
-            if self.pending_i + 1 < traj_len:
-                self.pending_i += 1
-                self.robot.send_movej(self.first_waypoint_id + self.pending_i,
-                                      traj.points[self.pending_i].positions,
-                                      t=get_segment_duration(traj, self.pending_i),
-                                      r=compute_blend(traj, self.pending_i))
-                print "New blend radius:", compute_blend(traj, self.pending_i)
-
-
 sock = None
 def main():
     global sock
     rospy.init_node('ur5_driver', disable_signals=True)
+    if rospy.get_param("use_sim_time", False):
+        rospy.logfatal("use_sim_time is set!!!")
+        sys.exit(1)
 
-    # Sends the program to the robot
-    sock = socket.create_connection((HOSTNAME, PORT))
-    with open('prog') as fin:
-        program = fin.read()
-        sock.sendall(program % {"driver_hostname": socket.getfqdn()})
-
-    if False:
-        print "Dump"
-        print "="*70
-        o = ""
-        while len(o) < 4096:
-            r = sock.recv(1024)
-            if not r: break
-            o = o + r
-        print o
-        
+    # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)
-
-    thread_commander = threading.Thread(name="CommanderHandler", target=server.handle_request)
+    thread_commander = threading.Thread(name="CommanderHandler", target=server.serve_forever)
     thread_commander.daemon = True
     thread_commander.start()
-
-    r = getConnectedRobot(wait=True)
-    print "Robot connected"
-
-    action_server = UR5TrajectoryFollower(r)
-    action_server.start()
-
+    
+    action_server = None
     try:
+        while True:
+            # Checks for disconnect
+            if getConnectedRobot(wait=False):
+                time.sleep(0.2)
+            else:
+                print "Disconnected.  Reconnecting"
+                if action_server:
+                    action_server.set_robot(None)
 
-        #r.send_servoj(1, Q1, 1.0)
-        #time.sleep(0.5)
-        #r.send_servoj(2, Q2, 1.0)
-        #time.sleep(0.2)
-        #r.send_servoj(3, Q3, 1.0)
-        #r.send_servoj(4, Q2, 1.0)
-        #time.sleep(0.5)
-        
-        #t0 = time.time()
-        #waypoint_id = 100
-        #while True:
-        #    t = time.time() - t0
-        #    q = Q2[:]
-        #    q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
-        #    q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
-        #    r.send_servoj(waypoint_id, q, 0.016)
-        #    waypoint_id += 1
-        #    #print "Servo:", t, q[0], q[1]
-        #    time.sleep(0.008)
-            
 
-        #log("movej Q1")
-        #r.send_movej(1, Q1, t=2.0)
-        #log("movej Q2")
-        #r.send_movej(2, Q2, t=1.0)
-        #time.sleep(3)
+                # Sends the program to the robot
+                sock = socket.create_connection((HOSTNAME, PORT))
+                with open('prog') as fin:
+                    program = fin.read()
+                    sock.sendall(program % {"driver_hostname": socket.getfqdn()})
 
-        #r.send_quit()
+                # Useful for determining if the robot failed to compile the program
+                if False:
+                    print "Dump"
+                    print "="*70
+                    o = ""
+                    while len(o) < 4096:
+                        r = sock.recv(1024)
+                        if not r: break
+                        o = o + r
+                    print o
 
-        # Waits for the threads to finish
-        joinAll([thread_commander])
+                rospy.loginfo("Waiting for the robot to connect back to the driver")
+                print "Commander thread:", thread_commander.is_alive()
+                r = getConnectedRobot(wait=True)
+                rospy.loginfo("Robot connected")
+
+                if action_server:
+                    action_server.set_robot(r)
+                else:
+                    action_server = UR5TrajectoryFollower(r)
+                    action_server.start()
+
     except KeyboardInterrupt:
-        r.send_quit()
-        rospy.signal_shutdown("KeyboardInterrupt")
+        try:
+            rospy.signal_shutdown("KeyboardInterrupt")
+            if r: r.send_quit()
+        except:
+            pass
         raise
 
 if __name__ == '__main__': main()
