@@ -413,7 +413,8 @@ def main():
     # Sends the program to the robot
     sock = socket.create_connection((HOSTNAME, PORT))
     with open('prog') as fin:
-        sock.sendall(fin.read())
+        program = fin.read()
+        sock.sendall(program % {"driver_hostname": socket.getfqdn()})
 
     if False:
         print "Dump"

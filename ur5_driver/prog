@@ -1,5 +1,5 @@
 def driverProg():
-  HOSTNAME = "10.0.2.97"
+  HOSTNAME = "%(driver_hostname)s"
   MSG_OUT = 1
   MSG_QUIT = 2
   MSG_JOINT_STATES = 3
