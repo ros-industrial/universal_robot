@@ -6,6 +6,7 @@ import datetime
 import socket, select
 import struct
 import traceback, code
+import optparse
 import SocketServer
 
 import rospy
@@ -14,8 +15,6 @@ from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
-HOSTNAME='ur-xx'
-HOSTNAME="10.0.1.20"
 PORT=30001
 
 MSG_OUT = 1
@@ -388,6 +387,13 @@ def main():
         rospy.logfatal("use_sim_time is set!!!")
         sys.exit(1)
 
+    # Parses command line arguments
+    parser = optparse.OptionParser(usage="usage: %prog robot_hostname")
+    (options, args) = parser.parse_args(rospy.myargv()[1:])
+    if len(args) != 1:
+        parser.error("You must specify the robot hostname")
+    robot_hostname = args[0]
+
     # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)
     thread_commander = threading.Thread(name="CommanderHandler", target=server.serve_forever)
@@ -408,7 +414,7 @@ def main():
                 rospy.loginfo("Programming the robot")
                 while True:
                 # Sends the program to the robot
-                    sock = socket.create_connection((HOSTNAME, PORT))
+                    sock = socket.create_connection((robot_hostname, PORT))
                     with open('prog') as fin:
                         program = fin.read()
                         sock.sendall(program % {"driver_hostname": socket.getfqdn()})
