@@ -2,7 +2,7 @@
   <arg name="monitor_robot_state" default="false"/>
   <arg name="allow_trajectory_execution" default="false"/>
 
-  <include file="$(find ur5_description)/launch/load.launch" />
+  <include file="$(find ur5_description)/launch/load_pretty.launch" />
   <!--<param name="robot_description" textfile="$(find ur5_description)/urdf/universal_or.dae" /-->
   <param name="robot_description_semantic" textfile="$(find ur5_moveit)/config/ur5.srdf" />
 
