@@ -1,0 +1,21 @@
+<package>
+  <description brief="ur5_moveit">
+
+     ur5_moveit
+
+  </description>
+  <author>Gil Jones</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ur5_moveit</url>
+  <depend package="kinematics_base"/>
+  <depend package="moveit_configuration_tools"/>
+  <depend package="pluginlib"/>
+  <depend package="ur5_description"/>
+  <export>
+    <kinematics_base plugin="${prefix}/kinematics_plugins.xml"/>
+  </export>
+
+</package>
+
+
