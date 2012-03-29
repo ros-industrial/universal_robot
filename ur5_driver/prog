@@ -106,7 +106,7 @@ def driverProg():
         servoj(q, 0, 0, dt)
         #send_out("Servoed")
       else:
-        send_out("Idle")
+        #send_out("Idle")
         sync()
       end
     end

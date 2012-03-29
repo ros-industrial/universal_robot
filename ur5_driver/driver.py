@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('ur5_driver')
 import time, sys, threading, math
+import copy
 import datetime
 import socket
 import struct
@@ -10,7 +11,7 @@ import rospy
 import actionlib
 from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
-from trajectory_msgs.msg import JointTrajectoryPoint
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 HOSTNAME='ur-xx'
 HOSTNAME="10.0.1.20"
@@ -159,6 +160,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
     def set_waypoint_finished_cb(self, cb):
         self.waypoint_finished_cb = cb
+
+    # Returns the last JointState message sent out
+    def get_joint_states(self):
+        return self.last_joint_states
     
 
 class TCPServer(SocketServer.TCPServer):
@@ -194,6 +199,39 @@ def reorder_traj_joints(traj, joint_names):
     traj.joint_names = joint_names
     traj.points = new_points
 
+def interp_cubic(p0, p1, t_abs):
+    T = (p1.time_from_start - p0.time_from_start).to_sec()
+    t = t_abs - p0.time_from_start.to_sec()
+    q = [0] * 6
+    qdot = [0] * 6
+    qddot = [0] * 6
+    for i in range(len(p0.positions)):
+        a = p0.positions[i]
+        b = p0.velocities[i]
+        c = (-3*p0.positions[i] + 3*p1.positions[i] - 2*T*p0.velocities[i] - T*p1.velocities[i]) / T**2
+        d = (2*p0.positions[i] - 2*p1.positions[i] + T*p0.velocities[i] + T*p1.velocities[i]) / T**3
+
+        q[i] = a + b*t + c*t**2 + d*t**3
+        qdot[i] = b + 2*c*t + 3*d*t**2
+        qddot[i] = 2*c + 6*d*t
+    return JointTrajectoryPoint(q, qdot, qddot, rospy.Duration(t_abs))
+
+# Returns (q, qdot, qddot) for sampling the JointTrajectory at time t.
+# The time t is the time since the trajectory was started.
+def sample_traj(traj, t):
+    # First point
+    if t <= 0.0:
+        return copy.deepcopy(traj.points[0])
+    # Last point
+    if t >= traj.points[-1].time_from_start.to_sec():
+        return copy.deepcopy(traj.points[-1])
+    
+    # Finds the (middle) segment containing t
+    i = 0
+    while traj.points[i+1].time_from_start.to_sec() < t:
+        i += 1
+    return interp_cubic(traj.points[i], traj.points[i+1], t)
+
 MAX_BLEND = 0.1
 # Determines a blend for the given point that doesn't overlap with its neighbors.
 def compute_blend(traj, index):
@@ -215,7 +253,7 @@ def compute_blend(traj, index):
     return min_diff
 
 class UR5TrajectoryFollower(object):
-    RATE = 0.01
+    RATE = 0.02
     def __init__(self, robot):
         self.following_lock = threading.Lock()
         self.T0 = time.time()
@@ -226,14 +264,31 @@ class UR5TrajectoryFollower(object):
         self.robot.set_waypoint_finished_cb(self.on_waypoint_finished)
 
         self.goal_handle = None
+        self.traj = None
+        self.traj_t0 = 0.0
         self.first_waypoint_id = 10
         self.tracking_i = 0
         self.pending_i = 0
-        self.goal_start_time = rospy.Time(0)
 
         self.update_timer = rospy.Timer(rospy.Duration(self.RATE), self._update)
 
+    def init_traj_from_robot(self):
+        # Busy wait (avoids another mutex)
+        state = self.robot.get_joint_states()
+        while not state:
+            time.sleep(0.1)
+            state = self.robot.get_joint_states()
+        self.traj_t0 = time.time()
+        self.traj = JointTrajectory()
+        self.traj.joint_names = JOINT_NAMES
+        self.traj.points = [JointTrajectoryPoint(
+            positions = state.position,
+            velocities = [0] * 6,
+            accelerations = [0] * 6,
+            time_from_start = rospy.Duration(0.0))]
+
     def start(self):
+        self.init_traj_from_robot()
         self.server.start()
 
     def on_goal(self, goal_handle):
@@ -256,44 +311,66 @@ class UR5TrajectoryFollower(object):
                 self.first_waypoint_id += len(self.goal_handle.get_goal().trajectory.points)
                 self.goal_handle = None
 
-            self.goal_handle = goal_handle
-            self.tracking_i = 0
-            self.pending_i = 0
-            self.goal_start_time = rospy.get_rostime()
+            # Inserts the current setpoint at the head of the trajectory
+            now = time.time()
+            point0 = sample_traj(self.traj, now)
+            point0.time_from_start = rospy.Duration(0.0)
+            goal_handle.get_goal().trajectory.points.insert(0, point0)
+            self.traj_t0 = now
 
-            # Sends a tracking point and a pending point to the robot
+            # Replaces the goal
+            self.goal_handle = goal_handle
+            self.traj = goal_handle.get_goal().trajectory
             self.goal_handle.set_accepted()
-            traj = self.goal_handle.get_goal().trajectory
-            self.robot.send_movej(self.first_waypoint_id, traj.points[0].positions,
-                                  t=get_segment_duration(traj, 0))
-            self.robot.send_movej(self.first_waypoint_id + 1, traj.points[1].positions,
-                                  t=get_segment_duration(traj, 1),
-                                  r=compute_blend(traj, 1))
-            self.tracking_i = 0
-            self.pending_i = 1
+
+            print "New trajectory:"
+            print self.traj
 
     def on_cancel(self, goal_handle):
         log("on_cancel")
         if goal_handle == self.goal_handle:
             with self.following_lock:
-                self.robot.send_stopj()
+                # Uses the next 100ms of trajectory to slow to a stop
+                STOP_DURATION = 0.5
+                now = time.time()
+                point0 = sample_traj(self.traj, now - self.traj_t0)
+                point0.time_from_start = rospy.Duration(0.0)
+                point1 = sample_traj(self.traj, now - self.traj_t0 + STOP_DURATION)
+                point1.velocities = [0] * 6
+                point1.accelerations = [0] * 6
+                point1.time_from_start = rospy.Duration(STOP_DURATION)
+                self.traj_t0 = now
+                self.traj = JointTrajectory()
+                self.traj.joint_names = JOINT_NAMES
+                self.traj.points = [point0, point1]
+                
                 self.goal_handle.set_canceled()
-                self.first_waypoint_id += len(self.goal_handle.get_goal().trajectory.points)
                 self.goal_handle = None
         else:
             goal_handle.set_canceled()
 
     def _update(self, event):
-        t = time.time() - self.T0
-        q = Q2[:]
-        q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
-        q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
-        self.robot.send_servoj(999, q, 0.016)
+        #t = time.time() - self.T0
+        #q = Q2[:]
+        #q[0] = Q2[0] + 0.2 * math.sin(0.25 * t*(2*math.pi))
+        #q[1] = Q2[1] - 0.2 + 0.2 * math.cos(0.25 * t*(2*math.pi))
+        #self.robot.send_servoj(999, q, 0.016)
+
+        if self.traj:
+            now = time.time()
+            if (now - self.traj_t0) <= self.traj.points[-1].time_from_start.to_sec():
+                setpoint = sample_traj(self.traj, now - self.traj_t0)
+                self.robot.send_servoj(999, setpoint.positions, 2 * self.RATE)
+            else:  # Off the end
+                if self.goal_handle:
+                    self.goal_handle.set_succeeded()
+                    self.goal_handle = None
 
 
     # The URScript program sends back waypoint_finished messages,
     # which trigger this callback.
     def on_waypoint_finished(self, waypoint_id):
+        return
         with self.following_lock:
             log("Waypoint finished: %i" % waypoint_id)
             if not self.goal_handle:
