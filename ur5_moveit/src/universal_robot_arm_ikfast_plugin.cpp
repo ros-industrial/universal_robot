@@ -191,7 +191,7 @@ public:
         std::vector<double> sol;
         ik_solver_->getSolution(s,sol);
         bool obeys_limits = true;
-        ROS_INFO_STREAM("Got " << numsol << " solutions");
+        ROS_DEBUG_STREAM("Got " << numsol << " solutions");
         for(unsigned int i = 0; i < sol.size(); i++) {
           if(joint_has_limits_vector_[i] && (sol[i] < joint_min_vector_[i] || sol[i] > joint_max_vector_[i])) {
             obeys_limits = false;
@@ -206,7 +206,7 @@ public:
         }
       }
     } else {
-      ROS_INFO_STREAM("No ik solution");
+      ROS_DEBUG_STREAM("No ik solution");
     }
 	
     error_code.val = error_code.NO_IK_SOLUTION; 

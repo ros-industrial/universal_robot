@@ -2,8 +2,6 @@
 
 <robot name="universal_robot">
 
-   <virtual_joint name="world_joint" type="floating" parent_frame="odom_combined" child_link="base_link"/> 
-
    <group name="arm">
       <chain base_link="base_link" tip_link="wrist_3_link"/>
    </group>
