@@ -1,4 +1,22 @@
 default_collision_operations:
+  - object1: world_link
+    object2: base_1_link
+    operation: disable  # Adjacent in collision
+  - object1: base_1_link
+    object2: base_2_link
+    operation: disable  # Adjacent in collision
+  - object1: base_2_link
+    object2: base_3_link
+    operation: disable  # Adjacent in collision
+  - object1: base_3_link
+    object2: base_4_link
+    operation: disable  # Adjacent in collision
+  - object1: base_4_link
+    object2: base_5_link
+    operation: disable  # Adjacent in collision
+  - object1: base_5_link
+    object2: base_link
+    operation: disable  # Adjacent in collision
   - object1: base_link
     object2: shoulder_link
     operation: disable  # Adjacent in collision
@@ -26,6 +44,81 @@ default_collision_operations:
   - object1: upper_arm_link
     object2: shoulder_collision_link
     operation: disable  # Adjacent in collision
+  - object1: base_3_link
+    object2: base_link
+    operation: disable  # Always in collision
+  - object1: shoulder_collision_link
+    object2: shoulder_link
+    operation: disable  # Always in collision
+  - object1: base_1_link
+    object2: base_3_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: base_4_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: base_5_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: base_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: elbow_collision_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: shoulder_collision_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: shoulder_link
+    operation: disable  # Never in collision
+  - object1: base_1_link
+    object2: upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_2_link
+    object2: base_4_link
+    operation: disable  # Never in collision
+  - object1: base_2_link
+    object2: base_5_link
+    operation: disable  # Never in collision
+  - object1: base_2_link
+    object2: base_link
+    operation: disable  # Never in collision
+  - object1: base_2_link
+    object2: shoulder_collision_link
+    operation: disable  # Never in collision
+  - object1: base_2_link
+    object2: shoulder_link
+    operation: disable  # Never in collision
+  - object1: base_3_link
+    object2: base_5_link
+    operation: disable  # Never in collision
+  - object1: base_3_link
+    object2: shoulder_collision_link
+    operation: disable  # Never in collision
+  - object1: base_3_link
+    object2: shoulder_link
+    operation: disable  # Never in collision
+  - object1: base_4_link
+    object2: base_link
+    operation: disable  # Never in collision
+  - object1: base_4_link
+    object2: shoulder_collision_link
+    operation: disable  # Never in collision
+  - object1: base_4_link
+    object2: shoulder_link
+    operation: disable  # Never in collision
+  - object1: base_5_link
+    object2: elbow_collision_link
+    operation: disable  # Never in collision
+  - object1: base_5_link
+    object2: shoulder_collision_link
+    operation: disable  # Never in collision
+  - object1: base_5_link
+    object2: shoulder_link
+    operation: disable  # Never in collision
+  - object1: base_5_link
+    object2: upper_arm_link
+    operation: disable  # Never in collision
   - object1: base_link
     object2: elbow_collision_link
     operation: disable  # Never in collision
@@ -54,37 +147,13 @@ default_collision_operations:
     object2: wrist_3_link
     operation: disable  # Never in collision
   - object1: forearm_link
-    object2: shoulder_collision_link
-    operation: disable  # Never in collision
-  - object1: forearm_link
-    object2: shoulder_link
-    operation: disable  # Never in collision
-  - object1: forearm_link
     object2: wrist_2_link
     operation: disable  # Never in collision
   - object1: forearm_link
-    object2: wrist_3_link
-    operation: disable  # Never in collision
-  - object1: shoulder_collision_link
-    object2: shoulder_link
-    operation: disable  # Never in collision
-  - object1: shoulder_collision_link
-    object2: wrist_1_link
-    operation: disable  # Never in collision
-  - object1: shoulder_collision_link
-    object2: wrist_2_link
-    operation: disable  # Never in collision
-  - object1: shoulder_collision_link
     object2: wrist_3_link
     operation: disable  # Never in collision
   - object1: shoulder_link
     object2: wrist_1_link
-    operation: disable  # Never in collision
-  - object1: shoulder_link
-    object2: wrist_2_link
-    operation: disable  # Never in collision
-  - object1: shoulder_link
-    object2: wrist_3_link
     operation: disable  # Never in collision
   - object1: upper_arm_link
     object2: wrist_1_link
