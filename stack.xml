@@ -6,5 +6,8 @@
   <url>http://ros.org/wiki/universal_robot</url>
 
   <depend stack="robot_model" /> 
-
+  <depend stack="pluginlib" /> 
+  <depend stack="arm_navigation" /> 
+  <depend stack="arm_navigation" /> 
+  
 </stack>
