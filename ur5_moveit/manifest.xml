@@ -9,7 +9,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/ur5_moveit</url>
   <depend package="kinematics_base"/>
-  <!--depend package="moveit_configuration_tools"/-->
+  <depend package="moveit_configuration_tools"/>
   <depend package="pluginlib"/>
   <depend package="ur5_description"/>
   <export>
