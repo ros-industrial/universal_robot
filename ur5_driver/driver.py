@@ -15,7 +15,10 @@ from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
-PORT=30001
+from deserialize import RobotState, RobotMode
+
+PORT=30002
+REVERSE_PORT = 50001
 
 MSG_OUT = 1
 MSG_QUIT = 2
@@ -40,7 +43,7 @@ connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
 pub_joint_states = rospy.Publisher('joint_states', JointState)
-dump_state = open('dump_state', 'wb')
+#dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
 
@@ -57,6 +60,106 @@ def dumpstacks():
 
 def log(s):
     print "[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s)
+
+
+class UR5Connection(object):
+    TIMEOUT = 1.0
+    
+    DISCONNECTED = 0
+    CONNECTED = 1
+    READY_TO_PROGRAM = 2
+    EXECUTING = 3
+    
+    def __init__(self, hostname, port, program):
+        self.__thread = None
+        self.__sock = None
+        self.robot_state = self.DISCONNECTED
+        self.hostname = hostname
+        self.port = port
+        self.program = program
+        self.last_state = None
+
+    def connect(self):
+        if self.__sock:
+            self.disconnect()
+        self.__buf = ""
+        self.robot_state = self.CONNECTED
+        self.__sock = socket.create_connection((self.hostname, self.port))
+        self.__keep_running = True
+        self.__thread = threading.Thread(name="UR5Connection", target=self.__run)
+        self.__thread.daemon = True
+        self.__thread.start()
+
+    def send_program(self):
+        assert self.robot_state == self.READY_TO_PROGRAM
+        rospy.loginfo("Programming the robot at %s" % self.hostname)
+        self.__sock.sendall(self.program)
+        self.robot_state = self.EXECUTING
+        
+    def disconnect(self):
+        if self.__thread:
+            self.__keep_running = False
+            self.__thread.join()
+            self.__thread = None
+        if self.__sock:
+            self.__sock.close()
+            self.__sock = None
+        self.last_state = None
+        self.robot_state = self.DISCONNECTED
+
+    def ready_to_program(self):
+        return (self.robot_state == self.READY_TO_PROGRAM)
+
+    def __trigger_disconnected(self):
+        log("Robot disconnected")
+        self.robot_state = self.DISCONNECTED
+    def __trigger_ready_to_program(self):
+        rospy.loginfo("Robot ready to program")
+    def __trigger_halted(self):
+        log("Halted")
+
+    def __on_packet(self, buf):
+        state = RobotState.unpack(buf)
+        self.last_state = state
+        #import deserialize; deserialize.pstate(self.last_state)
+
+        #log("Packet.  Mode=%s" % state.robot_mode_data.robot_mode)
+
+        can_execute = (state.robot_mode_data.robot_mode in [RobotMode.READY, RobotMode.RUNNING])
+        #print "can execute:", can_execute, "  state:", self.robot_state
+        if self.robot_state == self.CONNECTED:
+            if can_execute:
+                self.__trigger_ready_to_program()
+                self.robot_state = self.READY_TO_PROGRAM
+        elif self.robot_state == self.READY_TO_PROGRAM:
+            if not can_execute:
+                self.robot_state = self.CONNECTED
+        elif self.robot_state == self.EXECUTING:
+            if not can_execute:
+                self.__trigger_halted()
+                self.robot_state = self.CONNECTED
+
+    def __run(self):
+        while self.__keep_running:
+            r, _, _ = select.select([self.__sock], [], [], self.TIMEOUT)
+            if r:
+                more = self.__sock.recv(4096)
+                if more:
+                    self.__buf = self.__buf + more
+
+                    # Attempts to extract a packet
+                    packet_length, ptype = struct.unpack_from("!IB", self.__buf)
+                    if packet_length >= len(self.__buf):
+                        packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
+                        self.__on_packet(packet)
+                else:
+                    self.__trigger_disconnected()
+                    self.__keep_running = False
+                    
+            else:
+                self.__trigger_disconnected()
+                self.__keep_running = False
+
 
 def setConnectedRobot(r):
     global connected_robot, connected_robot_lock
@@ -379,9 +482,7 @@ class UR5TrajectoryFollower(object):
                     self.goal_handle.set_succeeded()
                     self.goal_handle = None
 
-sock = None
 def main():
-    global sock
     rospy.init_node('ur5_driver', disable_signals=True)
     if rospy.get_param("use_sim_time", False):
         rospy.logfatal("use_sim_time is set!!!")
@@ -399,6 +500,11 @@ def main():
     thread_commander = threading.Thread(name="CommanderHandler", target=server.serve_forever)
     thread_commander.daemon = True
     thread_commander.start()
+
+    with open('prog') as fin:
+        program = fin.read() % {"driver_hostname": socket.getfqdn()}
+    connection = UR5Connection(robot_hostname, PORT, program)
+    connection.connect()
     
     action_server = None
     try:
@@ -413,22 +519,11 @@ def main():
 
                 rospy.loginfo("Programming the robot")
                 while True:
-                # Sends the program to the robot
-                    sock = socket.create_connection((robot_hostname, PORT))
-                    with open('prog') as fin:
-                        program = fin.read()
-                        sock.sendall(program % {"driver_hostname": socket.getfqdn()})
-
-                    # Useful for determining if the robot failed to compile the program
-                    if False:
-                        print "Dump"
-                        print "="*70
-                        o = ""
-                        while len(o) < 4096:
-                            r = sock.recv(1024)
-                            if not r: break
-                            o = o + r
-                        print o
+                    # Sends the program to the robot
+                    while not connection.ready_to_program():
+                        print "Waiting to program"
+                        time.sleep(1.0)
+                    connection.send_program()
 
                     r = getConnectedRobot(wait=True, timeout=1.0)
                     if r:
