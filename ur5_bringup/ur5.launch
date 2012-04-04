@@ -1,0 +1,10 @@
+<launch>
+
+  <!-- robot model -->
+  <include file="$(find ur5_description)/launch/load.launch" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <!-- driver -->
+  <node name="ur5_driver" pkg="ur5_driver" type="driver.py" />
+   
+</launch>
