@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<robot name="universal_robot">
-
-   <group name="arm">
-      <chain base_link="link0" tip_link="link6"/>
-   </group>
-
-</robot>
