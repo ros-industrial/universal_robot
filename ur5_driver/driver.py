@@ -91,7 +91,7 @@ class UR5Connection(object):
         self.__thread.start()
 
     def send_program(self):
-        assert self.robot_state == self.READY_TO_PROGRAM
+        assert self.robot_state in [self.READY_TO_PROGRAM, self.EXECUTING]
         rospy.loginfo("Programming the robot at %s" % self.hostname)
         self.__sock.sendall(self.program)
         self.robot_state = self.EXECUTING
@@ -108,7 +108,7 @@ class UR5Connection(object):
         self.robot_state = self.DISCONNECTED
 
     def ready_to_program(self):
-        return (self.robot_state == self.READY_TO_PROGRAM)
+        return self.robot_state in [self.READY_TO_PROGRAM, self.EXECUTING]
 
     def __trigger_disconnected(self):
         log("Robot disconnected")
@@ -125,8 +125,23 @@ class UR5Connection(object):
 
         #log("Packet.  Mode=%s" % state.robot_mode_data.robot_mode)
 
+        # If the urscript program is not executing, then the driver
+        # needs to publish joint states using information from the
+        # robot state packet.
+        if self.robot_state != self.EXECUTING:
+            msg = JointState()
+            msg.header.stamp = rospy.get_rostime()
+            msg.header.frame_id = "From binary state data"
+            msg.name = JOINT_NAMES
+            msg.position = [jd.q_actual for jd in state.joint_data]
+            msg.velocity = [jd.qd_actual for jd in state.joint_data]
+            msg.effort = [0]*6
+            pub_joint_states.publish(msg)
+            self.last_joint_states = msg
+
+        # Updates the state machine that determines whether we can program the robot.
         can_execute = (state.robot_mode_data.robot_mode in [RobotMode.READY, RobotMode.RUNNING])
-        #print "can execute:", can_execute, "  state:", self.robot_state
+        log("Mode = %i,  can_execute = %s" % (state.robot_mode_data.robot_mode, can_execute))
         if self.robot_state == self.CONNECTED:
             if can_execute:
                 self.__trigger_ready_to_program()
