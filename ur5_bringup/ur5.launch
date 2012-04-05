@@ -7,4 +7,9 @@
   <!-- driver -->
   <node name="ur5_driver" pkg="ur5_driver" type="driver.py" />
    
+  <!-- TF Buffer Server -->
+  <node pkg="tf2_ros" type="buffer_server" name="tf2_buffer_server" output="screen">
+    <param name="buffer_size" value="120.0"/>
+  </node>
+
 </launch>

@@ -9,6 +9,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/ur5_bringup</url>
 
+  <depend package="tf2_ros" />
   <depend package="ur5_driver" />
   <depend package="ur5_description" />
 
