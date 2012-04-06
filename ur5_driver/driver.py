@@ -17,6 +17,8 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from deserialize import RobotState, RobotMode
 
+prevent_programming = False
+
 PORT=30002
 REVERSE_PORT = 50001
 
@@ -91,6 +93,10 @@ class UR5Connection(object):
         self.__thread.start()
 
     def send_program(self):
+        global prevent_programming
+        if prevent_programming:
+            rospy.loginfo("Programming is currently prevented")
+            return
         assert self.robot_state in [self.READY_TO_PROGRAM, self.EXECUTING]
         rospy.loginfo("Programming the robot at %s" % self.hostname)
         self.__sock.sendall(self.program)
@@ -141,7 +147,6 @@ class UR5Connection(object):
 
         # Updates the state machine that determines whether we can program the robot.
         can_execute = (state.robot_mode_data.robot_mode in [RobotMode.READY, RobotMode.RUNNING])
-        log("Mode = %i,  can_execute = %s" % (state.robot_mode_data.robot_mode, can_execute))
         if self.robot_state == self.CONNECTED:
             if can_execute:
                 self.__trigger_ready_to_program()
@@ -502,6 +507,8 @@ def main():
     if rospy.get_param("use_sim_time", False):
         rospy.logfatal("use_sim_time is set!!!")
         sys.exit(1)
+    global prevent_programming
+    prevent_programming = rospy.get_param("prevent_programming", False)
 
     # Parses command line arguments
     parser = optparse.OptionParser(usage="usage: %prog robot_hostname")
