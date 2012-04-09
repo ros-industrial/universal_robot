@@ -523,7 +523,7 @@ def main():
     thread_commander.daemon = True
     thread_commander.start()
 
-    with open('prog') as fin:
+    with open(roslib.packages.get_pkg_dir('ur5_driver') + '/prog') as fin:
         program = fin.read() % {"driver_hostname": socket.getfqdn()}
     connection = UR5Connection(robot_hostname, PORT, program)
     connection.connect()
