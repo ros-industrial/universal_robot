@@ -426,6 +426,7 @@ class UR5TrajectoryFollower(object):
     def start(self):
         self.init_traj_from_robot()
         self.server.start()
+        print "The action server for this driver has been started"
 
     def on_goal(self, goal_handle):
         log("on_goal")
