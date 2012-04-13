@@ -12,6 +12,7 @@
   <depend package="rospy" />
   <depend package="actionlib" />
   <depend package="control_msgs" />
+  <depend package="sensor_msgs" />
 
 </package>
 
