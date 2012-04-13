@@ -535,6 +535,7 @@ def main():
             # Checks for disconnect
             if getConnectedRobot(wait=False):
                 time.sleep(0.2)
+                prevent_programming = rospy.get_param("prevent_programming", False)
             else:
                 print "Disconnected.  Reconnecting"
                 if action_server:
@@ -546,6 +547,7 @@ def main():
                     while not connection.ready_to_program():
                         print "Waiting to program"
                         time.sleep(1.0)
+                    prevent_programming = rospy.get_param("prevent_programming", False)
                     connection.send_program()
 
                     r = getConnectedRobot(wait=True, timeout=1.0)
@@ -561,6 +563,7 @@ def main():
 
     except KeyboardInterrupt:
         try:
+            r = getConnectedRobot(wait=False)
             rospy.signal_shutdown("KeyboardInterrupt")
             if r: r.send_quit()
         except:
