@@ -10,5 +10,6 @@
   <depend stack="actionlib" /> 
   <depend stack="ros_comm" /> 
   <depend stack="control" /> 
+  <depend stack="common_msgs" /> 
   
 </stack>
