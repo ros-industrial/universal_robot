@@ -71,7 +71,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="shoulder_pan_joint" type="revolute">
+  <joint name="${prefix}shoulder_pan_joint" type="revolute">
     <parent link="${prefix}base_link" />
     <child link = "${prefix}shoulder_link" />
     <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
@@ -99,7 +99,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="shoulder_lift_joint" type="revolute">
+  <joint name="${prefix}shoulder_lift_joint" type="revolute">
     <parent link="${prefix}shoulder_link" />
     <child link = "${prefix}upper_arm_link" />
     <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
@@ -128,7 +128,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="elbow_joint" type="revolute">
+  <joint name="${prefix}elbow_joint" type="revolute">
     <parent link="${prefix}upper_arm_link" />
     <child link = "${prefix}forearm_link" />
     <origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
@@ -156,7 +156,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="wrist_1_joint" type="revolute">
+  <joint name="${prefix}wrist_1_joint" type="revolute">
     <parent link="${prefix}forearm_link" />
     <child link = "${prefix}wrist_1_link" />
     <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
@@ -185,7 +185,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="wrist_2_joint" type="revolute">
+  <joint name="${prefix}wrist_2_joint" type="revolute">
     <parent link="${prefix}wrist_1_link" />
     <child link = "${prefix}wrist_2_link" />
     <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
@@ -214,7 +214,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="wrist_3_joint" type="revolute">
+  <joint name="${prefix}wrist_3_joint" type="revolute">
     <parent link="${prefix}wrist_2_link" />
     <child link = "${prefix}wrist_3_link" />
     <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
@@ -242,7 +242,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
   
-  <joint name="ee_fixed_joint" type="fixed">
+  <joint name="${prefix}ee_fixed_joint" type="fixed">
     <parent link="${prefix}wrist_3_link" />
     <child link = "${prefix}ee_link" />
     <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />    
@@ -253,7 +253,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
 
   <!-- Extra links for collision model -->
-  <joint name="shoulder_collision_joint" type="fixed">
+  <joint name="${prefix}shoulder_collision_joint" type="fixed">
     <parent link="${prefix}upper_arm_link" />
     <child link = "${prefix}shoulder_collision_link" />
   </joint>
@@ -266,7 +266,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </collision>
   </link>
 
-  <joint name="elbow_collision_joint" type="fixed">
+  <joint name="${prefix}elbow_collision_joint" type="fixed">
     <parent link="${prefix}upper_arm_link" />
     <child link = "${prefix}elbow_collision_link" />
   </joint>
