@@ -1,0 +1,15 @@
+<package>
+  <description brief="ur5_gazebo">
+
+     ur5_gazebo
+
+  </description>
+  <author>Alexander Bubeck</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ur5_gazebo</url>
+  <depend package="ur5_description"/>
+
+</package>
+
+
