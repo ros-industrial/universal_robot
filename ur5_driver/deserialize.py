@@ -186,8 +186,13 @@ class RobotState(object):
     @staticmethod
     def unpack(buf):
         length, mtype = struct.unpack_from("!IB", buf)
-        assert length == len(buf)
-        assert mtype == 16
+        if length != len(buf):
+            raise Exception("Could not unpack packet: length field is incorrect")
+        if mtype != 16:
+            if mtype == 20:
+                print "Likely a syntax error:"
+                print buf[:2048]
+            raise Exception("Fatal error when unpacking RobotState packet")
 
         rs = RobotState()
         offset = 5

@@ -64,6 +64,12 @@ def log(s):
     print "[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s)
 
 
+RESET_PROGRAM = '''def resetProg():
+  sleep(0.0)
+end
+'''
+#RESET_PROGRAM = ''
+    
 class UR5Connection(object):
     TIMEOUT = 1.0
     
@@ -101,6 +107,9 @@ class UR5Connection(object):
         rospy.loginfo("Programming the robot at %s" % self.hostname)
         self.__sock.sendall(self.program)
         self.robot_state = self.EXECUTING
+
+    def send_reset_program(self):
+        self.__sock.sendall(RESET_PROGRAM)
         
     def disconnect(self):
         if self.__thread:
@@ -206,7 +215,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
             if r:
                 more = self.request.recv(4096)
                 if not more:
-                    raise EOF()
+                    raise EOF("EOF on recv")
                 return more
             else:
                 if self.last_joint_states and \
@@ -259,7 +268,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     self.last_joint_states = msg
                 elif mtype == MSG_QUIT:
                     print "Quitting"
-                    raise EOF()
+                    raise EOF("Received quit")
                 elif mtype == MSG_WAYPOINT_FINISHED:
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
@@ -271,8 +280,8 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
                 if not buf:
                     buf = buf + self.recv_more()
-        except EOF:
-            print "Connection closed (command)"
+        except EOF, ex:
+            print "Connection closed (command):", ex
             setConnectedRobot(None)
 
     def send_quit(self):
@@ -528,6 +537,7 @@ def main():
         program = fin.read() % {"driver_hostname": socket.getfqdn()}
     connection = UR5Connection(robot_hostname, PORT, program)
     connection.connect()
+    connection.send_reset_program()
     
     action_server = None
     try:
@@ -536,6 +546,9 @@ def main():
             if getConnectedRobot(wait=False):
                 time.sleep(0.2)
                 prevent_programming = rospy.get_param("prevent_programming", False)
+                if prevent_programming:
+                    print "Programming now prevented"
+                    connection.send_reset_program()
             else:
                 print "Disconnected.  Reconnecting"
                 if action_server:
