@@ -519,7 +519,6 @@ def main():
         sys.exit(1)
     global prevent_programming
     prevent_programming = rospy.get_param("prevent_programming", False)
-    global prefix
     prefix = rospy.get_param("~prefix", "")
     print "Setting prefix to %s" % prefix
     global joint_names
