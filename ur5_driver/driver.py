@@ -541,7 +541,7 @@ def main():
     
     action_server = None
     try:
-        while True:
+        while not rospy.is_shutdown():
             # Checks for disconnect
             if getConnectedRobot(wait=False):
                 time.sleep(0.2)
