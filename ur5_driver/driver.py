@@ -147,7 +147,7 @@ class UR5Connection(object):
             msg = JointState()
             msg.header.stamp = rospy.get_rostime()
             msg.header.frame_id = "From binary state data"
-            msg.name = JOINT_NAMES
+            msg.name = joint_names
             msg.position = [jd.q_actual for jd in state.joint_data]
             msg.velocity = [jd.qd_actual for jd in state.joint_data]
             msg.effort = [0]*6
@@ -260,7 +260,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
                     msg = JointState()
                     msg.header.stamp = rospy.get_rostime()
-                    msg.name = JOINT_NAMES
+                    msg.name = joint_names
                     msg.position = state[:6]
                     msg.velocity = state[6:12]
                     msg.effort = state[12:18]
@@ -425,7 +425,7 @@ class UR5TrajectoryFollower(object):
             state = self.robot.get_joint_states()
         self.traj_t0 = time.time()
         self.traj = JointTrajectory()
-        self.traj.joint_names = JOINT_NAMES
+        self.traj.joint_names = joint_names
         self.traj.points = [JointTrajectoryPoint(
             positions = state.position,
             velocities = [0] * 6,
@@ -447,14 +447,14 @@ class UR5TrajectoryFollower(object):
             return
 
         # Checks if the joints are just incorrect
-        if set(goal_handle.get_goal().trajectory.joint_names) != set(JOINT_NAMES):
+        if set(goal_handle.get_goal().trajectory.joint_names) != set(joint_names):
             rospy.logerr("Received a goal with incorrect joint names: (%s)" % \
                          ', '.join(goal_handle.get_goal().trajectory.joint_names))
             goal_handle.set_rejected()
             return
 
-        # Orders the joints of the trajectory according to JOINT_NAMES
-        reorder_traj_joints(goal_handle.get_goal().trajectory, JOINT_NAMES)
+        # Orders the joints of the trajectory according to joint_names
+        reorder_traj_joints(goal_handle.get_goal().trajectory, joint_names)
                 
         with self.following_lock:
             if self.goal_handle:
@@ -490,7 +490,7 @@ class UR5TrajectoryFollower(object):
                 point1.time_from_start = rospy.Duration(STOP_DURATION)
                 self.traj_t0 = now
                 self.traj = JointTrajectory()
-                self.traj.joint_names = JOINT_NAMES
+                self.traj.joint_names = joint_names
                 self.traj.points = [point0, point1]
                 
                 self.goal_handle.set_canceled()
@@ -519,6 +519,12 @@ def main():
         sys.exit(1)
     global prevent_programming
     prevent_programming = rospy.get_param("prevent_programming", False)
+    global prefix
+    prefix = rospy.get_param("~prefix", "")
+    print "Setting prefix to %s" % prefix
+    global joint_names
+    joint_names = [prefix + name for name in JOINT_NAMES]
+
 
     # Parses command line arguments
     parser = optparse.OptionParser(usage="usage: %prog robot_hostname")
