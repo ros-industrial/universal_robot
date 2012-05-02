@@ -64,6 +64,12 @@ def log(s):
     print "[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s)
 
 
+RESET_PROGRAM = '''def resetProg():
+  sleep(0.0)
+end
+'''
+#RESET_PROGRAM = ''
+    
 class UR5Connection(object):
     TIMEOUT = 1.0
     
@@ -101,6 +107,9 @@ class UR5Connection(object):
         rospy.loginfo("Programming the robot at %s" % self.hostname)
         self.__sock.sendall(self.program)
         self.robot_state = self.EXECUTING
+
+    def send_reset_program(self):
+        self.__sock.sendall(RESET_PROGRAM)
         
     def disconnect(self):
         if self.__thread:
@@ -138,7 +147,7 @@ class UR5Connection(object):
             msg = JointState()
             msg.header.stamp = rospy.get_rostime()
             msg.header.frame_id = "From binary state data"
-            msg.name = JOINT_NAMES
+            msg.name = joint_names
             msg.position = [jd.q_actual for jd in state.joint_data]
             msg.velocity = [jd.qd_actual for jd in state.joint_data]
             msg.effort = [0]*6
@@ -206,7 +215,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
             if r:
                 more = self.request.recv(4096)
                 if not more:
-                    raise EOF()
+                    raise EOF("EOF on recv")
                 return more
             else:
                 if self.last_joint_states and \
@@ -251,7 +260,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
                     msg = JointState()
                     msg.header.stamp = rospy.get_rostime()
-                    msg.name = JOINT_NAMES
+                    msg.name = joint_names
                     msg.position = state[:6]
                     msg.velocity = state[6:12]
                     msg.effort = state[12:18]
@@ -259,7 +268,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     self.last_joint_states = msg
                 elif mtype == MSG_QUIT:
                     print "Quitting"
-                    raise EOF()
+                    raise EOF("Received quit")
                 elif mtype == MSG_WAYPOINT_FINISHED:
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
@@ -271,8 +280,8 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
                 if not buf:
                     buf = buf + self.recv_more()
-        except EOF:
-            print "Connection closed (command)"
+        except EOF, ex:
+            print "Connection closed (command):", ex
             setConnectedRobot(None)
 
     def send_quit(self):
@@ -416,7 +425,7 @@ class UR5TrajectoryFollower(object):
             state = self.robot.get_joint_states()
         self.traj_t0 = time.time()
         self.traj = JointTrajectory()
-        self.traj.joint_names = JOINT_NAMES
+        self.traj.joint_names = joint_names
         self.traj.points = [JointTrajectoryPoint(
             positions = state.position,
             velocities = [0] * 6,
@@ -438,14 +447,14 @@ class UR5TrajectoryFollower(object):
             return
 
         # Checks if the joints are just incorrect
-        if set(goal_handle.get_goal().trajectory.joint_names) != set(JOINT_NAMES):
+        if set(goal_handle.get_goal().trajectory.joint_names) != set(joint_names):
             rospy.logerr("Received a goal with incorrect joint names: (%s)" % \
                          ', '.join(goal_handle.get_goal().trajectory.joint_names))
             goal_handle.set_rejected()
             return
 
-        # Orders the joints of the trajectory according to JOINT_NAMES
-        reorder_traj_joints(goal_handle.get_goal().trajectory, JOINT_NAMES)
+        # Orders the joints of the trajectory according to joint_names
+        reorder_traj_joints(goal_handle.get_goal().trajectory, joint_names)
                 
         with self.following_lock:
             if self.goal_handle:
@@ -481,7 +490,7 @@ class UR5TrajectoryFollower(object):
                 point1.time_from_start = rospy.Duration(STOP_DURATION)
                 self.traj_t0 = now
                 self.traj = JointTrajectory()
-                self.traj.joint_names = JOINT_NAMES
+                self.traj.joint_names = joint_names
                 self.traj.points = [point0, point1]
                 
                 self.goal_handle.set_canceled()
@@ -510,6 +519,11 @@ def main():
         sys.exit(1)
     global prevent_programming
     prevent_programming = rospy.get_param("prevent_programming", False)
+    prefix = rospy.get_param("~prefix", "")
+    print "Setting prefix to %s" % prefix
+    global joint_names
+    joint_names = [prefix + name for name in JOINT_NAMES]
+
 
     # Parses command line arguments
     parser = optparse.OptionParser(usage="usage: %prog robot_hostname")
@@ -528,14 +542,18 @@ def main():
         program = fin.read() % {"driver_hostname": socket.getfqdn()}
     connection = UR5Connection(robot_hostname, PORT, program)
     connection.connect()
+    connection.send_reset_program()
     
     action_server = None
     try:
-        while True:
+        while not rospy.is_shutdown():
             # Checks for disconnect
             if getConnectedRobot(wait=False):
                 time.sleep(0.2)
                 prevent_programming = rospy.get_param("prevent_programming", False)
+                if prevent_programming:
+                    print "Programming now prevented"
+                    connection.send_reset_program()
             else:
                 print "Disconnected.  Reconnecting"
                 if action_server:
