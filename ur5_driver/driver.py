@@ -29,7 +29,7 @@ MSG_MOVEJ = 4
 MSG_WAYPOINT_FINISHED = 5
 MSG_STOPJ = 6
 MSG_SERVOJ = 7
-MULT_jointstate = 1000.0
+MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
 
