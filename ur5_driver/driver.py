@@ -110,6 +110,7 @@ class UR5Connection(object):
 
     def send_reset_program(self):
         self.__sock.sendall(RESET_PROGRAM)
+        self.robot_state = self.READY_TO_PROGRAM
         
     def disconnect(self):
         if self.__thread:
