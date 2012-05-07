@@ -386,6 +386,12 @@ def sample_traj(traj, t):
         i += 1
     return interp_cubic(traj.points[i], traj.points[i+1], t)
 
+def has_velocities(traj):
+    for p in traj.points:
+        if len(p.velocities) != len(p.positions):
+            return False
+    return True
+
 class UR5TrajectoryFollower(object):
     RATE = 0.02
     def __init__(self, robot):
@@ -451,6 +457,12 @@ class UR5TrajectoryFollower(object):
         if set(goal_handle.get_goal().trajectory.joint_names) != set(joint_names):
             rospy.logerr("Received a goal with incorrect joint names: (%s)" % \
                          ', '.join(goal_handle.get_goal().trajectory.joint_names))
+            goal_handle.set_rejected()
+            return
+
+        # Checks that the trajectory has velocities
+        if not has_velocities(goal_handle.get_goal().trajectory):
+            rospy.logerr("Received a goal without velocities")
             goal_handle.set_rejected()
             return
 
