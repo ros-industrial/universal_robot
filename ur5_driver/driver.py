@@ -8,6 +8,7 @@ import struct
 import traceback, code
 import optparse
 import SocketServer
+from BeautifulSoup import BeautifulSoup
 
 import rospy
 import actionlib
@@ -18,6 +19,13 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from deserialize import RobotState, RobotMode
 
 prevent_programming = False
+
+# Joint offsets, pulled from calibration information stored in the URDF
+#
+# { "joint_name" : offset }
+#
+# q_actual = q_from_driver + offset
+joint_offsets = {}
 
 PORT=30002
 REVERSE_PORT = 50001
@@ -149,7 +157,9 @@ class UR5Connection(object):
             msg.header.stamp = rospy.get_rostime()
             msg.header.frame_id = "From binary state data"
             msg.name = joint_names
-            msg.position = [jd.q_actual for jd in state.joint_data]
+            msg.position = [0.0] * 6
+            for i, jd in enumerate(state.joint_data):
+                msg.position[i] = jd.q_actual + joint_offsets.get(joint_names[i], 0.0)
             msg.velocity = [jd.qd_actual for jd in state.joint_data]
             msg.effort = [0]*6
             pub_joint_states.publish(msg)
@@ -262,7 +272,9 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     msg = JointState()
                     msg.header.stamp = rospy.get_rostime()
                     msg.name = joint_names
-                    msg.position = state[:6]
+                    msg.position = [0.0] * 6
+                    for i, q_meas in enumerate(state[:6]):
+                        msg.position[i] = q_meas + joint_offsets.get(joint_names[i], 0.0)
                     msg.velocity = state[6:12]
                     msg.effort = state[12:18]
                     pub_joint_states.publish(msg)
@@ -289,19 +301,13 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(struct.pack("!i", MSG_QUIT))
             
-    def send_movej(self, waypoint_id, q, a=3, v=0.75, t=0, r=0):
-        assert(len(q) == 6)
-        params = [MSG_MOVEJ, waypoint_id] + \
-                 [MULT_jointstate * qq for qq in q] + \
-                 [MULT_jointstate * a, MULT_jointstate * v, MULT_time * t, MULT_blend * r]
-        buf = struct.pack("!%ii" % len(params), *params)
-        with self.socket_lock:
-            self.request.send(buf)
-
-    def send_servoj(self, waypoint_id, q, t):
-        assert(len(q) == 6)
+    def send_servoj(self, waypoint_id, q_actual, t):
+        assert(len(q_actual) == 6)
+        q_robot = [0.0] * 6
+        for i, q in enumerate(q_actual):
+            q_robot[i] = q - joint_offsets.get(joint_names[i], 0.0)
         params = [MSG_SERVOJ, waypoint_id] + \
-                 [MULT_jointstate * qq for qq in q] + \
+                 [MULT_jointstate * qq for qq in q_robot] + \
                  [MULT_time * t]
         buf = struct.pack("!%ii" % len(params), *params)
         with self.socket_lock:
@@ -525,6 +531,23 @@ class UR5TrajectoryFollower(object):
                     self.goal_handle.set_succeeded()
                     self.goal_handle = None
 
+# joint_names: list of joints
+#
+# returns: { "joint_name" : joint_offset }
+def load_joint_offsets(joint_names):
+    robot_description = rospy.get_param("robot_description")
+    soup = BeautifulSoup(robot_description)
+    
+    result = {}
+    for joint in joint_names:
+        try:
+            joint_elt = soup.find('joint', attrs={'name': joint})
+            calibration_offset = float(joint_elt.calibration_offset["value"])
+            result[joint] = calibration_offset
+        except Exception, ex:
+            rospy.logwarn("No calibration offset for joint \"%s\"" % joint)
+    return result
+
 def main():
     rospy.init_node('ur5_driver', disable_signals=True)
     if rospy.get_param("use_sim_time", False):
@@ -537,13 +560,17 @@ def main():
     global joint_names
     joint_names = [prefix + name for name in JOINT_NAMES]
 
-
     # Parses command line arguments
     parser = optparse.OptionParser(usage="usage: %prog robot_hostname")
     (options, args) = parser.parse_args(rospy.myargv()[1:])
     if len(args) != 1:
         parser.error("You must specify the robot hostname")
     robot_hostname = args[0]
+
+    # Reads the calibrated joint offsets from the URDF
+    global joint_offsets
+    joint_offsets = load_joint_offsets(joint_names)
+    rospy.logerr("Loaded calibration offsets: %s" % joint_offsets)
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)
