@@ -392,6 +392,13 @@ def sample_traj(traj, t):
         i += 1
     return interp_cubic(traj.points[i], traj.points[i+1], t)
 
+def has_limited_velocities(traj):
+    for p in traj.points:
+        for v in p.velocities:
+            if math.fabs(v) > max_velocity:
+                return False
+    return True
+
 def has_velocities(traj):
     for p in traj.points:
         if len(p.velocities) != len(p.positions):
@@ -469,6 +476,12 @@ class UR5TrajectoryFollower(object):
         # Checks that the trajectory has velocities
         if not has_velocities(goal_handle.get_goal().trajectory):
             rospy.logerr("Received a goal without velocities")
+            goal_handle.set_rejected()
+            return
+
+        # Checks that the velocities are withing the specified limits
+        if not has_limited_velocities(goal_handle.get_goal().trajectory):
+            rospy.logerr("Received a goal with velocities that are higher than %f"%max_velocity)
             goal_handle.set_rejected()
             return
 
@@ -571,6 +584,10 @@ def main():
     global joint_offsets
     joint_offsets = load_joint_offsets(joint_names)
     rospy.logerr("Loaded calibration offsets: %s" % joint_offsets)
+
+    # Reads the maximum velocity
+    global max_velocity
+    max_velocity = rospy.get_param("~max_velocity", 0.5)
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)
