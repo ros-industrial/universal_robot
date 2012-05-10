@@ -189,7 +189,7 @@ class UR5Connection(object):
 
                     # Attempts to extract a packet
                     packet_length, ptype = struct.unpack_from("!IB", self.__buf)
-                    if packet_length >= len(self.__buf):
+                    if len(self.__buf) >= packet_length:
                         packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
                         self.__on_packet(packet)
                 else:
