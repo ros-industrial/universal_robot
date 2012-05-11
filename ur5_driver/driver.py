@@ -149,6 +149,11 @@ class UR5Connection(object):
 
         #log("Packet.  Mode=%s" % state.robot_mode_data.robot_mode)
 
+        if not state.robot_mode_data.real_robot_enabled:
+            rospy.logfatal("Real robot is no longer enabled.  Driver is fuxored")
+            time.sleep(2)
+            sys.exit(1)
+
         # If the urscript program is not executing, then the driver
         # needs to publish joint states using information from the
         # robot state packet.
@@ -219,7 +224,7 @@ def getConnectedRobot(wait=False, timeout=-1):
 
 # Receives messages from the robot over the socket
 class CommanderTCPHandler(SocketServer.BaseRequestHandler):
-        
+
     def recv_more(self):
         while True:
             r, _, _ = select.select([self.request], [], [], 0.2)
@@ -229,9 +234,11 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     raise EOF("EOF on recv")
                 return more
             else:
+                now = rospy.get_rostime()
                 if self.last_joint_states and \
-                        self.last_joint_states.header.stamp.to_sec() < time.time() + 1.0:
-                    rospy.logerr("Stopped hearing from robot.  Disconnected")
+                        self.last_joint_states.header.stamp < now - rospy.Duration(1.0):
+                    rospy.logerr("Stopped hearing from robot (last heard %.3f sec ago).  Disconnected" % \
+                                     (now - self.last_joint_states.header.stamp).to_sec())
                     raise EOF()
 
     def handle(self):
@@ -277,8 +284,8 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                         msg.position[i] = q_meas + joint_offsets.get(joint_names[i], 0.0)
                     msg.velocity = state[6:12]
                     msg.effort = state[12:18]
-                    pub_joint_states.publish(msg)
                     self.last_joint_states = msg
+                    pub_joint_states.publish(msg)
                 elif mtype == MSG_QUIT:
                     print "Quitting"
                     raise EOF("Received quit")
@@ -406,7 +413,7 @@ def has_velocities(traj):
     return True
 
 class UR5TrajectoryFollower(object):
-    RATE = 0.01
+    RATE = 0.02
     def __init__(self, robot):
         self.following_lock = threading.Lock()
         self.T0 = time.time()
