@@ -399,6 +399,16 @@ def sample_traj(traj, t):
         i += 1
     return interp_cubic(traj.points[i], traj.points[i+1], t)
 
+def traj_is_finite(traj):
+    for pt in traj.points:
+        for p in pt.positions:
+            if math.isinf(p) or math.isnan(p):
+                return False
+        for v in pt.velocities:
+            if math.isinf(v) or math.isnan(v):
+                return False
+    return True
+        
 def has_limited_velocities(traj):
     for p in traj.points:
         for v in p.velocities:
@@ -480,16 +490,22 @@ class UR5TrajectoryFollower(object):
             goal_handle.set_rejected()
             return
 
+        if not traj_is_finite(goal_handle.get_goal().trajectory):
+            rospy.logerr("Received a goal with infinites or NaNs")
+            goal_handle.set_rejected(text="Received a goal with infinites or NaNs")
+            return
+        
         # Checks that the trajectory has velocities
         if not has_velocities(goal_handle.get_goal().trajectory):
             rospy.logerr("Received a goal without velocities")
-            goal_handle.set_rejected()
+            goal_handle.set_rejected(text="Received a goal without velocities")
             return
 
         # Checks that the velocities are withing the specified limits
         if not has_limited_velocities(goal_handle.get_goal().trajectory):
-            rospy.logerr("Received a goal with velocities that are higher than %f"%max_velocity)
-            goal_handle.set_rejected()
+            message = "Received a goal with velocities that are higher than %f" % max_velocity
+            rospy.logerr(message)
+            goal_handle.set_rejected(text=message)
             return
 
         # Orders the joints of the trajectory according to joint_names
