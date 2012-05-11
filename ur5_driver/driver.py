@@ -406,7 +406,7 @@ def has_velocities(traj):
     return True
 
 class UR5TrajectoryFollower(object):
-    RATE = 0.02
+    RATE = 0.01
     def __init__(self, robot):
         self.following_lock = threading.Lock()
         self.T0 = time.time()
@@ -530,13 +530,14 @@ class UR5TrajectoryFollower(object):
         else:
             goal_handle.set_canceled()
 
+    last_now = time.time()
     def _update(self, event):
         if self.robot and self.traj:
             now = time.time()
             if (now - self.traj_t0) <= self.traj.points[-1].time_from_start.to_sec():
                 setpoint = sample_traj(self.traj, now - self.traj_t0)
                 try:
-                    self.robot.send_servoj(999, setpoint.positions, 2 * self.RATE)
+                    self.robot.send_servoj(999, setpoint.positions, 4 * self.RATE)
                 except socket.error:
                     pass
             else:  # Off the end
