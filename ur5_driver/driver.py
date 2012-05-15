@@ -422,9 +422,17 @@ def has_velocities(traj):
             return False
     return True
 
+def within_tolerance(a_vec, b_vec, tol_vec):
+    for a, b, tol in zip(a_vec, b_vec, tol_vec):
+        if abs(a - b) > tol:
+            return False
+    return True
+
 class UR5TrajectoryFollower(object):
     RATE = 0.02
-    def __init__(self, robot):
+    def __init__(self, robot, goal_time_tolerance=None):
+        self.goal_time_tolerance = goal_time_tolerance or rospy.Duration(0.0)
+        self.joint_goal_tolerances = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
         self.following_lock = threading.Lock()
         self.T0 = time.time()
         self.robot = robot
@@ -565,8 +573,20 @@ class UR5TrajectoryFollower(object):
                     pass
             else:  # Off the end
                 if self.goal_handle:
-                    self.goal_handle.set_succeeded()
-                    self.goal_handle = None
+                    last_point = self.traj.points[-1]
+                    state = self.robot.get_joint_states()
+                    position_in_tol = within_tolerance(state.position, last_point.positions, self.joint_goal_tolerances)
+                    velocity_in_tol = within_tolerance(state.velocity, last_point.velocities, [0.005]*6)
+                    if position_in_tol and velocity_in_tol:
+                        # The arm reached the goal (and isn't moving).  Succeeding
+                        self.goal_handle.set_succeeded()
+                        self.goal_handle = None
+                    elif now - (self.traj_t0 + last_point.time_from_start.to_sec()) > self.goal_time_tolerance.to_sec():
+                        # Took too long to reach the goal.  Aborting
+                        rospy.logwarn("Took too long to reach the goal.\nDesired: %s\nactual: %s\nvelocity: %s" % \
+                                          (last_point.positions, state.position, state.velocity))
+                        self.goal_handle.set_aborted(text="Took too long to reach the goal")
+                        self.goal_handle = None
 
 # joint_names: list of joints
 #
@@ -657,7 +677,7 @@ def main():
                 if action_server:
                     action_server.set_robot(r)
                 else:
-                    action_server = UR5TrajectoryFollower(r)
+                    action_server = UR5TrajectoryFollower(r, rospy.Duration(1.0))
                     action_server.start()
 
     except KeyboardInterrupt:
