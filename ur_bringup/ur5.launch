@@ -1,11 +1,11 @@
 <launch>
 
   <!-- robot model -->
-  <include file="$(find ur5_description)/launch/load.launch" />
+  <include file="$(find ur_description)/launch/ur5_upload.launch" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <!-- driver -->
-  <node name="ur5_driver" pkg="ur5_driver" type="driver.py" args="ur5" output="screen" />
+  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="ur5" output="screen" />
    
   <!-- TF Buffer Server -->
   <node pkg="tf2_ros" type="buffer_server" name="tf2_buffer_server" output="screen">

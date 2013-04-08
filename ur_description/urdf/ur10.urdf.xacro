@@ -5,10 +5,13 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-<include filename="$(find ur5_description)/urdf/arm.transmission.xacro" />
+<include filename="$(find ur_description)/urdf/ur10.transmission.xacro" />
+<include filename="$(find ur_description)/urdf/ur10.gazebo.xacro" />
+<include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
+
 
 <!--
-DH for UR5:
+DH for ur10:
 a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
 d = [0.089159,  0.00000,  0.00000,  0.10915,  0.09465,  0.0823]
 alpha = [ 1.570796327, 0, 0, 1.570796327, -1.570796327, 0 ]
@@ -37,14 +40,14 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <property name="wrist_3_cog" value="0.0 0.001159 0.0" />
 
 <!-- Kinematic model -->
-  <property name="shoulder_height" value="0.089159" />  
-  <property name="shoulder_offset" value="0.13585" />  <!-- shoulder_offset - elbow_offset + wrist_1_length = 0.10915 -->
-  <property name="upper_arm_length" value="0.42500" />
-  <property name="elbow_offset" value="0.1197" />       <!-- CAD measured -->
-  <property name="forearm_length" value="0.39225" />
-  <property name="wrist_1_length" value="0.093" />     <!-- CAD measured -->
-  <property name="wrist_2_length" value="0.09465" />   <!-- In CAD this distance is 0.930, but in the spec it is 0.09465 -->
-  <property name="wrist_3_length" value="0.0823" />
+  <property name="shoulder_height" value="0.128" />  
+  <property name="shoulder_offset" value="0.1704" />  <!-- shoulder_offset - elbow_offset + wrist_1_length = 0.10915 -->
+  <property name="upper_arm_length" value="0.60186" />
+  <property name="elbow_offset" value="0.12817" />       <!-- CAD measured -->
+  <property name="forearm_length" value="0.56415" />
+  <property name="wrist_1_length" value="0.11279" />     <!-- CAD measured -->
+  <property name="wrist_2_length" value="0.11279" />   <!-- In CAD this distance is 0.930, but in the spec it is 0.09465 -->
+  <property name="wrist_3_length" value="0.0857" />
 
   <property name="shoulder_radius" value="0.060" />   <!-- manually measured -->
   <property name="upper_arm_radius" value="0.054" />  <!-- manually measured -->
@@ -61,14 +64,22 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
 
 
-<xacro:macro name="ur5_robot" params="prefix">
+<xacro:macro name="ur10_robot" params="parent name *origin">
 
-  <link name="${prefix}base_link" >
+	<!-- joint between base_link and ur_base_link -->
+	<joint name="${name}_base_joint" type="fixed" >
+			<insert_block name="origin" />
+			<parent link="${parent}" />
+			<child link="${name}_base_link" />
+	</joint>
+
+  <link name="${name}_base_link" >
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/Base.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/Base.stl" />
       </geometry>
       <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
+      <material name="Blue" />
     </visual>
     <inertial>
       <mass value="${base_mass}" />
@@ -76,20 +87,21 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="${prefix}shoulder_pan_joint" type="revolute">
-    <parent link="${prefix}base_link" />
-    <child link = "${prefix}shoulder_link" />
+  <joint name="${name}_shoulder_pan_joint" type="revolute">
+    <parent link="${name}_base_link" />
+    <child link = "${name}_shoulder_link" />
     <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
-    <axis xyz="0 0 1" />
+    <axis xyz="0.0 0.0 1.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
   
-  <link name="${prefix}shoulder_link">
+  <link name="${name}_shoulder_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/Shoulder.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/Shoulder.stl" />
       </geometry>
+      <material name="Grey" />
     </visual>
     <collision>
       <geometry>
@@ -104,21 +116,22 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="${prefix}shoulder_lift_joint" type="revolute">
-    <parent link="${prefix}shoulder_link" />
-    <child link = "${prefix}upper_arm_link" />
+  <joint name="${name}_shoulder_lift_joint" type="revolute">
+    <parent link="${name}_shoulder_link" />
+    <child link = "${name}_upper_arm_link" />
     <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
-    <axis xyz="0 1 0" />
+    <axis xyz="0.0 1.0 0.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
-  <link name="${prefix}upper_arm_link">
+  <link name="${name}_upper_arm_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/UpperArm.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/UpperArm.stl" />
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <material name="Blue" />
     </visual>
     <collision>
       <geometry>
@@ -133,20 +146,21 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="${prefix}elbow_joint" type="revolute">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}forearm_link" />
+  <joint name="${name}_elbow_joint" type="revolute">
+    <parent link="${name}_upper_arm_link" />
+    <child link = "${name}_forearm_link" />
     <origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
-    <axis xyz="0 1 0" />
+    <axis xyz="0.0 1.0 0.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
-  <link name="${prefix}forearm_link">
+  <link name="${name}_forearm_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/Forearm.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/Forearm_new.stl" />
       </geometry>
+      <material name="Grey" />
     </visual>
     <collision>
       <geometry>
@@ -161,21 +175,22 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="${prefix}wrist_1_joint" type="revolute">
-    <parent link="${prefix}forearm_link" />
-    <child link = "${prefix}wrist_1_link" />
+  <joint name="${name}_wrist_1_joint" type="revolute">
+    <parent link="${name}_forearm_link" />
+    <child link = "${name}_wrist_1_link" />
     <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
-    <axis xyz="0 1 0" />
+    <axis xyz="0.0 1.0 0.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
-  <link name="${prefix}wrist_1_link">
+  <link name="${name}_wrist_1_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/Wrist1.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/Wrist1_new.stl" />
       </geometry>
-      <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
+      <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0 0.0" />
+      <material name="Blue" />
     </visual>
     <collision>
       <geometry>
@@ -190,21 +205,22 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="${prefix}wrist_2_joint" type="revolute">
-    <parent link="${prefix}wrist_1_link" />
-    <child link = "${prefix}wrist_2_link" />
+  <joint name="${name}_wrist_2_joint" type="revolute">
+    <parent link="${name}_wrist_1_link" />
+    <child link = "${name}_wrist_2_link" />
     <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
-    <axis xyz="0 0 1" />
+    <axis xyz="0.0 0.0 1.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
-  <link name="${prefix}wrist_2_link">
+  <link name="${name}_wrist_2_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/Wrist2.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/Wrist2_new.stl" />
       </geometry>
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
+      <material name="Grey" />
     </visual>
     <collision>
       <geometry>
@@ -219,20 +235,22 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
 
-  <joint name="${prefix}wrist_3_joint" type="revolute">
-    <parent link="${prefix}wrist_2_link" />
-    <child link = "${prefix}wrist_3_link" />
+  <joint name="${name}_wrist_3_joint" type="revolute">
+    <parent link="${name}_wrist_2_link" />
+    <child link = "${name}_wrist_3_link" />
     <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
-    <axis xyz="0 1 0" />
+    <axis xyz="0.0 1.0 0.0" />
     <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
-  <link name="${prefix}wrist_3_link">
+  <link name="${name}_wrist_3_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur5_description/meshes/Wrist3.dae" />
+        <mesh filename="package://ur_description/meshes/ur10/Wrist3_new.stl" />
       </geometry>
+      <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 0" />
+      <material name="Blue" />
     </visual>
     <collision>
       <geometry>
@@ -247,23 +265,23 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </inertial>
   </link>
   
-  <joint name="${prefix}ee_fixed_joint" type="fixed">
-    <parent link="${prefix}wrist_3_link" />
-    <child link = "${prefix}ee_link" />
+  <joint name="${name}_ee_fixed_joint" type="fixed">
+    <parent link="${name}_wrist_3_link" />
+    <child link = "${name}_ee_link" />
     <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />    
   </joint>
 
-  <link name="${prefix}ee_link" />
+  <link name="${name}_ee_link" />
   
 
 
   <!-- Extra links for collision model -->
   <!-- Somehow don't work with gazebo TODO: fix this
-  <joint name="${prefix}shoulder_collision_joint" type="fixed">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}shoulder_collision_link" />
+  <joint name="${name}_shoulder_collision_joint" type="fixed">
+    <parent link="${name}_upper_arm_link" />
+    <child link = "${name}_shoulder_collision_link" />
   </joint>
-  <link name="${prefix}shoulder_collision_link">
+  <link name="${name}_shoulder_collision_link">
     <collision>
       <geometry>
         <cylinder length="${shoulder_collision_length}" radius="${shoulder_radius}"/>
@@ -272,11 +290,11 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
     </collision>
   </link>
 
-  <joint name="${prefix}elbow_collision_joint" type="fixed">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}elbow_collision_link" />
+  <joint name="${name}_elbow_collision_joint" type="fixed">
+    <parent link="${name}_upper_arm_link" />
+    <child link = "${name}_elbow_collision_link" />
   </joint>
-  <link name="${prefix}elbow_collision_link">
+  <link name="${name}_elbow_collision_link">
     <collision>
       <geometry>
         <cylinder length="${elbow_collision_length}" radius="${elbow_radius}"/>
@@ -286,11 +304,12 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   </link>
   -->
 
-  <xacro:ur_arm_transmission name="${prefix}" />
+  <xacro:ur10_arm_transmission name="${name}" />
+  <xacro:ur10_arm_gazebo name="${name}" />
 
-  <gazebo reference="universal_robot">
+  <!--gazebo reference="universal_robot">
     <material>Gazebo/Blue</material>
-  </gazebo>
+  </gazebo-->
 
 
 </xacro:macro>

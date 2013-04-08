@@ -5,7 +5,7 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-	<xacro:macro name="ur_arm_transmission" params="name">
+	<xacro:macro name="ur5_arm_transmission" params="name">
 
 
 
