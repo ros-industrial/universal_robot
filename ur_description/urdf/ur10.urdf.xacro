@@ -79,7 +79,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
         <mesh filename="package://ur_description/meshes/ur10/Base.stl" />
       </geometry>
       <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
-      <material name="Blue" />
+      <material name="UR/Blue" />
     </visual>
     <inertial>
       <mass value="${base_mass}" />
@@ -101,7 +101,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
       <geometry>
         <mesh filename="package://ur_description/meshes/ur10/Shoulder.stl" />
       </geometry>
-      <material name="Grey" />
+      <material name="UR/Grey" />
     </visual>
     <collision>
       <geometry>
@@ -131,7 +131,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
         <mesh filename="package://ur_description/meshes/ur10/UpperArm.stl" />
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-      <material name="Blue" />
+      <material name="UR/Blue" />
     </visual>
     <collision>
       <geometry>
@@ -160,7 +160,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
       <geometry>
         <mesh filename="package://ur_description/meshes/ur10/Forearm_new.stl" />
       </geometry>
-      <material name="Grey" />
+      <material name="UR/Grey" />
     </visual>
     <collision>
       <geometry>
@@ -190,7 +190,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
         <mesh filename="package://ur_description/meshes/ur10/Wrist1_new.stl" />
       </geometry>
       <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0 0.0" />
-      <material name="Blue" />
+      <material name="UR/Blue" />
     </visual>
     <collision>
       <geometry>
@@ -220,7 +220,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
         <mesh filename="package://ur_description/meshes/ur10/Wrist2_new.stl" />
       </geometry>
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
-      <material name="Grey" />
+      <material name="UR/Grey" />
     </visual>
     <collision>
       <geometry>
@@ -250,7 +250,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
         <mesh filename="package://ur_description/meshes/ur10/Wrist3_new.stl" />
       </geometry>
       <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 0" />
-      <material name="Blue" />
+      <material name="UR/Blue" />
     </visual>
     <collision>
       <geometry>
@@ -308,7 +308,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   <xacro:ur10_arm_gazebo name="${name}" />
 
   <!--gazebo reference="universal_robot">
-    <material>Gazebo/Blue</material>
+    <material>Gazebo/UR/Blue</material>
   </gazebo-->
 
 

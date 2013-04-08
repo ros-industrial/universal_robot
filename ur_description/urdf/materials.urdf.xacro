@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot>
 
-  <material name="Blue">
+  <material name="UR/Blue">
     <color rgba="0.0 0.0 0.8 1.0"/>
   </material>
 
-  <material name="Grey">
+  <material name="UR/Grey">
     <color rgba="0.7 0.7 0.7 1.0"/>
   </material>
 

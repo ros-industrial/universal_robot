@@ -1,11 +1,20 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" 
-       name="ur5">
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="ur5" >
 
-  <include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
+  <!-- common stuff -->
+  <include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
+  <include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 
+  <!-- ur5 -->
   <include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
-  <xacro:ur5_robot prefix="" />
 
+
+  <!-- arm -->
+  <xacro:ur5_robot prefix="arm_">
+  </xacro:ur5_robot>
 
 </robot>
