@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
 
   <!-- robot model -->
@@ -5,7 +6,7 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <!-- driver -->
-  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="ur10" output="screen" />
+  <node name="ur_driver" pkg="ur_driver" type="driver.py" output="screen" />
    
   <!-- TF Buffer Server -->
   <node pkg="tf2_ros" type="buffer_server" name="tf2_buffer_server" output="screen">

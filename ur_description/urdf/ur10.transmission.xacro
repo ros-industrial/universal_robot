@@ -43,7 +43,6 @@
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission> 
 
-
 	</xacro:macro>
 
 </robot>

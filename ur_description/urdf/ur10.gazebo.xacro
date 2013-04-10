@@ -42,10 +42,6 @@
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 
-
-
-
-
 	</xacro:macro>
 
 </robot>
