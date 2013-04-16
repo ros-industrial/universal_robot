@@ -6,17 +6,17 @@
        xmlns:xacro="http://ros.org/wiki/xacro">
 
 <include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
-
-<!--
-DH for UR5:
-a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
-d = [0.089159,  0.00000,  0.00000,  0.10915,  0.09465,  0.0823]
-alpha = [ 1.570796327, 0, 0, 1.570796327, -1.570796327, 0 ]
-q_home_offset = [0, -1.570796327, 0, -1.570796327, 0, 0]
-joint_direction = [-1, -1, 1, 1, 1, 1]
-mass = [3.7000, 8.3930, 2.2750, 1.2190, 1.2190, 0.1879]
-center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 0.0265], [0, -0.0018, 0.01634], [0, 0.0018,0.01634], [0, 0, -0.001159] ]
--->
+  <include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
+		<!--
+		DH for UR5:
+		a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
+		d = [0.089159,  0.00000,  0.00000,  0.10915,  0.09465,  0.0823]
+		alpha = [ 1.570796327, 0, 0, 1.570796327, -1.570796327, 0 ]
+		q_home_offset = [0, -1.570796327, 0, -1.570796327, 0, 0]
+		joint_direction = [-1, -1, 1, 1, 1, 1]
+		mass = [3.7000, 8.3930, 2.2750, 1.2190, 1.2190, 0.1879]
+		center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 0.0265], [0, -0.0018, 0.01634], [0, 0.0018,0.01634], [0, 0, -0.001159] ]
+		-->
 
   <property name="pi" value="3.14159265" />
 
@@ -63,18 +63,19 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
 <xacro:macro name="ur5_robot" params="prefix">
 
-  <link name="${prefix}base_link" >
-    <visual>
-      <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/Base.dae" />
-      </geometry>
-      <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
-    </visual>
-    <inertial>
-      <mass value="${base_mass}" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
-  </link>
+	<link name="${prefix}base_link" >
+		<visual>
+		  <geometry>
+		    <mesh filename="package://ur_description/meshes/ur5/Base.dae" />
+		  </geometry>
+		  <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
+		</visual>
+		
+		<inertial>
+		  <mass value="${base_mass}" />
+		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
 
   <joint name="${prefix}shoulder_pan_joint" type="revolute">
     <parent link="${prefix}base_link" />
@@ -287,10 +288,8 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   -->
 
   <xacro:ur5_arm_transmission name="${prefix}" />
+  <xacro:ur5_arm_gazebo name="${prefix}" />
 
-  <gazebo reference="universal_robot">
-    <material>Gazebo/Blue</material>
-  </gazebo>
 
 
 </xacro:macro>
