@@ -1,14 +1,14 @@
 <package>
-  <description brief="ur5_gazebo">
+  <description brief="ur_gazebo">
 
-     ur5_gazebo
+     ur_gazebo
 
   </description>
   <author>Alexander Bubeck</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/ur5_gazebo</url>
-  <depend package="ur5_description"/>
+  <url>http://ros.org/wiki/ur_gazebo</url>
+  <depend package="ur_description"/>
 
 </package>
 
