@@ -1,13 +1,13 @@
 <package>
-  <description brief="ur5_description">
+  <description brief="ur_description">
 
-     Universal robot UR5 description
+     Universal robot ur description
 
   </description>
   <author>wim</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/ur5_description</url>
+  <url>http://ros.org/wiki/ur_description</url>
   <depend package="urdf"/>
 
 </package>

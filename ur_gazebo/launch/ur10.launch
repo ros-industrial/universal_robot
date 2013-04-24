@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_worlds)/launch/empty_world.launch" />
+
+  <!-- send frida urdf to param server -->
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find ur_description)/urdf/ur10_robot.urdf.xacro'" />
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
+
+  <!-- Controller Manager -->
+  <include file="$(find pr2_controller_manager)/controller_manager.launch" />
+
+  <!-- Fake Calibration -->
+  <node pkg="rostopic" type="rostopic" name="fake_joint_calibration" args="pub /calibrated std_msgs/Bool true" />
+
+  <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur10.yaml" command="load"/>
+
+  <node name="arm_controller_spawner" pkg="pr2_controller_manager" type="spawner" args="arm_controller" />
+	
+  <group ns="arm_controller">
+	<node name="arm_joint_trajectory_action_node" pkg="joint_trajectory_action" type="joint_trajectory_action" />
+  </group>
+
+</launch>
