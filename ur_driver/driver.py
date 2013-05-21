@@ -8,7 +8,7 @@ import struct
 import traceback, code
 import optparse
 import SocketServer
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 import rospy
 import actionlib
@@ -592,7 +592,7 @@ class UR5TrajectoryFollower(object):
 #
 # returns: { "joint_name" : joint_offset }
 def load_joint_offsets(joint_names):
-    robot_description = rospy.get_param("robot_description")
+    robot_description = rospy.get_param("/robot_description")
     soup = BeautifulSoup(robot_description)
     
     result = {}
