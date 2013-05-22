@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  Universal robot ur10 launch.  Loads ur10 robot description (see ur_common.launch
+  for more info)
+
+  Usage:
+    ur10_bringup.launch robot_ip:=<value>
+-->
+<launch>
+  
+  <!-- robot_ip: IP-address of the robot's socket-messaging server -->
+  <arg name="robot_ip" />
+
+  <!-- robot model -->
+  <include file="$(find ur_description)/launch/ur10_upload.launch" />
+  
+  <!-- ur common -->
+  <include file="$(find ur_bringup)/launch/ur_common.launch">
+    <arg name="robot_ip"   value="$(arg robot_ip)" />
+  </include>
+
+</launch>
