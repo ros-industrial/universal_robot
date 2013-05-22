@@ -7,7 +7,6 @@
 
   <!-- common stuff -->
   <include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
-  <include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 
   <!-- ur5 -->
   <include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />

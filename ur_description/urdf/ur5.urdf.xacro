@@ -5,8 +5,9 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-<include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
+  <include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
   <include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
+  <include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 <!--
 DH for UR5:
 a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
@@ -250,37 +251,6 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   </joint>
 
   <link name="${prefix}ee_link" />
-  
-
-
-  <!-- Extra links for collision model -->
-  <!-- Somehow don't work with gazebo TODO: fix this
-  <joint name="${prefix}shoulder_collision_joint" type="fixed">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}shoulder_collision_link" />
-  </joint>
-  <link name="${prefix}shoulder_collision_link">
-    <collision>
-      <geometry>
-        <cylinder length="${shoulder_collision_length}" radius="${shoulder_radius}"/>
-      </geometry>
-      <origin xyz="0.0 ${-shoulder_collision_offset} 0.0" rpy="${-pi / 2.0} 0.0 0.0" />
-    </collision>
-  </link>
-
-  <joint name="${prefix}elbow_collision_joint" type="fixed">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}elbow_collision_link" />
-  </joint>
-  <link name="${prefix}elbow_collision_link">
-    <collision>
-      <geometry>
-        <cylinder length="${elbow_collision_length}" radius="${elbow_radius}"/>
-      </geometry>
-      <origin xyz="0.0 ${-elbow_collision_offset} ${upper_arm_length}" rpy="${pi / 2.0} 0.0 0.0" />
-    </collision>
-  </link>
-  -->
 
   <xacro:ur_arm_transmission name="${prefix}" />
 
