@@ -5,18 +5,19 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-<include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
+  <include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
   <include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
-		<!--
-		DH for UR5:
-		a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
-		d = [0.089159,  0.00000,  0.00000,  0.10915,  0.09465,  0.0823]
-		alpha = [ 1.570796327, 0, 0, 1.570796327, -1.570796327, 0 ]
-		q_home_offset = [0, -1.570796327, 0, -1.570796327, 0, 0]
-		joint_direction = [-1, -1, 1, 1, 1, 1]
-		mass = [3.7000, 8.3930, 2.2750, 1.2190, 1.2190, 0.1879]
-		center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 0.0265], [0, -0.0018, 0.01634], [0, 0.0018,0.01634], [0, 0, -0.001159] ]
-		-->
+  <include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
+<!--
+DH for UR5:
+a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
+d = [0.089159,  0.00000,  0.00000,  0.10915,  0.09465,  0.0823]
+alpha = [ 1.570796327, 0, 0, 1.570796327, -1.570796327, 0 ]
+q_home_offset = [0, -1.570796327, 0, -1.570796327, 0, 0]
+joint_direction = [-1, -1, 1, 1, 1, 1]
+mass = [3.7000, 8.3930, 2.2750, 1.2190, 1.2190, 0.1879]
+center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 0.0265], [0, -0.0018, 0.01634], [0, 0.0018,0.01634], [0, 0, -0.001159] ]
+-->
 
   <property name="pi" value="3.14159265" />
 
@@ -52,30 +53,26 @@
   <property name="forearm_radius" value="0.040" />    <!-- manually measured -->
   <property name="wrist_radius" value="0.045" />      <!-- manually measured -->
 
-<!-- Collision model -->
-  <property name="base_collision_length" value="0.160" />      <!-- manually measured -->
-  <property name="shoulder_collision_length" value="0.200" />  <!-- manually measured -->
-  <property name="shoulder_collision_offset" value="0.035" />  <!-- manually measured -->
-  <property name="elbow_collision_length" value="0.200" />     <!-- manually measured -->
-  <property name="elbow_collision_offset" value="0.035" />     <!-- manually measured -->
-
-
-
 <xacro:macro name="ur5_robot" params="prefix">
 
-	<link name="${prefix}base_link" >
-		<visual>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur5/Base.dae" />
-		  </geometry>
-		  <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
-		</visual>
-		
-		<inertial>
-		  <mass value="${base_mass}" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		</inertial>
-	</link>
+  <link name="${prefix}base_link" >
+    <visual>
+      <geometry>
+		    <mesh filename="package://ur_description/meshes/ur5/visual/Base.dae" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
+    </visual>
+	<collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur5/collision/Base.dae" />
+      </geometry>
+      <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.009159"/> -->
+    </collision>
+    <inertial>
+      <mass value="${base_mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
 
   <joint name="${prefix}shoulder_pan_joint" type="revolute">
     <parent link="${prefix}base_link" />
@@ -89,14 +86,14 @@
   <link name="${prefix}shoulder_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/Shoulder.dae" />
+        <mesh filename="package://ur_description/meshes/ur5/visual/Shoulder.dae" />
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${base_collision_length}" radius="${shoulder_radius}"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/Shoulder.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${-shoulder_height + (base_collision_length/2.0)}" rpy="0.0 0.0 0.0" />
+      <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.009159"/> -->
     </collision>
     <inertial>
       <mass value="${shoulder_mass}" />
@@ -117,15 +114,15 @@
   <link name="${prefix}upper_arm_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/UpperArm.dae" />
+        <mesh filename="package://ur_description/meshes/ur5/visual/UpperArm.dae" />
       </geometry>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${upper_arm_length}" radius="${upper_arm_radius}"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/UpperArm.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${upper_arm_length/2.0}" rpy="0.0 0.0 0.0" />
+<!--       <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.2125"/> -->
     </collision>
     <inertial>
       <mass value="${upper_arm_mass}" />
@@ -146,14 +143,14 @@
   <link name="${prefix}forearm_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/Forearm.dae" />
+        <mesh filename="package://ur_description/meshes/ur5/visual/Forearm.dae" />
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${forearm_length}" radius="${forearm_radius}"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/Forearm.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${forearm_length/2.0}" rpy="0.0 0.0 0.0" />
+<!--       <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.196125"/> -->
     </collision>
     <inertial>
       <mass value="${forearm_mass}" />
@@ -167,22 +164,22 @@
     <child link = "${prefix}wrist_1_link" />
     <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
     <axis xyz="0 1 0" />
-    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
+    <limit lower="${-1.0 * pi}" upper="${0.25 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
   <link name="${prefix}wrist_1_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/Wrist1.dae" />
+        <mesh filename="package://ur_description/meshes/ur5/visual/Wrist1.dae" />
       </geometry>
       <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${1.6*wrist_1_length}" radius="${wrist_radius}"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/Wrist1.dae" />
       </geometry>
-      <origin xyz="0.0 ${0.25*wrist_1_length} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
+      <origin rpy="0.0 1.570796325 0.0" xyz="0.0 0.093 0.0"/>
     </collision>
     <inertial>
       <mass value="${wrist_1_mass}" />
@@ -196,22 +193,22 @@
     <child link = "${prefix}wrist_2_link" />
     <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
     <axis xyz="0 0 1" />
-    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
+    <limit lower="${-1.0 * pi}" upper="${1.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
   <link name="${prefix}wrist_2_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/Wrist2.dae" />
+        <mesh filename="package://ur_description/meshes/ur5/visual/Wrist2.dae" />
       </geometry>
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${1.6*wrist_2_length}" radius="${wrist_radius}"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/Wrist2.dae" />
       </geometry>
-      <origin xyz="0.0 0.0 ${0.25*wrist_2_length}" rpy="0.0 0.0 0.0" />
+       <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.09465"/> 
     </collision>
     <inertial>
       <mass value="${wrist_2_mass}" />
@@ -225,21 +222,20 @@
     <child link = "${prefix}wrist_3_link" />
     <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
     <axis xyz="0 1 0" />
-    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
+    <limit lower="${-1.0 * pi}" upper="${1.0 * pi}" effort="10.0" velocity="${pi}"/>
     <dynamics damping="10" friction="0.1"/>
   </joint>
 
   <link name="${prefix}wrist_3_link">
     <visual>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/Wrist3.dae" />
+        <mesh filename="package://ur_description/meshes/ur5/visual/Wrist3.dae" />
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${1.65*wrist_3_length}" radius="${wrist_radius}"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/Wrist3.dae" />
       </geometry>
-      <origin xyz="0.0 ${0.15 * wrist_3_length} 0.0" rpy="${-pi/2.0} 0.0 0.0" />
     </collision>
     <inertial>
       <mass value="${wrist_3_mass}" />
@@ -255,41 +251,12 @@
   </joint>
 
   <link name="${prefix}ee_link" />
-  
 
+  <xacro:ur_arm_transmission name="${prefix}" />
 
-  <!-- Extra links for collision model -->
-  <!-- Somehow don't work with gazebo TODO: fix this
-  <joint name="${prefix}shoulder_collision_joint" type="fixed">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}shoulder_collision_link" />
-  </joint>
-  <link name="${prefix}shoulder_collision_link">
-    <collision>
-      <geometry>
-        <cylinder length="${shoulder_collision_length}" radius="${shoulder_radius}"/>
-      </geometry>
-      <origin xyz="0.0 ${-shoulder_collision_offset} 0.0" rpy="${-pi / 2.0} 0.0 0.0" />
-    </collision>
-  </link>
-
-  <joint name="${prefix}elbow_collision_joint" type="fixed">
-    <parent link="${prefix}upper_arm_link" />
-    <child link = "${prefix}elbow_collision_link" />
-  </joint>
-  <link name="${prefix}elbow_collision_link">
-    <collision>
-      <geometry>
-        <cylinder length="${elbow_collision_length}" radius="${elbow_radius}"/>
-      </geometry>
-      <origin xyz="0.0 ${-elbow_collision_offset} ${upper_arm_length}" rpy="${pi / 2.0} 0.0 0.0" />
-    </collision>
-  </link>
-  -->
-
-  <xacro:ur5_arm_transmission name="${prefix}" />
-  <xacro:ur5_arm_gazebo name="${prefix}" />
-
+  <gazebo reference="universal_robot">
+    <material>Gazebo/Blue</material>
+  </gazebo>
 
 
 </xacro:macro>

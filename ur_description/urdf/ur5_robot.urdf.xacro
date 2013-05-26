@@ -7,44 +7,12 @@
 
   <!-- common stuff -->
   <include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
-  <include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 
   <!-- ur5 -->
   <include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
 
-  <!-- foot for arm -->
-	<link name="base_link">
-		<inertial>
-		   <origin xyz="0 0 -10" rpy="0 0 0"/>
-		   <mass value="1000.0"/>
-		   <inertia ixx="100.0"  ixy="0"  ixz="0" iyy="100.0" iyz="0" izz="100.0" />
-		</inertial>
-
-		<visual>
-		   <origin xyz="0 0 0.25" rpy="0 0 0" />
-		   <geometry>
-			  <cylinder radius="0.1" length="0.5"/>
-		   </geometry>
-		   <material name="Grey" />
-		</visual>
-
-		<collision>
-		   <origin xyz="0 0 0.25" rpy="0 0 0" />
-		   <geometry>
-			  <cylinder radius="0.1" length="0.5"/>
-		   </geometry>
-		</collision>
-	</link>
-
-	<!-- joint between base_link and ur_base_link -->
-	<joint name="arm_base_joint" type="fixed" >
-		<origin xyz="0 0 0.5" rpy="0 0 0" />
-		<parent link="base_link" />
-		<child link="arm_base_link" />
-	</joint>
-
   <!-- arm -->
-  <xacro:ur5_robot prefix="arm_">
+  <xacro:ur5_robot prefix="">
   </xacro:ur5_robot>
 
 </robot>
