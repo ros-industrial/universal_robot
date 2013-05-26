@@ -1,1 +1,0 @@
-Any move it packages generated with the default UR urdfs presents dificulties for the KDL IK solver.  To work around these issues, joint limited version (i.e. +/- 180 degree) joint limits are imposed.  These limits are smaller than the true joint limits which can be as great at +/- 360 degrees.
