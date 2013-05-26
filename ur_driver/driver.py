@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('ur5_driver')
+import roslib; roslib.load_manifest('ur_driver')
 import time, sys, threading, math
 import copy
 import datetime
@@ -8,7 +8,7 @@ import struct
 import traceback, code
 import optparse
 import SocketServer
-from bs4 import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 
 import rospy
 import actionlib
@@ -592,7 +592,7 @@ class UR5TrajectoryFollower(object):
 #
 # returns: { "joint_name" : joint_offset }
 def load_joint_offsets(joint_names):
-    robot_description = rospy.get_param("/robot_description")
+    robot_description = rospy.get_param("robot_description")
     soup = BeautifulSoup(robot_description)
     
     result = {}
@@ -605,11 +605,16 @@ def load_joint_offsets(joint_names):
             rospy.logwarn("No calibration offset for joint \"%s\"" % joint)
     return result
 
+def get_my_ip(robot_ip, port):
+    s = socket.create_connection((robot_ip, port))
+    tmp = s.getsockname()[0]
+    s.close()
+    return tmp
+
 def main():
-    rospy.init_node('ur5_driver', disable_signals=True)
+    rospy.init_node('ur_driver', disable_signals=True)
     if rospy.get_param("use_sim_time", False):
-        rospy.logfatal("use_sim_time is set!!!")
-        sys.exit(1)
+        rospy.logwarn("use_sim_time is set!!!")
     global prevent_programming
     prevent_programming = rospy.get_param("prevent_programming", False)
     prefix = rospy.get_param("~prefix", "")
@@ -639,8 +644,8 @@ def main():
     thread_commander.daemon = True
     thread_commander.start()
 
-    with open(roslib.packages.get_pkg_dir('ur5_driver') + '/prog') as fin:
-        program = fin.read() % {"driver_hostname": socket.getfqdn()}
+    with open(roslib.packages.get_pkg_dir('ur_driver') + '/prog') as fin:
+        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, PORT)}
     connection = UR5Connection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()
