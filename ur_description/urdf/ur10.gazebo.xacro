@@ -5,39 +5,39 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-	<xacro:macro name="ur10_arm_gazebo" params="name">
+	<xacro:macro name="ur10_arm_gazebo" params="prefix">
 
-		<gazebo reference="${name}_base_link">
+		<gazebo reference="${prefix}base_link">
 			<material value="Gazebo/Grey" />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 
-		<gazebo reference="${name}_shoulder_pan_link">
+		<gazebo reference="${prefix}shoulder_pan_link">
 			<material value="Gazebo/Blue " />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 
-		<gazebo reference="${name}_shoulder_lift_link">
+		<gazebo reference="${prefix}shoulder_lift_link">
 			<material value="Gazebo/Grey" />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 	
-		<gazebo reference="${name}_elbow_link">
+		<gazebo reference="${prefix}elbow_link">
 			<material value="Gazebo/Blue " />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 	
-		<gazebo reference="${name}_wrist_1_link">
+		<gazebo reference="${prefix}wrist_1_link">
 			<material value="Gazebo/Grey" />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 	
-		<gazebo reference="${name}_wrist_2_link">
+		<gazebo reference="${prefix}wrist_2_link">
 			<material value="Gazebo/Blue " />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 
-		<gazebo reference="${name}_wrist_1_link">
+		<gazebo reference="${prefix}wrist_1_link">
 			<material value="Gazebo/Grey" />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
