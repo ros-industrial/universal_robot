@@ -37,11 +37,10 @@
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
 
-		<gazebo reference="${prefix}wrist_1_link">
+		<gazebo reference="${prefix}wrist_3_link">
 			<material value="Gazebo/Grey" />
 			<turnGravityOff>false</turnGravityOff>
 		</gazebo>
-
 	</xacro:macro>
 
 </robot>
