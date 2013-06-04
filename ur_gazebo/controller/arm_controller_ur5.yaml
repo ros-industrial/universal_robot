@@ -1,53 +1,53 @@
 arm_controller:
   type: robot_mechanism_controllers/JointTrajectoryActionController
   joints:
-    - arm_shoulder_pan_joint
-    - arm_shoulder_lift_joint
-    - arm_elbow_joint
-    - arm_wrist_1_joint
-    - arm_wrist_2_joint
-    - arm_wrist_3_joint
+    - shoulder_pan_joint
+    - shoulder_lift_joint
+    - elbow_joint
+    - wrist_1_joint
+    - wrist_2_joint
+    - wrist_3_joint
   gains:
-    arm_shoulder_pan_joint:
+    shoulder_pan_joint:
       p: 2000.0
       d: 0.0
-    arm_shoulder_lift_joint:
+    shoulder_lift_joint:
       p: 2000.0
       d: 0.0
-    arm_elbow_joint:
+    elbow_joint:
       p: 2000.0
       d: 0.0
-    arm_wrist_1_joint:
+    wrist_1_joint:
       p: 2020.0
       d: 0.0
-    arm_wrist_2_joint:
+    wrist_2_joint:
       p: 2030.0
       d: 0.0
-    arm_wrist_3_joint:
+    wrist_3_joint:
       p: 2050.0
       d: 0.0
 
   arm_joint_trajectory_action_node:
     joints:
-        - arm_shoulder_pan_joint
-        - arm_shoulder_lift_joint
-        - arm_elbow_joint
-        - arm_wrist_1_joint
-        - arm_wrist_2_joint
-        - arm_wrist_3_joint
+        - shoulder_pan_joint
+        - shoulder_lift_joint
+        - elbow_joint
+        - wrist_1_joint
+        - wrist_2_joint
+        - wrist_3_joint
     constraints:
       goal_time: 0.6
-      arm_shoulder_pan_joint:
+      shoulder_pan_joint:
         goal: 0.05
-      arm_shoulder_lift_joint:
+      shoulder_lift_joint:
         goal: 0.05
-      arm_elbow_joint:
+      elbow_joint:
         goal: 0.05
-      arm_wrist_1_joint:
+      wrist_1_joint:
         goal: 0.05
-      arm_wrist_2_joint:
+      wrist_2_joint:
         goal: 0.05
-      arm_wrist_3_joint:
+      wrist_3_joint:
         goal: 0.05
 
 

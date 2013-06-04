@@ -264,8 +264,8 @@
 		</inertial>
 	</link>
 
-  <xacro:ur10_arm_transmission name="${prefix}" />
-  <xacro:ur10_arm_gazebo name="${prefix}" />
+  <xacro:ur10_arm_transmission prefix="${prefix}" />
+  <xacro:ur10_arm_gazebo prefix="${prefix}" />
 
   </xacro:macro>
 </robot>
