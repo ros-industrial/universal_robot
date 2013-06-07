@@ -252,7 +252,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 
   <link name="${prefix}ee_link" />
 
-  <xacro:ur_arm_transmission name="${prefix}" />
+  <xacro:ur5_arm_transmission name="${prefix}" />
 
   <gazebo reference="universal_robot">
     <material>Gazebo/Blue</material>

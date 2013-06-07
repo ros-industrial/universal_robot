@@ -5,41 +5,41 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-	<xacro:macro name="ur10_arm_transmission" params="name">
+	<xacro:macro name="ur10_arm_transmission" params="prefix">
 
 		<transmission name="shoulder_pan_trans" type="pr2_mechanism_model/SimpleTransmission">
 			<actuator name="shoulder_pan_motor"/>
-			<joint name="${name}_shoulder_pan_joint"/>
+			<joint name="${prefix}shoulder_pan_joint"/>
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission>
 	
 		<transmission name="shoulder_lift_trans" type="pr2_mechanism_model/SimpleTransmission">
 			<actuator name="shoulder_lift_motor"/>
-			<joint name="${name}_shoulder_lift_joint"/>
+			<joint name="${prefix}shoulder_lift_joint"/>
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission>
 	
 		<transmission name="elbow_trans" type="pr2_mechanism_model/SimpleTransmission">
 			<actuator name="elbow_motor"/>
-			<joint name="${name}_elbow_joint"/>
+			<joint name="${prefix}elbow_joint"/>
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission>
 	
 		<transmission name="wrist_1_trans" type="pr2_mechanism_model/SimpleTransmission">
 			<actuator name="wrist_1_motor"/>
-			<joint name="${name}_wrist_1_joint"/>
+			<joint name="${prefix}wrist_1_joint"/>
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission>
 	
 		<transmission name="wrist_2_trans" type="pr2_mechanism_model/SimpleTransmission">
 			<actuator name="wrist_2_motor"/>
-			<joint name="${name}_wrist_2_joint"/>
+			<joint name="${prefix}wrist_2_joint"/>
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission>
 	
 		<transmission name="wrist_3_trans" type="pr2_mechanism_model/SimpleTransmission">
 			<actuator name="wrist_3_motor"/>
-			<joint name="${name}_wrist_3_joint"/>
+			<joint name="${prefix}wrist_3_joint"/>
 			<mechanicalReduction>1</mechanicalReduction>
 		</transmission> 
 
