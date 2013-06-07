@@ -182,6 +182,84 @@ namespace ur_kinematics {
   }
 };
 
+
+#define IKFAST_HAS_LIBRARY
+#include <ur_kinematics/ikfast.h>
+using namespace ikfast;
+
+// check if the included ikfast version matches what this file was compiled with
+#define IKFAST_COMPILE_ASSERT(x) extern int __dummy[(int)x]
+IKFAST_COMPILE_ASSERT(IKFAST_VERSION==61);
+
+#ifdef IKFAST_NAMESPACE
+namespace IKFAST_NAMESPACE {
+#endif
+
+void to_mat44(double * mat4_4, const IkReal* eetrans, const IkReal* eerot)
+{
+    for(int i=0; i< 3;++i){
+        mat4_4[i*4+0] = eerot[i*3+0];
+        mat4_4[i*4+1] = eerot[i*3+1];
+        mat4_4[i*4+2] = eerot[i*3+2];
+        mat4_4[i*4+3] = eetrans[i];
+    }
+    mat4_4[3*4+0] = 0;
+    mat4_4[3*4+1] = 0;
+    mat4_4[3*4+2] = 0;
+    mat4_4[3*4+3] = 1;
+}
+
+void from_mat44(const double * mat4_4, IkReal* eetrans, IkReal* eerot)
+{
+    for(int i=0; i< 3;++i){
+        eerot[i*3+0] = mat4_4[i*4+0];
+        eerot[i*3+1] = mat4_4[i*4+1];
+        eerot[i*3+2] = mat4_4[i*4+2];
+        eetrans[i] = mat4_4[i*4+3];
+    }
+}
+
+
+IKFAST_API bool ComputeIk(const IkReal* eetrans, const IkReal* eerot, const IkReal* pfree, IkSolutionListBase<IkReal>& solutions) {
+  if(!pfree) return false;
+
+  int n = GetNumJoints();
+  double q_sols[8*6];
+  double T[16];
+
+  to_mat44(T, eetrans, eerot);
+
+  int num_sols = ur_kinematics::inverse(T, q_sols,pfree[0]);
+
+  std::vector<int> vfree(0);
+
+  for (int i=0; i < num_sols; ++i){
+    std::vector<IkSingleDOFSolutionBase<IkReal> > vinfos(n);
+    for (int j=0; j < n; ++j) vinfos[j].foffset = q_sols[i*n+j];
+    solutions.AddSolution(vinfos,vfree);
+  }
+  return num_sols > 0;
+}
+
+IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot)
+{
+    double T[16];
+    ur_kinematics::forward(j,T);
+    from_mat44(T,eetrans,eerot);
+}
+
+IKFAST_API int GetNumFreeParameters() { return 1; }
+IKFAST_API int* GetFreeParameters() { static int freeparams[] = {5}; return freeparams; }
+IKFAST_API int GetNumJoints() { return 6; }
+
+IKFAST_API int GetIkRealSize() { return sizeof(IkReal); }
+
+#ifdef IKFAST_NAMESPACE
+} // end namespace
+#endif
+
+#ifndef IKFAST_NO_MAIN
+
 using namespace std;
 using namespace ur_kinematics;
 
@@ -206,3 +284,4 @@ int main(int argc, char* argv[])
   printf("\n");
   return 0;
 }
+#endif
