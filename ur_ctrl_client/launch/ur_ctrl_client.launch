@@ -1,0 +1,6 @@
+<launch>
+    <node name="ur_ctrl_client" type="ur_ctrl_client" pkg="ur_ctrl_client" 
+          output="screen" >
+        <param name="robot_ip" value="127.0.0.1" />
+    </node>
+</launch>
