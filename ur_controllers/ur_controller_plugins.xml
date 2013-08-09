@@ -1,0 +1,59 @@
+<library path="lib/libur_controllers">
+
+  <class name="ur_controllers/PosVelAccForwardController" 
+         type="ur_controllers::PosVelAccForwardController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      Forwards Position/Velocity/Acceleration command vectors through to the UR controller.
+    </description>
+  </class>
+
+  <class name="ur_controllers/VelocityForwardController" 
+         type="ur_controllers::VelocityForwardController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      Forwards velocity command vectors through to the UR controller.
+    </description>
+  </class>
+
+  <class name="ur_controllers/ConfigForwardController" 
+         type="ur_controllers::ConfigForwardController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      Forwards config commands through to the UR controller.
+    </description>
+  </class>
+
+  <class name="ur_controllers/PosVelAccModeController" 
+         type="ur_controllers::PosVelAccModeController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      Changes the control mode to Position/Velocity/Acceleration commands.
+    </description>
+  </class>
+
+  <class name="ur_controllers/VelocityModeController" 
+         type="ur_controllers::VelocityModeController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      Changes the control mode to Position/Velocity/Acceleration commands.
+    </description>
+  </class>
+
+  <class name="ur_controllers/StatePublishController" 
+         type="ur_controllers::StatePublishController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+        Publishes the UR mode states.
+    </description>
+  </class>
+
+  <class name="ur_controllers/DiagnosticPublishController" 
+         type="ur_controllers::DiagnosticPublishController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+        Publishes the UR mode states as diagnostics messages.
+    </description>
+  </class>
+  
+</library>

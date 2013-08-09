@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ur_ctrl_client)
+project(ur_controllers)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS 
-  industrial_msgs industrial_robot_client simple_message ur_ctrl_server 
-  controller_manager controller_interface control_toolbox realtime_tools sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface std_msgs ur_ctrl_client ur_ctrl_server simple_message realtime_tools)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -24,8 +22,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   JointTrajPtFull32.msg
-#   JointTrajPtFull64.msg
+#   Message1.msg
+#   Message2.msg
 # )
 
 ## Generate services in the 'srv' folder
@@ -36,7 +34,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages()
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ###################################
 ## catkin specific configuration ##
@@ -47,8 +48,10 @@ generate_messages()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-    CATKIN_DEPENDS controller_manager controller_interface control_toolbox
-    INCLUDE_DIRS include
+#  INCLUDE_DIRS include
+#  LIBRARIES ur_controllers
+#  CATKIN_DEPENDS controller_interface hardware_interface std_msgs ur_ctrl_client
+#  DEPENDS system_lib
 )
 
 ###########
@@ -57,51 +60,32 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
+# include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 include_directories(include ${catkin_INCLUDE_DIRS})
 
+add_library(ur_controllers
+  src/ur_forward_cmd_controllers.cpp
+  src/ur_state_controllers.cpp
+  src/ur_switch_mode_controllers.cpp
+)
+target_link_libraries(ur_controllers
+  simple_message_float64 
+)
+
 ## Declare a cpp library
-# add_library(ur_ctrl_client
-#   src/${PROJECT_NAME}/ur_ctrl_client.cpp
+# add_library(ur_controllers
+#   src/${PROJECT_NAME}/ur_controllers.cpp
 # )
-add_definitions(-DROS=1)  # build using ROS libraries
-add_definitions(-DLINUXSOCKETS=1)  # use linux sockets for communication
-add_definitions(-DFLOAT64=1)  # use 64-bit floats in messages
 
 ## Declare a cpp executable
-# add_executable(ur_ctrl_client 
-#   src/ur_ctrl_client.cpp 
-#   src/ur_msg_handlers.cpp
-# )
-# target_link_libraries(ur_ctrl_client 
-#   simple_message_float64 
-#   industrial_robot_client
-#   ur_ctrl_msgs
-# )
-
-add_executable(ur_ctrl_man
-  src/ur_ctrl_man.cpp 
-  src/ur_robot_hw.cpp
-  src/ur_msg_handlers.cpp
-)
-target_link_libraries(ur_ctrl_man 
-  simple_message_float64 
-  ${catkin_LIBRARIES}
-)
-
-# add_library(ur_test_controller
-#   include/ur_ctrl_client/ur_test_controller.h
-#   src/ur_test_controller.cpp
-# )
-# target_link_libraries(ur_test_controller
-#   ${catkin_LIBRARIES}
-# )
+# add_executable(ur_controllers_node src/ur_controllers_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(ur_ctrl_client_node ur_ctrl_client_generate_messages_cpp)
+# add_dependencies(ur_controllers_node ur_controllers_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(ur_ctrl_client_node
+# target_link_libraries(ur_controllers_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -120,7 +104,7 @@ target_link_libraries(ur_ctrl_man
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS ur_ctrl_client ur_ctrl_client_node
+# install(TARGETS ur_controllers ur_controllers_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -140,15 +124,12 @@ target_link_libraries(ur_ctrl_man
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-  install(FILES test_controllers_plugin.xml
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
 #############
 ## Testing ##
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_ur_ctrl_client.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_ur_controllers.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

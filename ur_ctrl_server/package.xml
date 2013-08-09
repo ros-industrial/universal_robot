@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package>
-  <name>ur_ctrl_client</name>
+  <name>ur_ctrl_server</name>
   <version>0.0.0</version>
   <description>
-      Driver for the UR5/10 robot arms that runs client-side, off the controller,
-      and in a ROS environment.
+      Driver for the UR5/10 robot arms that runs server-side, on the controller,
+      and communicates with the robot directly.
   </description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
@@ -22,14 +22,14 @@
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://ros.org/wiki/ur_ctrl_client</url> -->
+  <!-- <url type="website">http://ros.org/wiki/ur_ctrl_server</url> -->
+  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
   <!-- Authors do not have to be maintianers, but could be -->
   <!-- Example: -->
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
-  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
 
 
   <!-- The *_depend tags are used to specify dependencies -->
@@ -44,26 +44,16 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>industrial_msgs</build_depend>
-  <build_depend>industrial_robot_client</build_depend>
-  <build_depend>sensor_msgs</build_depend>
   <build_depend>simple_message</build_depend>
-  <build_depend>control_toolbox</build_depend>
-  <build_depend>controller_interface</build_depend>
-  <build_depend>controller_manager</build_depend>
-  <build_depend>ur_ctrl_server</build_depend>
-  <run_depend>industrial_msgs</run_depend>
-  <run_depend>industrial_robot_client</run_depend>
-  <run_depend>sensor_msgs</run_depend>
   <run_depend>simple_message</run_depend>
-  <run_depend>control_toolbox</run_depend>
-  <run_depend>controller_interface</run_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>ur_ctrl_server</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <controller_interface plugin="${prefix}/ur_test_controller_plugins.xml"/>
+    <!-- You can specify that this package is a metapackage here: -->
+    <!-- <metapackage/> -->
+
+    <!-- Other tools can request additional information be placed here -->
+
   </export>
 </package>

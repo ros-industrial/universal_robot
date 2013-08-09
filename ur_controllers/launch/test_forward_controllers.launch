@@ -1,0 +1,80 @@
+<launch>
+  <rosparam>
+    pos_vel_acc_fwd_ctrl:
+      type: ur_controllers/PosVelAccForwardController
+    velocity_fwd_ctrl:
+      type: ur_controllers/VelocityForwardController
+
+    pos_vel_acc_mode:
+      type: ur_controllers/PosVelAccModeController
+      joint_names: 
+        - joint_command
+    velocity_mode:
+      type: ur_controllers/VelocityModeController
+      joint_names: 
+        - joint_command
+
+    joint_state_pub:
+      type: joint_state_controller/JointStateController
+      publish_rate: 1
+      
+    config_fwd_ctrl:
+      type: ur_controllers/ConfigForwardController
+
+    mode_state_pub:
+      type: ur_controllers/StatePublishController
+
+    ur_diagnostics_pub:
+      type: ur_controllers/DiagnosticPublishController
+      publish_rate: 1
+  </rosparam>
+
+  <rosparam command="load" file="$(find ur_ctrl_client)/param/joint_names.yaml"
+            param="pos_vel_acc_fwd_ctrl/joint_names" />
+  <rosparam command="load" file="$(find ur_ctrl_client)/param/joint_names.yaml"
+            param="velocity_fwd_ctrl/joint_names" />
+
+  <!--<node name="controller_manager" type="spawner" pkg="controller_manager"
+        output="screen" args="pos_vel_acc_fwd_ctrl" /> -->
+
+  <node name="load_pos_vel_acc_mode" type="controller_manager" pkg="controller_manager"
+        output="screen" args="load pos_vel_acc_mode" />
+  <node name="load_velocity_mode" type="controller_manager" pkg="controller_manager"
+        output="screen" args="load velocity_mode" />
+
+  <node name="load_pos_vel_acc_fwd_ctrl" type="controller_manager" pkg="controller_manager"
+        output="screen" args="load pos_vel_acc_fwd_ctrl" />
+  <node name="load_velocity_fwd_ctrl" type="controller_manager" pkg="controller_manager"
+        output="screen" args="load velocity_fwd_ctrl" />
+
+  <node name="spawn_joint_state_pub" type="spawner" pkg="controller_manager"
+        output="screen" args="joint_state_pub" />
+
+  <node name="spawn_mode_state_pub" type="spawner" pkg="controller_manager"
+        output="screen" args="mode_state_pub" />
+
+  <node name="spawn_ur_diagnostics_pub" type="spawner" pkg="controller_manager"
+        output="screen" args="ur_diagnostics_pub" />
+
+  <node name="spawn_config_fwd_ctrl" type="spawner" pkg="controller_manager"
+        output="screen" args="config_fwd_ctrl" />
+
+    <node pkg="diagnostic_aggregator" type="aggregator_node"
+        name="diag_agg" >
+        <rosparam> 
+            pub_rate: 1.0
+            analyzers:
+                arm:
+                    type: GenericAnalyzer
+                    path: Arm
+                    contains: UR arm controller
+                joints:
+                    type: GenericAnalyzer
+                    path: Joints
+                    contains: UR arm joint
+        </rosparam> 
+    </node>
+
+  <include file="$(find ur_ctrl_client)/launch/ur_ctrl_client_manager.launch" />
+
+</launch>

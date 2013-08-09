@@ -1,0 +1,7 @@
+
+#include <ur_controllers/ur_forward_cmd_controllers.h>
+#include <pluginlib/class_list_macros.h>
+
+PLUGINLIB_EXPORT_CLASS(ur_controllers::PosVelAccForwardController,controller_interface::ControllerBase)
+PLUGINLIB_EXPORT_CLASS(ur_controllers::VelocityForwardController,controller_interface::ControllerBase)
+PLUGINLIB_EXPORT_CLASS(ur_controllers::ConfigForwardController,controller_interface::ControllerBase)
