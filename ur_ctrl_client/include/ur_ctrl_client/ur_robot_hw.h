@@ -3,6 +3,10 @@
 #ifndef UR_ROBOT_HW_H
 #define UR_ROBOT_HW_H
 
+#define ROS
+#define LINUXSOCKETS
+#define FLOAT64
+
 #include "simple_message/simple_message.h"
 #include "simple_message/message_manager.h"
 #ifdef TCP_COM

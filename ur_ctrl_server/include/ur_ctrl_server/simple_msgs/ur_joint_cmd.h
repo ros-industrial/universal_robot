@@ -2,6 +2,8 @@
 #ifndef UR_JOINT_CMD_H
 #define UR_JOINT_CMD_H
 
+#define FLOAT64
+
 #include "simple_message/simple_message.h"
 #include "simple_message/simple_serialize.h"
 #include "simple_message/shared_types.h"

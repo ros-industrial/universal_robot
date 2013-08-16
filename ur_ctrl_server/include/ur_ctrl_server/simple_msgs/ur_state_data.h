@@ -2,6 +2,8 @@
 #ifndef UR_STATE_DATA_H
 #define UR_STATE_DATA_H
 
+#define FLOAT64
+
 #include <vector>
 
 #include <simple_message/simple_message.h>
@@ -73,8 +75,8 @@ struct URStateData : public SimpleSerialize
   bool isExtraButtonPressed() { return is_extra_button_pressed; }
   bool isPowerButtonPressed() { return is_power_button_pressed; }
   bool isSafetySignalSuchThatWeShouldStop() { return is_safety_signal_such_that_we_should_stop; }
-  void getJointModeIDs(int* out) 
-  { for(int i=0;i<6;i++) out[i] = joint_mode_ids[i]; /*std::copy(joint_mode_ids, joint_mode_ids+6, out.begin());*/ }
+  void getJointModeIDs(std::vector<int>& out) 
+  { std::copy(joint_mode_ids, joint_mode_ids+6, out.begin()); }
 
   ///////////////////////////////// Data ////////////////////////////////////
   

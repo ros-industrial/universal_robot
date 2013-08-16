@@ -63,9 +63,9 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 # add_definitions(-DROS=1)  # Build using ROS libraries
-add_definitions(-DLINUXSOCKETS=1)  # Use linux sockets for communication
-add_definitions(-DFLOAT64=1)  # Use 64-bit floats for communication
-add_definitions(-DROBOTDISABLED=1)  # Robot communication is disabled
+# add_definitions(-DLINUXSOCKETS=1)  # Use linux sockets for communication
+# add_definitions(-DFLOAT64=1)  # Use 64-bit floats for communication
+# add_definitions(-DROBOTDISABLED=1)  # Robot communication is disabled
 
 add_library(ur_ctrl_msgs
     src/simple_msgs/ur_joint_cmd.cpp

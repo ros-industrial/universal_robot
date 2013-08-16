@@ -37,27 +37,10 @@
   <!--<node name="controller_manager" type="spawner" pkg="controller_manager"
         output="screen" args="pos_vel_acc_fwd_ctrl" /> -->
 
-  <node name="load_pos_vel_acc_mode" type="controller_manager" pkg="controller_manager"
-        output="screen" args="load pos_vel_acc_mode" />
-  <node name="load_velocity_mode" type="controller_manager" pkg="controller_manager"
-        output="screen" args="load velocity_mode" />
-
-  <node name="load_pos_vel_acc_fwd_ctrl" type="controller_manager" pkg="controller_manager"
-        output="screen" args="load pos_vel_acc_fwd_ctrl" />
-  <node name="load_velocity_fwd_ctrl" type="controller_manager" pkg="controller_manager"
-        output="screen" args="load velocity_fwd_ctrl" />
-
-  <node name="spawn_joint_state_pub" type="spawner" pkg="controller_manager"
-        output="screen" args="joint_state_pub" />
-
-  <node name="spawn_mode_state_pub" type="spawner" pkg="controller_manager"
-        output="screen" args="mode_state_pub" />
-
-  <node name="spawn_ur_diagnostics_pub" type="spawner" pkg="controller_manager"
-        output="screen" args="ur_diagnostics_pub" />
-
-  <node name="spawn_config_fwd_ctrl" type="spawner" pkg="controller_manager"
-        output="screen" args="config_fwd_ctrl" />
+  <node name="ur_load_ctrls" type="controller_manager" pkg="controller_manager"
+        output="screen" args="load velocity_fwd_ctrl pos_vel_acc_fwd_ctrl pos_vel_acc_mode velocity_mode" />
+  <node name="ur_spawn_ctrls" type="spawner" pkg="controller_manager"
+        output="screen" args="joint_state_pub mode_state_pub ur_diagnostics_pub config_fwd_ctrl" />
 
     <node pkg="diagnostic_aggregator" type="aggregator_node"
         name="diag_agg" >

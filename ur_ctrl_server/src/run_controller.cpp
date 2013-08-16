@@ -1,4 +1,6 @@
 
+#define LINUXSOCKETS
+#define FLOAT64
 
 #include "ur_ctrl_server/ur_ctrl_shared.h"
 #ifdef TCP_COM

@@ -5,7 +5,7 @@ project(ur_ctrl_client)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS 
-  industrial_msgs industrial_robot_client simple_message ur_ctrl_server 
+  ur_ctrl_server 
   controller_manager controller_interface control_toolbox realtime_tools sensor_msgs)
 
 ## System dependencies are found with CMake's conventions
@@ -63,9 +63,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 # add_library(ur_ctrl_client
 #   src/${PROJECT_NAME}/ur_ctrl_client.cpp
 # )
-add_definitions(-DROS=1)  # build using ROS libraries
-add_definitions(-DLINUXSOCKETS=1)  # use linux sockets for communication
-add_definitions(-DFLOAT64=1)  # use 64-bit floats in messages
 
 ## Declare a cpp executable
 # add_executable(ur_ctrl_client 
@@ -85,7 +82,9 @@ add_executable(ur_ctrl_man
 )
 target_link_libraries(ur_ctrl_man 
   simple_message_float64 
-  ${catkin_LIBRARIES}
+  controller_manager
+  control_toolbox
+  ur_ctrl_msgs
 )
 
 # add_library(ur_test_controller

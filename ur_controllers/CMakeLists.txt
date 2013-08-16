@@ -4,7 +4,7 @@ project(ur_controllers)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface std_msgs ur_ctrl_client ur_ctrl_server simple_message realtime_tools)
+find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface std_msgs ur_ctrl_client ur_ctrl_server realtime_tools)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -62,6 +62,8 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 include_directories(include ${catkin_INCLUDE_DIRS})
+
+#add_definitions(-DFLOAT64=1)  # use 64-bit floats in messages
 
 add_library(ur_controllers
   src/ur_forward_cmd_controllers.cpp

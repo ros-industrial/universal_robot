@@ -1,6 +1,9 @@
 #ifndef UR_CONTROLLER_IFACE_H
 #define UR_CONTROLLER_IFACE_H
 
+#define LINUXSOCKETS
+#define FLOAT64
+
 #include "simple_message/socket/simple_socket.h"
 #include "simple_message/message_manager.h"
 

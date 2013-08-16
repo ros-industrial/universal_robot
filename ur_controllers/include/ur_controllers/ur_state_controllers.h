@@ -1,6 +1,8 @@
 #ifndef UR_STATE_CONTROLLERS_H
 #define UR_STATE_CONTROLLERS_H
 
+#define FLOAT64
+
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -52,6 +54,8 @@ public:
                            n, "is_safety_signal_such_that_we_should_stop", 1, true));
     cur_bool_states_.resize(bool_rt_pubs_.size());
 
+    cur_joint_ids_.resize(6);
+
     return true;
   }
 
@@ -88,7 +92,7 @@ public:
         }
       }
       if(joint_ids_changed || first_update_) {
-        std::copy(cur_joint_ids_, cur_joint_ids_+6, jnt_modes_rt_pub_->msg_.data.begin());
+        std::copy(cur_joint_ids_.begin(), cur_joint_ids_.end(), jnt_modes_rt_pub_->msg_.data.begin());
         jnt_modes_rt_pub_->unlockAndPublish();
       }
       else jnt_modes_rt_pub_->unlock();
@@ -117,7 +121,7 @@ private:
   std::vector<boost::shared_ptr<RealtimePublisher<std_msgs::Bool> > > bool_rt_pubs_;
   bool first_update_;
   std::vector<bool> cur_bool_states_;
-  int cur_joint_ids_[6];
+  std::vector<int> cur_joint_ids_;
 };
 
 const char* JOINT_NAMES[6] = { 
@@ -201,6 +205,7 @@ public:
     }
     
     cur_bool_states_.resize(6);
+    cur_joint_ids_.resize(6);
     last_bool_states_.resize(6);
     last_joint_ids_.resize(6);
 
@@ -243,7 +248,7 @@ public:
 
     last_robot_mode_ = cur_robot_mode_;
     std::copy(cur_bool_states_.begin(), cur_bool_states_.end(), last_bool_states_.begin());
-    std::copy(cur_joint_ids_, cur_joint_ids_+6, last_joint_ids_.begin());
+    std::copy(cur_joint_ids_.begin(), cur_joint_ids_.end(), last_joint_ids_.begin());
 
     if(diag_pub_->trylock()) {
       diag_pub_->msg_.header.stamp = time;
@@ -255,9 +260,12 @@ public:
         diag_pub_->msg_.status[0].level = diag_pub_->msg_.status[0].WARN;
       else 
         diag_pub_->msg_.status[0].level = diag_pub_->msg_.status[0].ERROR;
-      diag_pub_->msg_.status[0].message = ROBOT_MODES[cur_robot_mode_];
+      if(cur_robot_mode_ >= 0 && cur_robot_mode_ < 11)
+        diag_pub_->msg_.status[0].message = ROBOT_MODES[cur_robot_mode_];
+      else
+        diag_pub_->msg_.status[0].message = "UNINITIALIZED";
 
-      diag_pub_->msg_.status[0].values[0].value = ROBOT_MODES[cur_robot_mode_];
+      diag_pub_->msg_.status[0].values[0].value = diag_pub_->msg_.status[0].message;
       for(size_t i=0;i<cur_bool_states_.size();i++) 
         diag_pub_->msg_.status[0].values[i+1].value = lexical_cast<std::string>(cur_bool_states_[i]);
       
@@ -269,8 +277,11 @@ public:
           diag_pub_->msg_.status[i+1].level = diag_pub_->msg_.status[i+1].WARN;
         else 
           diag_pub_->msg_.status[i+1].level = diag_pub_->msg_.status[i+1].ERROR;
-        diag_pub_->msg_.status[i+1].message = JOINT_MODES[cur_joint_ids_[i]];
-        diag_pub_->msg_.status[i+1].values[0].value = JOINT_MODES[cur_joint_ids_[i]];
+        if(cur_joint_ids_[i] >= 0 && cur_joint_ids_[i] < 19)
+          diag_pub_->msg_.status[i+1].message = JOINT_MODES[cur_joint_ids_[i]];
+        else
+          diag_pub_->msg_.status[i+1].message = "UNINITIALIZED";
+        diag_pub_->msg_.status[i+1].values[0].value = diag_pub_->msg_.status[i+1].message;
         diag_pub_->msg_.status[i+1].values[1].value = lexical_cast<std::string>(cur_joint_ids_[i]);
       }
 
@@ -289,7 +300,7 @@ private:
 
   int cur_robot_mode_;
   std::vector<bool> cur_bool_states_;
-  int cur_joint_ids_[6];
+  std::vector<int> cur_joint_ids_;
 
   int last_robot_mode_;
   std::vector<bool> last_bool_states_;

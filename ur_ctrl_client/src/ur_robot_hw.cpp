@@ -85,10 +85,6 @@ void URRobotHW::read()
     while(connection_.isReadyReceive(0) && ros::ok()) 
       msg_man_.spinOnce();
     if(ur_state_hdl_.hasUpdated()) {
-      ROS_INFO("DA: %x", ur_state_data_.joint_mode_ids);
-      int jnt_modes[6];
-      //ur_state_data_.getJointModeIDs(jnt_modes);
-      ROS_INFO("YO: %d", jnt_modes[5]);
       return; 
     }
     r.sleep();
