@@ -36,7 +36,6 @@ public:
     jnt_modes_rt_pub_.reset(new RealtimePublisher<std_msgs::Int32MultiArray>(
                             n, "joint_mode_ids", 1, true));
     jnt_modes_rt_pub_->msg_.data.resize(6);
-    cur_joint_ids_.resize(6);
 
     bool_rt_pubs_.resize(6);
     bool_rt_pubs_[0].reset(new RealtimePublisher<std_msgs::Bool>(
@@ -89,7 +88,7 @@ public:
         }
       }
       if(joint_ids_changed || first_update_) {
-        std::copy(cur_joint_ids_.begin(), cur_joint_ids_.end(), jnt_modes_rt_pub_->msg_.data.begin());
+        std::copy(cur_joint_ids_, cur_joint_ids_+6, jnt_modes_rt_pub_->msg_.data.begin());
         jnt_modes_rt_pub_->unlockAndPublish();
       }
       else jnt_modes_rt_pub_->unlock();
@@ -118,7 +117,7 @@ private:
   std::vector<boost::shared_ptr<RealtimePublisher<std_msgs::Bool> > > bool_rt_pubs_;
   bool first_update_;
   std::vector<bool> cur_bool_states_;
-  std::vector<int> cur_joint_ids_;
+  int cur_joint_ids_[6];
 };
 
 const char* JOINT_NAMES[6] = { 
@@ -202,7 +201,6 @@ public:
     }
     
     cur_bool_states_.resize(6);
-    cur_joint_ids_.resize(6);
     last_bool_states_.resize(6);
     last_joint_ids_.resize(6);
 
@@ -245,7 +243,7 @@ public:
 
     last_robot_mode_ = cur_robot_mode_;
     std::copy(cur_bool_states_.begin(), cur_bool_states_.end(), last_bool_states_.begin());
-    std::copy(cur_joint_ids_.begin(), cur_joint_ids_.end(), last_joint_ids_.begin());
+    std::copy(cur_joint_ids_, cur_joint_ids_+6, last_joint_ids_.begin());
 
     if(diag_pub_->trylock()) {
       diag_pub_->msg_.header.stamp = time;
@@ -291,7 +289,7 @@ private:
 
   int cur_robot_mode_;
   std::vector<bool> cur_bool_states_;
-  std::vector<int> cur_joint_ids_;
+  int cur_joint_ids_[6];
 
   int last_robot_mode_;
   std::vector<bool> last_bool_states_;

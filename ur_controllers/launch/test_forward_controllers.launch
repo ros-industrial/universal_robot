@@ -65,13 +65,17 @@
             pub_rate: 1.0
             analyzers:
                 arm:
-                    type: GenericAnalyzer
-                    path: Arm
-                    contains: UR arm controller
-                joints:
-                    type: GenericAnalyzer
-                    path: Joints
-                    contains: UR arm joint
+                    type: AnalyzerGroup
+                    path: UR Arm
+                    analyzers:
+                        controller:
+                            type: GenericAnalyzer
+                            path: Controller
+                            contains: UR arm controller
+                        joints:
+                            type: GenericAnalyzer
+                            path: Joints
+                            contains: UR arm joint
         </rosparam> 
     </node>
 

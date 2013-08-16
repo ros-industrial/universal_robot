@@ -19,6 +19,9 @@ int URTestController::initRobot(int argc, char** argv)
 
 void URTestController::readRobotState()
 {
+  for(int i=0;i<6;i++)
+    ur_state.joint_mode_ids[i] = 16;
+
   usleep(1000000); // 1000000 us = 1 Hz
   // usleep(8000); // 8000 us = 125 Hz
 }

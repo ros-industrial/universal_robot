@@ -83,7 +83,7 @@ public:
   bool isPowerButtonPressed() { return state_data_->isPowerButtonPressed(); }
   bool isSafetySignalSuchThatWeShouldStop() 
     { return state_data_->isSafetySignalSuchThatWeShouldStop(); }
-  void getJointModeIDs(std::vector<int>& out) { state_data_->getJointModeIDs(out); }
+  void getJointModeIDs(int* out) { ROS_INFO("kkk %x\n", state_data_->joint_mode_ids); state_data_->getJointModeIDs(out); }
 
   void addCommand(const URConfigCommand* new_cmd) 
     { scoped_lock guard(*config_lock_); config_cmd_->addCommand(new_cmd); }

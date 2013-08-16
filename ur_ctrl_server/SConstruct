@@ -1,0 +1,5 @@
+# Construction environment
+env = Environment(CPPDEFINES='NDEBUG', CCFLAGS='-O2 -Wall')
+
+# Build '.'
+env.SConscript('./SConscript', exports='env', variant_dir='./build', duplicate=0)
