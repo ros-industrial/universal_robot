@@ -111,7 +111,7 @@ void URHardwareController::readRobotState()
 void URHardwareController::sendRobotCommands()
 {
   ////////////////////////////// Joint commands ///////////////////////////////
-  if(ur_state.robot_mode_id != ROBOT_RUNNING_MODE) 
+  if(ur_state.robot_mode_id != ROBOT_RUNNING_MODE && ur_state.robot_mode_id != ROBOT_INITIALIZING_MODE) 
     // robot not running at the moment, don't bother commanding joints
     robotinterface_command_empty_command();
 
