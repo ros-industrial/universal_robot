@@ -4,8 +4,8 @@
 #include <ur_ctrl_server/ur_controller_iface.h>
 #include <robotinterface.h>
 #include <Configuration.h>
-//#include <microprocessor_commands.h>
-//#include <microprocessor_definitions.h>
+#include <microprocessor_commands.h>
+#include <microprocessor_definitions.h>
 
 #define MSG_BUFFER_SIZE 10
 #define CMD_TIMEOUT 3

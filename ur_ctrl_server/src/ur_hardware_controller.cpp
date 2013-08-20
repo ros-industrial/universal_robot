@@ -99,7 +99,7 @@ void URHardwareController::readRobotState()
     robotinterface_is_safety_signal_such_that_we_should_stop(); 
   /* This is from the safety stop interface */
   for(int i=0;i<6;i++)
-    ur_state.joint_mode_ids[i] = robotinterface_get_joint_mode(i);
+    ur_state.joint_mode_ids[i] = robotinterface_get_joint_mode(i) - JOINT_MODE_BAR;
 
   // read error codes
   msg_count = robotinterface_get_message_count();
