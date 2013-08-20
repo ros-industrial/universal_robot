@@ -44,7 +44,7 @@ int URHardwareController::initRobot(int argc, char** argv)
   }
   printf("success!");
 
-#if 0
+#if 1
   // Make this thread RT priority
   struct sched_param sch_param;
   pid_t pid;
@@ -59,7 +59,7 @@ int URHardwareController::initRobot(int argc, char** argv)
   }
   ////////////////////////////
 
-  ur::startRobot(); // go through startup procedure
+  // ur::startRobot(); // go through startup procedure
 #endif
   // ur::initializeJoints(joint_vel); // move joints joint_vel speed to initialize robot
   return 0;
