@@ -1,7 +1,8 @@
 <launch>
+    <arg name="robot_ip" default="127.0.0.1" />
     <node name="ur_ctrl_client_manager" type="ur_ctrl_man" pkg="ur_ctrl_client" 
           output="screen" >
-        <param name="robot_ip" value="127.0.0.1" />
+        <param name="robot_ip" value="$(arg robot_ip)" />
         <rosparam command="load" file="$(find ur_ctrl_client)/param/joint_names.yaml"
                   param="joint_names" />
     </node>
