@@ -1,7 +1,7 @@
 # Import construction environment
 Import('env')
 
-sources = Split("""
+sources_test = Split("""
 src/simple_msgs/ur_joint_cmd.cpp
 src/simple_msgs/ur_config_cmd.cpp
 src/simple_msgs/ur_state_data.cpp
@@ -37,17 +37,47 @@ src/simple_message/socket/udp_server.cpp
 src/simple_message/socket/udp_socket.cpp
 """)
 
-#industrial_core_dir = '../../../industrial_core'
-#sm_srcs_abs = ""
-#for sm_src in simple_message_sources.split('\n'):
-#    sm_srcs_abs = sm_srcs_abs + industrial_core_dir + '/' + sm_src + '\n'
-#sm_sources = Split(sm_srcs_abs)
+sources_real = Split("""
+src/simple_msgs/ur_joint_cmd.cpp
+src/simple_msgs/ur_config_cmd.cpp
+src/simple_msgs/ur_state_data.cpp
+src/ur_joint_cmd_handler.cpp
+src/ur_config_cmd_handler.cpp
+src/ur_controller_iface.cpp
+src/ur_ctrl_server.cpp
+src/ur_hardware_controller.cpp
+src/run_controller.cpp
+src/simple_message/byte_array.cpp
+src/simple_message/joint_data.cpp
+src/simple_message/joint_traj.cpp
+src/simple_message/joint_traj_pt.cpp
+src/simple_message/joint_traj_pt_full.cpp
+src/simple_message/message_handler.cpp
+src/simple_message/message_manager.cpp
+src/simple_message/ping_handler.cpp
+src/simple_message/ping_message.cpp
+src/simple_message/robot_status.cpp
+src/simple_message/simple_comms_fault_handler.cpp
+src/simple_message/simple_message.cpp
+src/simple_message/smpl_msg_connection.cpp
+src/simple_message/messages/joint_message.cpp
+src/simple_message/messages/joint_traj_pt_message.cpp
+src/simple_message/messages/joint_traj_pt_full_message.cpp
+src/simple_message/messages/robot_status_message.cpp
+src/simple_message/socket/simple_socket.cpp
+src/simple_message/socket/tcp_client.cpp
+src/simple_message/socket/tcp_server.cpp
+src/simple_message/socket/tcp_socket.cpp
+src/simple_message/socket/udp_client.cpp
+src/simple_message/socket/udp_server.cpp
+src/simple_message/socket/udp_socket.cpp
+""")
 
-#libpath = ['./ur_c_api/1_5/lib']
-#libs = ['robotcomm', 'kinematics', 'configuration', 'dev', 'collision', 'm', 'math']
+libpath = ['./include/ur_c_api']
+libs = ['robotcomm', 'kinematics', 'configuration', 'dev', 'collision', 'm', 'math', 'legacy']
 cppdefines = ['NDEBUG', 'LINUXSOCKETS', 'FLOAT64']
 ccflags = '-O2 -Wall -m32'
-cpppath = ['./include']
+cpppath = ['./include', './include/ur_c_api']
 
 ###############################################################################
 
@@ -56,10 +86,17 @@ VariantDir('build', 'src', duplicate=0)
 env = Environment(CC = 'g++',  # link using g++
                   CPPPATH=cpppath,
                   CPPDEFINES=cppdefines)
-object_list = env.Object(source=sources)
+test_object_list = env.Object(source=sources_test)
+env.Program(target='#bin/ur_test_server',
+            source=test_object_list,
+            LIBPATH=libpath,
+            LIBS=libs, 
+            CCFLAGS=ccflags,
+            CPPDEFINES=cppdefines)
+real_object_list = env.Object(source=sources_real)
 env.Program(target='#bin/ur_ctrl_server',
-            source=object_list,
-            #LIBPATH=libpath,
-            #LIBS=libs, 
+            source=real_object_list,
+            LIBPATH=libpath,
+            LIBS=libs, 
             CCFLAGS=ccflags,
             CPPDEFINES=cppdefines)
