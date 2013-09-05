@@ -8,6 +8,8 @@ class PackageType(object):
     CARTESIAN_INFO = 4
     KINEMATICS_INFO = 5
     CONFIGURATION_DATA = 6
+    FORCE_MODE_DATA = 7
+    ADDITIONAL_INFO = 8
 
 class RobotMode(object):
     RUNNING = 0
@@ -79,7 +81,8 @@ class RobotModeData(object):
          rmd.program_running, rmd.program_paused, rmd.robot_mode,
          rmd.speed_fraction) = struct.unpack_from("!IBQ???????Bd", buf)
         return rmd
-    
+
+# Don't use T_micro (obsolete). For retrocompatibility purposes. 
 class JointData(object):
     __slots__ = ['q_actual', 'q_target', 'qd_actual',
                  'I_actual', 'V_actual', 'T_motor', 'T_micro', 'joint_mode']
@@ -175,10 +178,28 @@ class ConfigurationData(object):
          cd.robot_subtype) = struct.unpack_from("!iiii", buf, 5+32*6+5*8+6*32)
         return cd
 
+class ForceModeData(object):
+    __slots__ = ['x', 'y', 'z', 'rx', 'ry', 'rz', 'robot_dexterity']
+    @staticmethod
+    def unpack(buf):
+        fmd = ForceModeData()
+        (_, _, fmd.x, fmd.y, fmd.z, fmd.rx, fmd.ry, fmd.rz,
+         fmd.robot_dexterity) = struct.unpack_from("!IBddddddd", buf)
+        return fmd
+
+class AdditionalInfo(object):
+    __slots__ = ['ctrl_bits', 'teach_button']
+    @staticmethod
+    def unpack(buf):
+        ai = AdditionalInfo()
+        (_, _, ai.ctrl_bits, ai.teach_button) = struct.unpack_from("!IBIB", buf)
+        return ai
+
 class RobotState(object):
     __slots__ = ['robot_mode_data', 'joint_data', 'tool_data',
                  'masterboard_data', 'cartesian_info',
-                 'kinematics_info', 'configuration_data']
+                 'kinematics_info', 'configuration_data',
+                 'force_mode_data', 'additional_info']
 
     def __init__(self):
         pass
@@ -216,6 +237,10 @@ class RobotState(object):
                 rs.kinematics_info = KinematicsInfo.unpack(package_buf)
             elif ptype == PackageType.CONFIGURATION_DATA:
                 rs.configuration_data = ConfigurationData.unpack(package_buf)
+            elif ptype == PackageType.FORCE_MODE_DATA:
+                rs.force_mode_data = ForceModeData.unpack(package_buf)
+            elif ptype == PackageType.ADDITIONAL_INFO:
+                rs.additional_info = AdditionalInfo.unpack(package_buf)
             else:
                 raise Exception("Unknown package type: %i" % ptype)
         return rs
