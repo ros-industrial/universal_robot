@@ -15,10 +15,12 @@
   <author>Wim Meeussen</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>ur5_moveit_config</run_depend>
   <run_depend>ur_bringup</run_depend>
   <run_depend>ur_description</run_depend>
-  <run_depend>ur_kinematics</run_depend>
+  <run_depend>ur_driver</run_depend>
   <run_depend>ur_gazebo</run_depend>
+  <run_depend>ur_kinematics</run_depend>
 
   <export>
     <metapackage/>
