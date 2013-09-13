@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import time
-import roslib; roslib.load_manifest('ur5_driver')
+import roslib; roslib.load_manifest('ur_driver')
 import rospy
 import actionlib
 from control_msgs.msg import *
