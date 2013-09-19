@@ -5,9 +5,9 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
-  <include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
-  <include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 <!--
 DH for UR5:
 a = [0.00000, -0.42500, -0.39225,  0.00000,  0.00000,  0.0000]
