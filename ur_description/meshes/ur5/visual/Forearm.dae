@@ -13508,7 +13508,7 @@
 				</technique>
 			</extra>
 			 </rigid_body>
-			<rigid_body	sid="Actor1-RigidBody" name="UR5-1/Size 1 r°r_r01_Simple-1">
+			<rigid_body	sid="Actor1-RigidBody" name="UR5-1/Size 1 rr_r01_Simple-1">
 				<technique_common>
 					 <dynamic>true</dynamic>
 					 <mass>1.205767751</mass>
