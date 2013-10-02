@@ -50,7 +50,7 @@ find_package(catkin REQUIRED COMPONENTS simple_message)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ur_ctrl_msgs
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS simple_message
 #  DEPENDS system_lib
 )
 
