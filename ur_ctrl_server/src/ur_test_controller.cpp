@@ -14,6 +14,7 @@ URTestController::URTestController(SimpleSocket* socket_conn)
 
 int URTestController::initRobot(int argc, char** argv)
 {
+  ur_state.robot_mode_id = 8;
   return 0;
 }
 
@@ -79,14 +80,19 @@ void URTestController::sendRobotCommands()
   /////////////////////////////////////////////////////////////////////////////
   
   /////////////////////////////// Config commands ///////////////////////////////
-  if(config_cmd.func_calls & URI_OPEN_REAL)
+  if(config_cmd.func_calls & URI_OPEN_REAL) {
     printf("Function call: robotinterface_open(0)\n");
+    ur_state.robot_mode_id = 7;
+  }
 
   else if(config_cmd.func_calls & URI_OPEN_SIMULATED)
     printf("Function call: robotinterface_open(1)\n");
 
-  if(config_cmd.func_calls & URI_CLOSE)
+  if(config_cmd.func_calls & URI_CLOSE) {
     printf("Function call: robotinterface_close()\n");
+    ur_state.robot_mode_id = 8;
+    ur_state.is_power_on_robot = 0;
+  }
 
   if(config_cmd.func_calls & URI_UNLOCK_SECURITY_STOP)
     printf("Function call: robotinterface_unlock_security_stop()\n");
@@ -97,11 +103,17 @@ void URTestController::sendRobotCommands()
   if(config_cmd.func_calls & URI_SET_ROBOT_RUNNING_MODE)
     printf("Function call: robotinterface_set_robot_running_mode()\n");
 
-  if(config_cmd.func_calls & URI_POWER_ON_ROBOT)
+  if(config_cmd.func_calls & URI_POWER_ON_ROBOT) {
     printf("Function call: robotinterface_power_on_robot()\n");
+    ur_state.robot_mode_id = 3;
+    ur_state.is_power_on_robot = 1;
+  }
 
-  if(config_cmd.func_calls & URI_POWER_OFF_ROBOT)
+  if(config_cmd.func_calls & URI_POWER_OFF_ROBOT) {
     printf("Function call: robotinterface_power_off_robot()\n");
+    ur_state.robot_mode_id = 7;
+    ur_state.is_power_on_robot = 0;
+  }
 
   if(config_cmd.func_calls & URI_SET_TCP)
     printf("Function call: robotinterface_set_tcp([%.1f %.1f %.1f %.1f %.1f %.1f])\n",

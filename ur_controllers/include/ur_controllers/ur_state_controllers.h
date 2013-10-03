@@ -266,8 +266,9 @@ public:
         diag_pub_->msg_.status[0].message = "UNINITIALIZED";
 
       diag_pub_->msg_.status[0].values[0].value = diag_pub_->msg_.status[0].message;
+      diag_pub_->msg_.status[0].values[1].value = lexical_cast<std::string>(cur_robot_mode_);
       for(size_t i=0;i<cur_bool_states_.size();i++) 
-        diag_pub_->msg_.status[0].values[i+1].value = lexical_cast<std::string>(cur_bool_states_[i]);
+        diag_pub_->msg_.status[0].values[i+2].value = lexical_cast<std::string>(cur_bool_states_[i]);
       
       // Joint modes
       for(int i=0;i<6;i++) {
