@@ -6,10 +6,10 @@
        name="ur5" >
 
   <!-- common stuff -->
-  <include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
 
   <!-- ur5 -->
-  <include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
 
   <!-- arm -->
   <xacro:ur5_robot prefix="">
