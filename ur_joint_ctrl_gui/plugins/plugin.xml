@@ -1,0 +1,13 @@
+<library path="src">
+    <class name="URJointCtrlGui" type="ur_joint_ctrl_gui.joint_gui.URJointCtrlGui" 
+           base_class_type="rqt_gui_py::Plugin">
+    <description>
+      Joint controller interface for a UR robot arm
+    </description>
+    <qtgui>
+      <label>UR Joint Control</label>
+      <icon type="file">images/ur_icon.png</icon>
+      <statustip>Control UR arm joints</statustip>
+    </qtgui>
+  </class>
+</library>
