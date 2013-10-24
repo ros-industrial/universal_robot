@@ -180,6 +180,9 @@ void URHardwareController::sendRobotCommands()
     robotinterface_security_stop(config_cmd.security_stop_joint_code, 
                                  config_cmd.security_stop_error_state,
                                  config_cmd.security_stop_error_argument);
+
+  if(config_cmd.func_calls & URI_SET_FREEDRIVE_MODE)
+    robotinterface_set_robot_freedrive_mode();
   /////////////////////////////////////////////////////////////////////////////
 
   // Send commands to lower level controller.

@@ -43,6 +43,7 @@ typedef URJointCommandModes::URJointCommandMode URJointCommandMode;
 #define URI_SET_TCP_PAYLOAD          (1 <<10)
 #define URI_SET_TCP_WRENCH           (1 <<11)
 #define URI_SET_SECURITY_STOP        (1 <<12)
+#define URI_SET_FREEDRIVE_MODE       (1 <<13)
 
 }
 

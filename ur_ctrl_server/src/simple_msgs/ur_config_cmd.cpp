@@ -142,6 +142,11 @@ void URConfigCommand::setRobotRunningMode()
   func_calls |= URI_SET_ROBOT_RUNNING_MODE;
 }
 
+void URConfigCommand::setFreedriveMode()
+{
+  func_calls |= URI_SET_FREEDRIVE_MODE;
+}
+
 void URConfigCommand::powerOnRobot()
 {
   func_calls |= URI_POWER_ON_ROBOT;

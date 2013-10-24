@@ -49,6 +49,7 @@ struct URConfigCommand : public SimpleSerialize
   void unlockSecurityStop();
   void setRobotReadyMode();
   void setRobotRunningMode();
+  void setFreedriveMode();
   void powerOnRobot();
   void powerOffRobot();
   void setTCP(const std::vector<double>& tcp_pose);

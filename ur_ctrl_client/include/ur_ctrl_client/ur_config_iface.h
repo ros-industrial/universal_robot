@@ -103,6 +103,8 @@ public:
     { scoped_lock guard(*config_lock_); config_cmd_->setRobotReadyMode(); }
   void setRobotRunningMode() 
     { scoped_lock guard(*config_lock_); config_cmd_->setRobotRunningMode(); }
+  void setFreedriveMode() 
+    { scoped_lock guard(*config_lock_); config_cmd_->setFreedriveMode(); }
   void powerOnRobot() 
     { scoped_lock guard(*config_lock_); config_cmd_->powerOnRobot(); }
   void powerOffRobot() 

@@ -196,12 +196,14 @@ public:
                                         &ConfigForwardController::openSimulatedInterfaceCB, this));
     sub_list_.push_back(n.subscribe<std_msgs::Empty>("close_interface", 1, 
                                         &ConfigForwardController::closeInterfaceCB, this));
-    sub_list_.push_back(n.subscribe<std_msgs::Empty>("unlock_securty_stop", 1, 
+    sub_list_.push_back(n.subscribe<std_msgs::Empty>("unlock_security_stop", 1, 
                                         &ConfigForwardController::unlockSecurityStopCB, this));
     sub_list_.push_back(n.subscribe<std_msgs::Empty>("set_robot_ready_mode", 1, 
                                         &ConfigForwardController::setRobotReadyModeCB, this));
     sub_list_.push_back(n.subscribe<std_msgs::Empty>("set_robot_running_mode", 1, 
                                         &ConfigForwardController::setRobotRunningModeCB, this));
+    sub_list_.push_back(n.subscribe<std_msgs::Empty>("set_freedrive_mode", 1, 
+                                        &ConfigForwardController::setFreedriveModeCB, this));
     sub_list_.push_back(n.subscribe<std_msgs::Empty>("power_on_robot", 1, 
                                         &ConfigForwardController::powerOnRobotCB, this));
     sub_list_.push_back(n.subscribe<std_msgs::Empty>("power_off_robot", 1, 
@@ -274,13 +276,15 @@ private:
   { config_cmd_buf_[11].setTCPWrenchBase(msg->data); }
   void setTCPWrenchEECB(const std_msgs::Float64MultiArrayConstPtr& msg)
   { config_cmd_buf_[12].setTCPWrenchEE(msg->data); }
+  void setFreedriveModeCB(const std_msgs::EmptyConstPtr& msg)
+  { config_cmd_buf_[13].setFreedriveMode(); }
   void setSecurityStopCB(const std_msgs::Int32MultiArrayConstPtr& msg)
   { 
     if(msg->data.size() != 3) {
       ROS_WARN("ConfigForwardController: Security stop must be of length 3");
       return;
     }
-    config_cmd_buf_[13].setSecurityStop(msg->data[0], msg->data[1], msg->data[2]);
+    config_cmd_buf_[14].setSecurityStop(msg->data[0], msg->data[1], msg->data[2]);
   }
 };
 
