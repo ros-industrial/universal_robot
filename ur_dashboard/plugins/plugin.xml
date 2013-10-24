@@ -1,0 +1,12 @@
+<library path="src">
+  <class name="URDashboard" type="ur_dashboard.dashboard.URDashboard" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      Dashboard for UR Robot
+    </description>
+    <qtgui>
+      <label>UR Dashboard</label>
+      <icon type="file">images/ur_icon.png</icon>
+      <statustip>Interface for powering and monitoring UR arm</statustip>
+    </qtgui>
+  </class>
+</library>
