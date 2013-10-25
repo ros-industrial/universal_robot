@@ -22,7 +22,7 @@ ICON_NAMES = [['rotate_y_pos_on.png'], ['rotate_y_neg_on.png'],
               ['rotate_z_neg_on.png'], ['rotate_z_pos_on.png']]
 BUTTON_ICONS = [(2,3), (0,1), (0,1), (0,1), (2,3), (0,1)]
 VEL_MULTS = [-1.0, 1.0] 
-MONITOR_RATE = 1000./125.
+MONITOR_RATE = 1000./250.
 
 class URJointCtrlGui(Plugin):
 
