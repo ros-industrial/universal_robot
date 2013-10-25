@@ -8,6 +8,8 @@
 
 namespace ur {
 
+double ZERO_VECTOR[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
 URHardwareController::URHardwareController(SimpleSocket* socket_conn) 
   : URControllerInterface(socket_conn)
 {
@@ -113,14 +115,17 @@ void URHardwareController::sendRobotCommands()
   ////////////////////////////// Joint commands ///////////////////////////////
   if(ur_state.robot_mode_id != ROBOT_RUNNING_MODE && ur_state.robot_mode_id != ROBOT_INITIALIZING_MODE) 
     // robot not running at the moment, don't bother commanding joints
-    robotinterface_command_empty_command();
+    // robotinterface_command_empty_command();
+    robotinterface_command_velocity(ZERO_VECTOR);
 
   else if(ur_state.sequence - latest_cmd_seq >= CMD_TIMEOUT)
     // we haven't received a new command for CMD_TIMEOUT cycles, stop moving
-    robotinterface_command_empty_command();
+    // robotinterface_command_empty_command();
+    robotinterface_command_velocity(ZERO_VECTOR);
 
   else if(jnt_cmd.mode == ur::URJointCommandModes::EMPTY)
-    robotinterface_command_empty_command();
+    // robotinterface_command_empty_command();
+    robotinterface_command_velocity(ZERO_VECTOR);
 
   else if(jnt_cmd.mode == ur::URJointCommandModes::VEL)
     robotinterface_command_velocity(jnt_cmd.qd);
@@ -136,7 +141,8 @@ void URHardwareController::sendRobotCommands()
     robotinterface_command_torque(jnt_cmd.qd, jnt_cmd.security_torque, jnt_cmd.control_torque);
 
   else
-    robotinterface_command_empty_command();
+    // robotinterface_command_empty_command();
+    robotinterface_command_velocity(ZERO_VECTOR);
   /////////////////////////////////////////////////////////////////////////////
 
   /////////////////////////////// Config commands ///////////////////////////////
