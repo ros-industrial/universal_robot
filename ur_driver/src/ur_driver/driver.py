@@ -184,6 +184,12 @@ class UR5Connection(object):
                 self.__trigger_halted()
                 self.robot_state = self.CONNECTED
 
+        # Report on any unknown packet types that were received
+        if len(state.unknown_ptypes) > 0:
+            s_unknown_ptypes = [str(ptype) for ptype in state.unknown_ptypes]
+            rospy.logwarn("Ignoring unknown pkt type(s): %s. "
+                          "Please report." % ",".join(s_unknown_ptypes))
+
     def __run(self):
         while self.__keep_running:
             r, _, _ = select.select([self.__sock], [], [], self.TIMEOUT)
