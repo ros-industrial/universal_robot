@@ -12,6 +12,8 @@ from rqt_robot_dashboard.util import IconHelper
 from diagnostic_msgs.msg import DiagnosticArray
 from sensor_msgs.msg import JointState
 
+from .joint_vel_ctrl import JointVelocityController
+
 JOINT_NAMES = ['Shoulder Pan', 'Shoulder Lift', 'Elbow',
                'Wrist 1', 'Wrist 2', 'Wrist 3']
 JOINT_SHORT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
@@ -20,6 +22,7 @@ ICON_NAMES = [['rotate_y_pos_on.png'], ['rotate_y_neg_on.png'],
               ['rotate_z_neg_on.png'], ['rotate_z_pos_on.png']]
 BUTTON_ICONS = [(2,3), (0,1), (0,1), (0,1), (2,3), (0,1)]
 VEL_MULTS = [-1.0, 1.0] 
+MONITOR_RATE = 1000./125.
 
 class URJointCtrlGui(Plugin):
 
@@ -232,7 +235,7 @@ class URJointCtrlGui(Plugin):
             self.q_deg_nums.append(q_deg_num)
             self.q_sliders.append(q_slider)
 
-        # self.joint_vel_ctrl = JointVelocityController()
+        self.joint_vel_ctrl = JointVelocityController()
 
         # connect signals
         self.state_changed.connect(self._update_state)
@@ -240,9 +243,16 @@ class URJointCtrlGui(Plugin):
             for j in range(2):
                 self.buttons[i][j].pressed.connect(partial(self._start_move, i, j))
                 self.buttons[i][j].released.connect(self._stop_move)
-        # self.start_moving.connect(self.joint_vel_ctrl.start_moving)
-        # self.stop_moving.connect(self.joint_vel_ctrl.stop_moving)
+        self.start_moving.connect(self.joint_vel_ctrl.start_moving)
+        self.stop_moving.connect(self.joint_vel_ctrl.stop_moving)
 
+        # setup update timer
+        self.monitor_timer = QtCore.QTimer(context)
+        QtCore.QObject.connect(self.monitor_timer, QtCore.SIGNAL("timeout()"), 
+                               self.joint_vel_ctrl.update)
+        self.monitor_timer.start(MONITOR_RATE)
+
+        # create ros subscribers
         self._diag_agg_sub = rospy.Subscriber('diagnostics_agg', DiagnosticArray, 
                                               self._diagnostics_cb)
         self._joint_states_sub = rospy.Subscriber('joint_states', JointState, 

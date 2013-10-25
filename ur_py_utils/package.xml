@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <package>
-  <name>ur_dashboard</name>
+  <name>ur_py_utils</name>
   <version>0.0.0</version>
-  <description>
-    RQT-based plugin for visualizing the UR robot power/joint states and
-    configuring the robot.
-  </description>
+  <description>The ur_py_utils package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="Hawkins@todo.todo">Kelsey Hawkins</maintainer>
+  <maintainer email="kelsey@todo.todo">kelsey</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -22,14 +19,13 @@
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://ros.org/wiki/ur_dashboard</url> -->
+  <!-- <url type="website">http://ros.org/wiki/ur_py_utils</url> -->
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
   <!-- Authors do not have to be maintianers, but could be -->
   <!-- Example: -->
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
-  <author >Kelsey Hawkins</author>
 
 
   <!-- The *_depend tags are used to specify dependencies -->
@@ -45,15 +41,17 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rospy</build_depend>
-  <build_depend>rqt_robot_dashboard</build_depend>
-  <build_depend>ur_py_utils</build_depend>
+  <build_depend>ur_controllers</build_depend>
   <run_depend>rospy</run_depend>
-  <run_depend>rqt_robot_dashboard</run_depend>
-  <run_depend>ur_py_utils</run_depend>
+  <run_depend>ur_controllers</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <rqt_gui plugin="${prefix}/plugins/plugin.xml" />
+    <!-- You can specify that this package is a metapackage here: -->
+    <!-- <metapackage/> -->
+
+    <!-- Other tools can request additional information be placed here -->
+
   </export>
 </package>

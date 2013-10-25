@@ -1,11 +1,10 @@
-# Much of this code is borrowed from kobuki_dashboard
-
 from functools import partial
 
 import rospy
 from diagnostic_msgs.msg import DiagnosticArray
 from std_msgs.msg import Empty, Int32MultiArray
 
+from ur_py_utils.arm_iface import ArmInterface
 from rqt_robot_dashboard.dashboard import Dashboard
 from rqt_robot_dashboard.widgets import MonitorDashWidget, ConsoleDashWidget
 from rqt_robot_dashboard.widgets import MenuDashWidget, IconToolButton
@@ -18,14 +17,12 @@ class URDashboard(Dashboard):
 
     def setup(self, context):
         self._last_diag_msg_time = 0.0
+        self.arm_iface = ArmInterface()
 
-        self._iface_widget = InterfaceWidget('/config_fwd_ctrl/open_interface',
-                                             '/config_fwd_ctrl/close_interface')
-        self._pwr_widget = PowerWidget('/config_fwd_ctrl/power_on_robot',
-                                       '/config_fwd_ctrl/power_off_robot')
-        self._estop_widget = EStopWidget('/config_fwd_ctrl/power_on_robot')
-        self._sstop_widget = SecuStopWidget('/config_fwd_ctrl/unlock_security_stop',
-                                            '/config_fwd_ctrl/set_security_stop')
+        self._iface_widget = InterfaceWidget(self.arm_iface)
+        self._pwr_widget = PowerWidget(self.arm_iface)
+        self._estop_widget = EStopWidget(self.arm_iface)
+        self._sstop_widget = SecuStopWidget(self.arm_iface)
         self._mode_text = RobotModeTextWidget()
 
         self._dashboard_agg_sub = rospy.Subscriber('diagnostics_agg', DiagnosticArray, 
@@ -86,11 +83,11 @@ class URDashboard(Dashboard):
     def shutdown_dashboard(self):
         self._dashboard_agg_sub.unregister()
         self.timeout_timer.shutdown()
+        self.arm_iface.shutdown()
 
 class InterfaceWidget(IconToolButton):
-    def __init__(self, topic_open, topic_close):
-        self._pub_open = rospy.Publisher(topic_open, Empty)
-        self._pub_close = rospy.Publisher(topic_close, Empty)
+    def __init__(self, arm_iface):
+        self.arm_iface = arm_iface
 
         self._off_icon = ['bg-red.svg', 'ic-navigation.svg']
         self._on_icon = ['bg-green.svg', 'ic-navigation.svg']
@@ -119,18 +116,16 @@ class InterfaceWidget(IconToolButton):
 
     def toggle(self):
         if super(InterfaceWidget, self).state is 1:
-            self._pub_close.publish(Empty())
+            self.arm_iface.close_interface()
         else:
-            self._pub_open.publish(Empty())
+            self.arm_iface.open_interface()
 
     def close(self):
-        self._pub_open.unregister()
-        self._pub_close.unregister()
+        pass
 
 class PowerWidget(IconToolButton):
-    def __init__(self, topic_on, topic_off):
-        self._pub_on = rospy.Publisher(topic_on, Empty)
-        self._pub_off = rospy.Publisher(topic_off, Empty)
+    def __init__(self, arm_iface):
+        self.arm_iface = arm_iface
 
         self._off_icon = ['bg-red.svg', 'ic-breaker.svg']
         self._on_icon = ['bg-green.svg', 'ic-breaker.svg']
@@ -158,17 +153,16 @@ class PowerWidget(IconToolButton):
 
     def toggle(self):
         if super(PowerWidget, self).state is 1:
-            self._pub_off.publish(Empty())
+            self.arm_iface.power_off_robot()
         else:
-            self._pub_on.publish(Empty())
+            self.arm_iface.power_on_robot()
 
     def close(self):
-        self._pub_on.unregister()
-        self._pub_off.unregister()
+        pass
 
 class EStopWidget(IconToolButton):
-    def __init__(self, topic_enable):
-        self._pub_enable = rospy.Publisher(topic_enable, Empty)
+    def __init__(self, arm_iface):
+        self.arm_iface = arm_iface
 
         self._stopped_icon = ['bg-red.svg', 'ic-wireless-runstop-on.svg']
         self._running_icon = ['bg-green.svg', 'ic-wireless-runstop-off.svg']
@@ -184,7 +178,6 @@ class EStopWidget(IconToolButton):
 
         self.clicked.connect(self.toggle)
 
-
     def update_state(self, state):
         if state is not super(EStopWidget, self).state:
             super(EStopWidget, self).update_state(state)
@@ -199,15 +192,14 @@ class EStopWidget(IconToolButton):
 
     def toggle(self):
         if super(EStopWidget, self).state is 2:
-            self._pub_enable.publish(Empty())
+            self.arm_iface.power_on_robot()
 
     def close(self):
-        self._pub_enable.unregister()
+        pass
 
 class SecuStopWidget(IconToolButton):
-    def __init__(self, topic_enable, topic_stop):
-        self._pub_enable = rospy.Publisher(topic_enable, Empty)
-        self._pub_stop = rospy.Publisher(topic_stop, Int32MultiArray)
+    def __init__(self, arm_iface):
+        self.arm_iface = arm_iface
 
         self._stopped_icon = ['bg-red.svg', 'ic-runstop-on.svg', 'ol-err-badge.svg']
         self._running_icon = ['bg-green.svg', 'ic-runstop-off.svg']
@@ -234,15 +226,12 @@ class SecuStopWidget(IconToolButton):
 
     def toggle(self):
         if super(SecuStopWidget, self).state is 0:
-            self._pub_enable.publish(Empty())
+            self.arm_iface.unlock_security_stop()
         elif super(SecuStopWidget, self).state is 1:
-            stop_msg = Int32MultiArray()
-            stop_msg.data = [0, 110, 0]
-            self._pub_stop.publish(stop_msg)
+            self.arm_iface.set_security_stop()
 
     def close(self):
-        self._pub_enable.unregister()
-        self._pub_stop.unregister()
+        pass
 
 class RobotModeTextWidget(QTextEdit):
     text_changed = Signal()
