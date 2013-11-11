@@ -381,7 +381,7 @@ def interp_cubic(p0, p1, t_abs):
         q[i] = a + b*t + c*t**2 + d*t**3
         qdot[i] = b + 2*c*t + 3*d*t**2
         qddot[i] = 2*c + 6*d*t
-    return JointTrajectoryPoint(q, qdot, qddot, rospy.Duration(t_abs))
+    return JointTrajectoryPoint(positions=q, velocities=qdot, accelerations=qddot, time_from_start=rospy.Duration(t_abs))
 
 # Returns (q, qdot, qddot) for sampling the JointTrajectory at time t.
 # The time t is the time since the trajectory was started.
