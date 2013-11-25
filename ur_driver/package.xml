@@ -50,6 +50,7 @@
   <run_depend>control_msgs</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>sensor_msgs</run_depend>
+  <run_depend>python-beautifulsoup</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
