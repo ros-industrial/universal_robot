@@ -46,10 +46,12 @@
   <build_depend>control_msgs</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>sensor_msgs</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
   <run_depend>actionlib</run_depend>
   <run_depend>control_msgs</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>sensor_msgs</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
   <run_depend>python-beautifulsoup</run_depend>
 
 
