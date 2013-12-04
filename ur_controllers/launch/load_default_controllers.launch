@@ -1,5 +1,4 @@
 <launch>
-  <arg name="robot_ip" default="127.0.0.1" />
 
   <rosparam>
     pos_vel_acc_fwd_ctrl:
@@ -18,7 +17,7 @@
 
     joint_state_pub:
       type: joint_state_controller/JointStateController
-      publish_rate: 1
+      publish_rate: 100
       
     config_fwd_ctrl:
       type: ur_controllers/ConfigForwardController
@@ -63,10 +62,5 @@
                             contains: UR arm joint
         </rosparam> 
     </node>
-
-    <include file="$(find ur_ctrl_client)/launch/ur_ctrl_client_manager.launch" >
-        <arg name="robot_ip" value="$(arg robot_ip)" />
-    </include>
-
 
 </launch>
