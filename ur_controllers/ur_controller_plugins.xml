@@ -1,5 +1,25 @@
 <library path="lib/libur_controllers">
 
+  <!--
+  <class name="pos_vel_acc_controllers/JointTrajectoryController" 
+         type="pos_vel_acc_controllers::JointTrajectoryController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      The JointTrajectoryController executes joint-space trajectories on a set of joints.
+      This variant represents trajectory segments as quintic splines and sends commands to a position/velocity/acceleration interface.
+    </description>
+  </class>
+  -->
+
+  <class name="velocity_controllers/JointTrajectoryController" 
+         type="velocity_controllers::JointTrajectoryController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      The JointTrajectoryController executes joint-space trajectories on a set of joints.
+      This variant represents trajectory segments as quintic splines and sends commands to a velocity interface.
+    </description>
+  </class>
+
   <class name="ur_controllers/PosVelAccForwardController" 
          type="ur_controllers::PosVelAccForwardController" 
          base_class_type="controller_interface::ControllerBase">

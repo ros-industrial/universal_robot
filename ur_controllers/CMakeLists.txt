@@ -4,7 +4,7 @@ project(ur_controllers)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface std_msgs ur_ctrl_client ur_ctrl_server realtime_tools)
+find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface std_msgs ur_ctrl_client ur_ctrl_server realtime_tools joint_trajectory_controller urdf)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -50,7 +50,7 @@ find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ur_controllers
-#  CATKIN_DEPENDS controller_interface hardware_interface std_msgs ur_ctrl_client
+  CATKIN_DEPENDS controller_interface hardware_interface std_msgs ur_ctrl_client urdf
 #  DEPENDS system_lib
 )
 
@@ -69,9 +69,12 @@ add_library(ur_controllers
   src/ur_forward_cmd_controllers.cpp
   src/ur_state_controllers.cpp
   src/ur_switch_mode_controllers.cpp
+  src/ur_joint_trajectory_controller.cpp
 )
 target_link_libraries(ur_controllers
   simple_message_float64 
+  pthread
+  ${catkin_LIBRARIES}
 )
 
 ## Declare a cpp library

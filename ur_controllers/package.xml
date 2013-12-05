@@ -45,11 +45,15 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>ur_ctrl_client</build_depend>
   <build_depend>realtime_tools</build_depend>
+  <build_depend>joint_trajectory_controller</build_depend>
+  <build_depend>urdf</build_depend>
   <run_depend>controller_interface</run_depend>
   <run_depend>hardware_interface</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>ur_ctrl_client</run_depend>
   <run_depend>realtime_tools</run_depend>
+  <run_depend>joint_trajectory_controller</run_depend>
+  <run_depend>urdf</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

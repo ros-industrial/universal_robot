@@ -1,16 +1,16 @@
 <launch>
 
   <rosparam>
-    pos_vel_acc_fwd_ctrl:
+    pva_forward_ctrl:
       type: ur_controllers/PosVelAccForwardController
-    velocity_fwd_ctrl:
+    vel_forward_ctrl:
       type: ur_controllers/VelocityForwardController
 
-    pos_vel_acc_mode:
+    pva_enable_mode:
       type: ur_controllers/PosVelAccModeController
       joint_names: 
         - joint_command
-    velocity_mode:
+    vel_enable_mode:
       type: ur_controllers/VelocityModeController
       joint_names: 
         - joint_command
@@ -22,6 +22,9 @@
     config_fwd_ctrl:
       type: ur_controllers/ConfigForwardController
 
+    vel_trajectory_ctrl:
+      type: velocity_controllers/JointTrajectoryController
+
     mode_state_pub:
       type: ur_controllers/StatePublishController
 
@@ -31,15 +34,20 @@
   </rosparam>
 
   <rosparam command="load" file="$(find ur_ctrl_client)/param/joint_names.yaml"
-            param="pos_vel_acc_fwd_ctrl/joint_names" />
+            param="pva_forward_ctrl/joint_names" />
   <rosparam command="load" file="$(find ur_ctrl_client)/param/joint_names.yaml"
-            param="velocity_fwd_ctrl/joint_names" />
+            param="vel_forward_ctrl/joint_names" />
+  <rosparam command="load" file="$(find ur_ctrl_client)/param/joint_names.yaml"
+            param="vel_trajectory_ctrl/joints" />
+
+  <rosparam command="load" file="$(find ur_controllers)/launch/trajectory_ctrl_constraints.yaml"
+            param="vel_trajectory_ctrl" />
 
   <!--<node name="controller_manager" type="spawner" pkg="controller_manager"
-        output="screen" args="pos_vel_acc_fwd_ctrl" /> -->
+        output="screen" args="pva_forward_ctrl" /> -->
 
   <node name="ur_load_ctrls" type="controller_manager" pkg="controller_manager"
-        output="screen" args="load velocity_fwd_ctrl pos_vel_acc_fwd_ctrl pos_vel_acc_mode velocity_mode" />
+        output="screen" args="load vel_forward_ctrl pva_forward_ctrl pva_enable_mode vel_enable_mode vel_trajectory_ctrl" />
   <node name="ur_spawn_ctrls" type="spawner" pkg="controller_manager"
         output="screen" args="joint_state_pub mode_state_pub ur_diagnostics_pub config_fwd_ctrl" />
 
