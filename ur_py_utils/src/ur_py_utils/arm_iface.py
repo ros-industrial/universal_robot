@@ -23,8 +23,8 @@ class ArmInterface(object):
         self._pub_unlock_sstop = rospy.Publisher(config_prefix + '/unlock_security_stop', Empty)
         self._pub_set_sstop = rospy.Publisher(config_prefix + '/set_security_stop', Int32MultiArray)
 
-        self._pub_vel = rospy.Publisher('/velocity_fwd_ctrl/command', Float64MultiArray)
-        self._pub_pva = rospy.Publisher('/pos_vel_acc_fwd_ctrl/command', JointTrajectoryPoint)
+        self._pub_vel = rospy.Publisher('/vel_forward_ctrl/command', Float64MultiArray)
+        self._pub_pva = rospy.Publisher('/pva_forward_ctrl/command', JointTrajectoryPoint)
     
     def is_emergency_stopped(self, timeout=0.3):
         try:
@@ -130,19 +130,22 @@ class ArmInterface(object):
         js = self.get_joint_state(timeout)
         if js is None:
             return None
-        return js.position
+        q = np.array(js.position)
+        return q[self.joint_state_inds]
 
     def get_qd(self, timeout=1.1):
         js = self.get_joint_state(timeout)
         if js is None:
             return None
-        return js.velocity
+        qd = np.array(js.velocity)
+        return qd[self.joint_state_inds]
 
     def get_effort(self, timeout=1.1):
         js = self.get_joint_state(timeout)
         if js is None:
             return None
-        return js.effort
+        effort = np.array(js.effort)
+        return effort[self.joint_state_inds]
 
     def shutdown(self):
         self._pub_open_iface.unregister()
