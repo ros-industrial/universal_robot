@@ -460,6 +460,7 @@ class UR5TrajectoryFollower(object):
         self.first_waypoint_id = 10
         self.tracking_i = 0
         self.pending_i = 0
+        self.last_point_sent = True
 
         self.update_timer = rospy.Timer(rospy.Duration(self.RATE), self._update)
 
@@ -605,6 +606,12 @@ class UR5TrajectoryFollower(object):
                                           (last_point.positions, state.position, state.velocity))
                 setpoint = sample_traj(self.traj, self.traj.points[-1].time_from_start.to_sec())
 
+                try:
+                    self.robot.send_servoj(999, setpoint.positions, 4 * self.RATE)
+                    self.last_point_sent = True
+                except socket.error:
+                    pass
+                    
             else:  # Off the end
                 if self.goal_handle:
                     last_point = self.traj.points[-1]
