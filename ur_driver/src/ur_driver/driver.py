@@ -580,27 +580,47 @@ class UR5TrajectoryFollower(object):
         if self.robot and self.traj:
             now = time.time()
             if (now - self.traj_t0) <= self.traj.points[-1].time_from_start.to_sec():
+                self.last_point_sent = False #sending intermediate points
                 setpoint = sample_traj(self.traj, now - self.traj_t0)
                 try:
                     self.robot.send_servoj(999, setpoint.positions, 4 * self.RATE)
                 except socket.error:
                     pass
+                    
+            elif not self.last_point_sent:
+                # All intermediate points sent, sending last point to make sure we
+                # reach the goal.
+                # This should solve an issue where the robot does not reach the final
+                # position and errors out due to not reaching the goal point.
+                last_point = self.traj.points[-1]
+                state = self.robot.get_joint_states()
+                position_in_tol = within_tolerance(state.position, last_point.positions, self.joint_goal_tolerances)
+                # Performing this check to try and catch our error condition.  We will always
+                # send the last point just in case.
+                if not position_in_tol:
+                    rospy.logwarn("Trajectory time exceeded and current robot state not at goal, last point required")
+                    rospy.logwarn("Current trajectory time: %s, last point time: %s" % \
+                                (now - self.traj_t0, self.traj.points[-1].time_from_start.to_sec()))
+                    rospy.logwarn("Desired: %s\nactual: %s\nvelocity: %s" % \
+                                          (last_point.positions, state.position, state.velocity))
+                setpoint = sample_traj(self.traj, self.traj.points[-1].time_from_start.to_sec())
+
             else:  # Off the end
                 if self.goal_handle:
                     last_point = self.traj.points[-1]
                     state = self.robot.get_joint_states()
-                    position_in_tol = within_tolerance(state.position, last_point.positions, self.joint_goal_tolerances)
-                    velocity_in_tol = within_tolerance(state.velocity, last_point.velocities, [0.005]*6)
+                    position_in_tol = within_tolerance(state.position, last_point.positions, [0.1]*6)
+                    velocity_in_tol = within_tolerance(state.velocity, last_point.velocities, [0.05]*6)
                     if position_in_tol and velocity_in_tol:
                         # The arm reached the goal (and isn't moving).  Succeeding
                         self.goal_handle.set_succeeded()
                         self.goal_handle = None
-                    elif now - (self.traj_t0 + last_point.time_from_start.to_sec()) > self.goal_time_tolerance.to_sec():
-                        # Took too long to reach the goal.  Aborting
-                        rospy.logwarn("Took too long to reach the goal.\nDesired: %s\nactual: %s\nvelocity: %s" % \
-                                          (last_point.positions, state.position, state.velocity))
-                        self.goal_handle.set_aborted(text="Took too long to reach the goal")
-                        self.goal_handle = None
+                    #elif now - (self.traj_t0 + last_point.time_from_start.to_sec()) > self.goal_time_tolerance.to_sec():
+                    #    # Took too long to reach the goal.  Aborting
+                    #    rospy.logwarn("Took too long to reach the goal.\nDesired: %s\nactual: %s\nvelocity: %s" % \
+                    #                      (last_point.positions, state.position, state.velocity))
+                    #    self.goal_handle.set_aborted(text="Took too long to reach the goal")
+                    #    self.goal_handle = None
 
 # joint_names: list of joints
 #
@@ -650,7 +670,7 @@ def main():
 
     # Reads the maximum velocity
     global max_velocity
-    max_velocity = rospy.get_param("~max_velocity", 0.5)
+    max_velocity = rospy.get_param("~max_velocity", 2.0)
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)
