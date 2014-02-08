@@ -199,10 +199,11 @@ class RobotState(object):
     __slots__ = ['robot_mode_data', 'joint_data', 'tool_data',
                  'masterboard_data', 'cartesian_info',
                  'kinematics_info', 'configuration_data',
-                 'force_mode_data', 'additional_info']
+                 'force_mode_data', 'additional_info',
+                 'unknown_ptypes']
 
     def __init__(self):
-        pass
+        self.unknown_ptypes = []
 
     @staticmethod
     def unpack(buf):
@@ -242,7 +243,7 @@ class RobotState(object):
             elif ptype == PackageType.ADDITIONAL_INFO:
                 rs.additional_info = AdditionalInfo.unpack(package_buf)
             else:
-                raise Exception("Unknown package type: %i" % ptype)
+                rs.unknown_ptypes.append(ptype)
         return rs
 
 def pstate(o, indent=''):
