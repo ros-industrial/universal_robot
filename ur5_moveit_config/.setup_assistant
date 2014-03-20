@@ -1,8 +1,0 @@
-moveit_setup_assistant_config:
-  URDF:
-    package: ur_description
-    relative_path: urdf/ur5_joint_limited_robot.urdf
-  SRDF:
-    relative_path: config/ur5.srdf
-  CONFIG:
-    generated_timestamp: 1369541351
