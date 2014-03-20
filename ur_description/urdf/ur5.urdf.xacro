@@ -239,14 +239,6 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
-  
-  <joint name="${prefix}ee_fixed_joint" type="fixed">
-    <parent link="${prefix}wrist_3_link" />
-    <child link = "${prefix}ee_link" />
-    <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />    
-  </joint>
-
-  <link name="${prefix}ee_link" />
 
   <xacro:ur5_arm_transmission prefix="${prefix}" />
   <xacro:ur5_arm_gazebo prefix="${prefix}" />
