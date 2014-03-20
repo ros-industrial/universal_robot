@@ -1,53 +1,29 @@
 arm_controller:
-  type: robot_mechanism_controllers/JointTrajectoryActionController
+  type: effort_controllers/JointTrajectoryController
+  topic: "test"
   joints:
-    - shoulder_pan_joint
-    - shoulder_lift_joint
-    - elbow_joint
-    - wrist_1_joint
-    - wrist_2_joint
-    - wrist_3_joint
+     - shoulder_pan_joint
+     - shoulder_lift_joint
+     - elbow_joint
+     - wrist_1_joint
+     - wrist_2_joint
+     - wrist_3_joint
   gains:
-    shoulder_pan_joint:
-      p: 2000.0
-      d: 0.0
-    shoulder_lift_joint:
-      p: 2000.0
-      d: 0.0
-    elbow_joint:
-      p: 2000.0
-      d: 0.0
-    wrist_1_joint:
-      p: 2020.0
-      d: 0.0
-    wrist_2_joint:
-      p: 2030.0
-      d: 0.0
-    wrist_3_joint:
-      p: 2050.0
-      d: 0.0
-
-  arm_joint_trajectory_action_node:
-    joints:
-        - shoulder_pan_joint
-        - shoulder_lift_joint
-        - elbow_joint
-        - wrist_1_joint
-        - wrist_2_joint
-        - wrist_3_joint
-    constraints:
+    shoulder_pan_joint: {p: 1000.0, i: 0.0, d: 0.0, i_clamp: 0.0, i_clamp_min: 0.0, i_clamp_max: 0.0}
+    shoulder_lift_joint: {p: 1000.0, i: 0.0, d: 0.0, i_clamp: 0.0, i_clamp_min: 0.0, i_clamp_max: 0.0}
+    elbow_joint: {p: 1000.0, i: 0.0, d: 0.0, i_clamp: 0.0, i_clamp_min: 0.0, i_clamp_max: 0.0}
+    wrist_1_joint: {p: 1000.0, i: 0.0, d: 0.0, i_clamp: 0.0, i_clamp_min: 0.0, i_clamp_max: 0.0}
+    wrist_2_joint: {p: 1000.0, i: 0.0, d: 0.0, i_clamp: 0.0, i_clamp_min: 0.0, i_clamp_max: 0.0}
+    wrist_3_joint: {p: 1000.0, i: 0.0, d: 0.0, i_clamp: 0.0, i_clamp_min: 0.0, i_clamp_max: 0.0}
+  constraints:
       goal_time: 0.6
-      shoulder_pan_joint:
-        goal: 0.05
-      shoulder_lift_joint:
-        goal: 0.05
-      elbow_joint:
-        goal: 0.05
-      wrist_1_joint:
-        goal: 0.05
-      wrist_2_joint:
-        goal: 0.05
-      wrist_3_joint:
-        goal: 0.05
-
-
+      stopped_velocity_tolerance: 0.5
+      shoulder_pan_joint: {trajectory: 0.1, goal: 0.1}
+      shoulder_lift_joint: {trajectory: 0.1, goal: 0.1}
+      elbow_joint: {trajectory: 0.1, goal: 0.1}
+      wrist_1_joint: {trajectory: 0.1, goal: 0.1}
+      wrist_2_joint: {trajectory: 0.1, goal: 0.1}
+      wrist_3_joint: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10
