@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="ur5_arm_gazebo" params="name">
+  <xacro:macro name="ur5_arm_gazebo" params="prefix">
 
     <gazebo reference="universal_robot">
       <material>Gazebo/Blue</material>
