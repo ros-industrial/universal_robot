@@ -4,7 +4,7 @@ project(ur_driver)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS actionlib control_msgs rospy sensor_msgs)
+find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -47,14 +47,8 @@ catkin_python_setup()
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES ur_driver
-#  CATKIN_DEPENDS actionlib control_msgs rospy sensor_msgs
-#  DEPENDS system_lib
-)
+catkin_package()
 
-catkin_python_setup()
 
 ###########
 ## Build ##
