@@ -5,10 +5,13 @@
 
   <!-- By default, we are not in debug mode -->
   <arg name="debug" default="false" />
+  
+  <arg name="limited" default="false"/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find ur10_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
+    <arg name="limited" value="$(arg limited)"/>
   </include>
 
   <!-- If needed, broadcast static tf for robot root -->

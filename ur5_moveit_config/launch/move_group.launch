@@ -1,6 +1,9 @@
 <launch>
+  <arg name="limited" default="false"/>
 
-  <include file="$(find ur5_moveit_config)/launch/planning_context.launch" />
+  <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
+    <arg name="limited" value="$(arg limited)" />
+  </include>
 
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
