@@ -40,9 +40,6 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>tf2_ros</build_depend>
-  <build_depend>ur_description</build_depend>
-  <build_depend>ur_driver</build_depend>
   <run_depend>tf2_ros</run_depend>
   <run_depend>ur_description</run_depend>
   <run_depend>ur_driver</run_depend>

@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="limited" default="false"/>
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" default="worlds/empty.world"/>
   </include>
 
-  <!-- send frida urdf to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find ur_description)/urdf/ur10_robot.urdf.xacro'" />
+  <!-- send robot urdf to param server -->
+  <include file="$(find ur_description)/launch/ur10_upload.launch">
+    <arg name="limited" value="$(arg limited)"/>
+  </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />

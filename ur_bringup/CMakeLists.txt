@@ -4,7 +4,7 @@ project(ur_bringup)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS tf2_ros ur_description ur_driver)
+find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -84,6 +84,9 @@ catkin_package(
 #############
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(FILES ur_common.launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(FILES ur5.launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(FILES ur10.launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
