@@ -6,7 +6,7 @@
   <xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
 
   <!-- ur10 -->
-  <xacro:include filename="$(find ur_description)/urdf/ur10_limited.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur10_joint_limited.urdf.xacro" />
 
   <!-- arm -->
   <xacro:ur10_robot prefix="">
