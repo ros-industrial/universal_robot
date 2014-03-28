@@ -1,7 +1,5 @@
 controller_list:
-  - name: arm_controller
-    ns: follow_joint_trajectory
-    default: true
+  - name: fake_manipulator_controller
     joints:
       - shoulder_pan_joint
       - shoulder_lift_joint
