@@ -4,6 +4,7 @@ Changelog for package ur_driver
 
 Forthcoming
 -----------
+
 * Merge pull request `#25 <https://github.com/ros-industrial/universal_robot/issues/25>`_ from ros-industrial/groovy-devel
   Merging latest changed from groovy to hydro devel branch
 * completed adding the workarounds from the original driver script

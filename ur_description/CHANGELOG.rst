@@ -4,6 +4,22 @@ Changelog for package ur_description
 
 Forthcoming
 -----------
+* changes due to file renaming
+* generate urdfs from latest xacros
+* file renaming
+* adapt launch files in order to be able to use normal/limited xacro
+* fixed typo in limits
+* add joint_limited urdf.xacros for both robots
+* (re-)add ee_link for both robots
+* updates for latest gazebo under hydro
+* remove ee_link - as in ur10
+* use same xacro params as ur10
+* use new transmission interfaces
+* update xml namespaces for hydro
+* remove obsolete urdf file
+* remove obsolete urdf file
+* Contributors: ipa-fxm
+
 * Update ur10.urdf.xacro
   Corrected UR10's urdf to faithfully represent joint effort thresholds, velocity limits, and dynamics parameters.
 * Update ur5.urdf.xacro

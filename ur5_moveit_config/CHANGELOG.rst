@@ -4,6 +4,13 @@ Changelog for package ur5_moveit_config
 
 Forthcoming
 -----------
+* Merge branch 'hydro-devel' of github.com:ros-industrial/universal_robot into hydro
+* changes due to file renaming
+* update moveit_configs: include ee_link and handle limited robot
+* new moveit_configs for ur5 and ur10
+* remove old ur5_moveit_config
+* Contributors: Florian Weisshardt, ipa-fxm
+
 * ur5_moveit_cfg: add missing run_depend ind_rob_simulator. Fix `#38 <https://github.com/ros-industrial/universal_robot/issues/38>`_.
 * update moveit_configs to use moveit_simple_controller_manager
 * Added config files missed on last commit
