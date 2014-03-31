@@ -2,8 +2,8 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2014-03-31)
+------------------
 * adapt launch files in order to be able to use normal/limited xacro
 * updates for latest gazebo under hydro
 * Contributors: ipa-fxm

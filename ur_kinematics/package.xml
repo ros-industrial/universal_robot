@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_kinematics</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>
      Provides forward and inverse kinematics for Universal robot designs.
   </description>
