@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
-
-<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
-       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-       xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:include filename="$(find ur_description)/urdf/ur10.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur10.gazebo.xacro" />
@@ -54,215 +50,223 @@
 
   <xacro:macro name="ur10_robot" params="prefix">
 
-	<link name="${prefix}base_link" >
-		<visual>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/visual/Base.stl" />
-		  </geometry>
-		  <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
-		  <material name="UR/Blue" />
-		</visual>
-		
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/Base.stl" />
-		  </geometry>
-		  <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
-		</collision>
+  <link name="${prefix}base_link" >
+    <visual>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/visual/Base.stl" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
+      <material name="UR/Blue" />
+    </visual>
+    
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/Base.stl" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
+    </collision>
 
-		<inertial>
-		  <mass value="${base_mass}" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		</inertial>
-	</link>
+    <inertial>
+      <mass value="${base_mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
 
-	<joint name="${prefix}shoulder_pan_joint" type="revolute">
-		<parent link="${prefix}base_link" />
-		<child link = "${prefix}shoulder_link" />
-		<origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
-		<axis xyz="0.0 0.0 1.0" />
-		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
-		<dynamics damping="1.2" friction="0.0"/>
-	</joint>
+  <joint name="${prefix}shoulder_pan_joint" type="revolute">
+    <parent link="${prefix}base_link" />
+    <child link = "${prefix}shoulder_link" />
+    <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
+    <dynamics damping="1.2" friction="0.0"/>
+  </joint>
   
-	<link name="${prefix}shoulder_link">
-		<visual>
-		  <geometry>
-  		    <mesh filename="package://ur_description/meshes/ur10/visual/Shoulder.stl" />
-		  </geometry>
-		  <material name="UR/Grey" />
-		</visual>
+  <link name="${prefix}shoulder_link">
+    <visual>
+      <geometry>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Shoulder.stl" />
+      </geometry>
+      <material name="UR/Grey" />
+    </visual>
 
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/Shoulder.stl" />
-		  </geometry>
-		</collision>
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/Shoulder.stl" />
+      </geometry>
+    </collision>
 
-		<inertial>
-		  <mass value="${shoulder_mass}" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		  <origin xyz="${shoulder_cog}" rpy="0.0 0.0 0.0" />
-		</inertial>
-	</link>
+    <inertial>
+      <mass value="${shoulder_mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <origin xyz="${shoulder_cog}" rpy="0.0 0.0 0.0" />
+    </inertial>
+  </link>
 
-	<joint name="${prefix}shoulder_lift_joint" type="revolute">
-		<parent link="${prefix}shoulder_link" />
-		<child link = "${prefix}upper_arm_link" />
-		<origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
-		<axis xyz="0.0 1.0 0.0" />
-		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
-		<dynamics damping="1.2" friction="0.0"/>
-	</joint>
+  <joint name="${prefix}shoulder_lift_joint" type="revolute">
+    <parent link="${prefix}shoulder_link" />
+    <child link = "${prefix}upper_arm_link" />
+    <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
+    <axis xyz="0.0 1.0 0.0" />
+    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
+    <dynamics damping="1.2" friction="0.0"/>
+  </joint>
 
-	<link name="${prefix}upper_arm_link">
-		<visual>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/visual/UpperArm.stl" />
-		  </geometry>
-		  <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-		  <material name="UR/Blue" />
-		</visual>
+  <link name="${prefix}upper_arm_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/visual/UpperArm.stl" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <material name="UR/Blue" />
+    </visual>
 
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/UpperArm.stl" />
-		  </geometry>
- 		  <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-		</collision>
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/UpperArm.stl" />
+      </geometry>
+       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </collision>
 
-		<inertial>
-		  <mass value="${upper_arm_mass}" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		  <origin xyz="${upper_arm_cog}" rpy="0.0 0.0 0.0" />
-		</inertial>
-	</link>
+    <inertial>
+      <mass value="${upper_arm_mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <origin xyz="${upper_arm_cog}" rpy="0.0 0.0 0.0" />
+    </inertial>
+  </link>
 
-	<joint name="${prefix}elbow_joint" type="revolute">
-		<parent link="${prefix}upper_arm_link" />
-		<child link = "${prefix}forearm_link" />
-		<origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
-		<axis xyz="0.0 1.0 0.0" />
-		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="${pi}"/>
-		<dynamics damping="0.6" friction="0.0"/>
-	</joint>
+  <joint name="${prefix}elbow_joint" type="revolute">
+    <parent link="${prefix}upper_arm_link" />
+    <child link = "${prefix}forearm_link" />
+    <origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
+    <axis xyz="0.0 1.0 0.0" />
+    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="${pi}"/>
+    <dynamics damping="0.6" friction="0.0"/>
+  </joint>
 
-	<link name="${prefix}forearm_link">
-		<visual>
- 		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/visual/Forearm.stl" />
-		  </geometry>
-		  <material name="UR/Grey" />
-		</visual>
+  <link name="${prefix}forearm_link">
+    <visual>
+       <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/visual/Forearm.stl" />
+      </geometry>
+      <material name="UR/Grey" />
+    </visual>
 
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/Forearm.stl" />
-		  </geometry>
-		</collision>
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/Forearm.stl" />
+      </geometry>
+    </collision>
 
-		<inertial>
-		  <mass value="${forearm_mass}" />
-		  <origin xyz="${forearm_cog}" rpy="0.0 0.0 0.0" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		</inertial>
-	</link>
+    <inertial>
+      <mass value="${forearm_mass}" />
+      <origin xyz="${forearm_cog}" rpy="0.0 0.0 0.0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
 
-	<joint name="${prefix}wrist_1_joint" type="revolute">
- 		<parent link="${prefix}forearm_link" />
-		<child link = "${prefix}wrist_1_link" />
-		<origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
-		<axis xyz="0.0 1.0 0.0" />
-		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="${pi}"/>
-		<dynamics damping="0.6" friction="0.0"/>
-	</joint>
+  <joint name="${prefix}wrist_1_joint" type="revolute">
+     <parent link="${prefix}forearm_link" />
+    <child link = "${prefix}wrist_1_link" />
+    <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
+    <axis xyz="0.0 1.0 0.0" />
+    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="${pi}"/>
+    <dynamics damping="0.6" friction="0.0"/>
+  </joint>
 
-	<link name="${prefix}wrist_1_link">
-		<visual>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/visual/Wrist1.stl" />
-		  </geometry>
-		  <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0 0.0" />
-		  <material name="UR/Blue" />
-		</visual>
+  <link name="${prefix}wrist_1_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/visual/Wrist1.stl" />
+      </geometry>
+      <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0 0.0" />
+      <material name="UR/Blue" />
+    </visual>
 
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/Wrist1.stl" />
-		  </geometry>
-		  <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0 0.0" />
-		</collision>
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/Wrist1.stl" />
+      </geometry>
+      <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0 0.0" />
+    </collision>
 
-		<inertial>
-		  <mass value="${wrist_1_mass}" />
-		  <origin xyz="${wrist_1_cog}" rpy="0.0 0.0 0.0" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		</inertial>
-	</link>
+    <inertial>
+      <mass value="${wrist_1_mass}" />
+      <origin xyz="${wrist_1_cog}" rpy="0.0 0.0 0.0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
 
-	  <joint name="${prefix}wrist_2_joint" type="revolute">
-		<parent link="${prefix}wrist_1_link" />
-		<child link = "${prefix}wrist_2_link" />
-		<origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
-		<axis xyz="0.0 0.0 1.0" />
-		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="${pi}"/>
-		<dynamics damping="0.6" friction="0.0"/>
-	</joint>
+    <joint name="${prefix}wrist_2_joint" type="revolute">
+    <parent link="${prefix}wrist_1_link" />
+    <child link = "${prefix}wrist_2_link" />
+    <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="${pi}"/>
+    <dynamics damping="0.6" friction="0.0"/>
+  </joint>
 
-	<link name="${prefix}wrist_2_link">
-		<visual>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/visual/Wrist2.stl" />
-		  </geometry>
-		  <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
-		  <material name="UR/Grey" />
-		</visual>
+  <link name="${prefix}wrist_2_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/visual/Wrist2.stl" />
+      </geometry>
+      <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
+      <material name="UR/Grey" />
+    </visual>
 
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/Wrist2.stl" />
-		  </geometry>
-		  <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
-		</collision>
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/Wrist2.stl" />
+      </geometry>
+      <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
+    </collision>
 
-		<inertial>
-		  <mass value="${wrist_2_mass}" />
-		  <origin xyz="${wrist_2_cog}" rpy="0.0 0.0 0.0" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		</inertial>
-	</link>
+    <inertial>
+      <mass value="${wrist_2_mass}" />
+      <origin xyz="${wrist_2_cog}" rpy="0.0 0.0 0.0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
 
-	<joint name="${prefix}wrist_3_joint" type="revolute">
-		<parent link="${prefix}wrist_2_link" />
-		<child link = "${prefix}wrist_3_link" />
-		<origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
-		<axis xyz="0.0 1.0 0.0" />
-		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="${pi}"/>
-		<dynamics damping="0.6" friction="0.0"/>
-	</joint>
+  <joint name="${prefix}wrist_3_joint" type="revolute">
+    <parent link="${prefix}wrist_2_link" />
+    <child link = "${prefix}wrist_3_link" />
+    <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
+    <axis xyz="0.0 1.0 0.0" />
+    <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="${pi}"/>
+    <dynamics damping="0.6" friction="0.0"/>
+  </joint>
 
-	<link name="${prefix}wrist_3_link">
-		<visual>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/visual/Wrist3.stl" />
-		  </geometry>
- 		  <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 0" />
-		  <material name="UR/Blue" />
-		</visual>
+  <link name="${prefix}wrist_3_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/visual/Wrist3.stl" />
+      </geometry>
+       <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 0" />
+      <material name="UR/Blue" />
+    </visual>
 
-		<collision>
-		  <geometry>
-		    <mesh filename="package://ur_description/meshes/ur10/collision/Wrist3.stl" />
-		  </geometry>
-		  <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 0" />
-		</collision>
+    <collision>
+      <geometry>
+        <mesh filename="package://ur_description/meshes/ur10/collision/Wrist3.stl" />
+      </geometry>
+      <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 0" />
+    </collision>
 
-		<inertial>
- 		  <mass value="${wrist_3_mass}" />
-		  <origin xyz="${wrist_3_cog}" rpy="0.0 0.0 0.0" />
-		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-		</inertial>
-	</link>
+    <inertial>
+       <mass value="${wrist_3_mass}" />
+      <origin xyz="${wrist_3_cog}" rpy="0.0 0.0 0.0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+  
+  <joint name="${prefix}ee_fixed_joint" type="fixed">
+    <parent link="${prefix}wrist_3_link" />
+    <child link = "${prefix}ee_link" />
+    <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+  </joint>
+
+  <link name="${prefix}ee_link" />
 
   <xacro:ur10_arm_transmission prefix="${prefix}" />
   <xacro:ur10_arm_gazebo prefix="${prefix}" />

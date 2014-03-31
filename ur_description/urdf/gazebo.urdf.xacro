@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
-<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
-       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <gazebo>
-	<plugin name="gazebo_ros_controller_manager" filename="libgazebo_ros_controller_manager.so">
-      <alwaysOn>true</alwaysOn>
-      <updateRate>1000.0</updateRate>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      <!--robotNamespace>/</robotNamespace-->
+      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
     </plugin>
 
+<!--
     <plugin name="gazebo_ros_power_monitor_controller" filename="libgazebo_ros_power_monitor.so">
       <alwaysOn>true</alwaysOn>
       <updateRate>1.0</updateRate>
@@ -21,6 +20,7 @@
       <dischargeVoltage>15.52</dischargeVoltage>
       <chargeVoltage>16.41</chargeVoltage>
     </plugin>
+-->
   </gazebo>
 
 </robot>

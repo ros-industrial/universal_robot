@@ -1,33 +1,45 @@
 <launch>
+  <arg name="limited" default="false"/>
 
-  <include file="$(find ur5_moveit_config)/launch/planning_context.launch" />
+  <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
+    <arg name="limited" value="$(arg limited)" />
+  </include>
 
+  <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
+  <!-- Verbose Mode Option -->
   <arg name="info" default="$(arg debug)" />  
   <arg unless="$(arg info)" name="command_args" value="" />
   <arg     if="$(arg info)" name="command_args" value="--debug" />
 
-  <arg name="allow_trajectory_execution" default="true"/>
+  <!-- move_group settings -->
+  <arg name="allow_trajectory_execution" default="true"/> 
+  <arg name="fake_execution" default="false"/>
   <arg name="max_safe_path_cost" default="1"/>
   <arg name="jiggle_fraction" default="0.05" />
-  <arg name="publish_monitored_planning_scene" default="false"/>
+  <arg name="publish_monitored_planning_scene" default="true"/>
 
-  <include ns="move_group" file="$(find ur5_moveit_config)/launch/planning_pipeline.launch">
+  <!-- Planning Functionality -->
+  <include ns="move_group" file="$(find ur5_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="ompl" />
   </include>
 
-  <include ns="move_group" file="$(find ur5_moveit_config)/launch/trajectory_execution.launch" if="$(arg allow_trajectory_execution)">
-    <arg name="moveit_controller_manager" value="ur5" /> 
+  <!-- Trajectory Execution Functionality -->
+  <include ns="move_group" file="$(find ur5_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_manage_controllers" value="true" />
+    <arg name="moveit_controller_manager" value="ur5" unless="$(arg fake_execution)"/>
+    <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>
   </include>
 
-  <include ns="move_group" file="$(find ur5_moveit_config)/launch/sensor_manager.launch" if="$(arg allow_trajectory_execution)">
+  <!-- Sensors Functionality -->
+  <include ns="move_group" file="$(find ur5_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_sensor_manager" value="ur5" /> 
   </include>
 
+  <!-- Start the actual move_group node/action server -->
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" args="$(arg command_args)">
     <!-- Set the display variable, in case OpenGL code is used internally -->
     <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
@@ -45,6 +57,7 @@
 				      move_group/MoveGroupPlanService
 				      move_group/MoveGroupQueryPlannersService
 				      move_group/MoveGroupStateValidationService
+				      move_group/MoveGroupGetPlanningSceneService
 				      " />
 
     <!-- Publish the planning scene of the physical robot so that rviz plugin can know actual robot -->
