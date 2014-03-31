@@ -2,6 +2,9 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.1 (2014-03-31)
 ------------------
 * changes due to file renaming

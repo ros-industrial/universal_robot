@@ -2,6 +2,12 @@
 Changelog for package universal_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'hydro-devel' of github.com:ros-industrial/universal_robot into hydro
+* added missing dependency
+* Contributors: Florian Weisshardt, ipa-fxm
+
 1.0.1 (2014-03-31)
 ------------------
 

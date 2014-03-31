@@ -2,6 +2,9 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.1 (2014-03-31)
 ------------------
 * Merge branch 'hydro-devel' of github.com:ros-industrial/universal_robot into hydro
