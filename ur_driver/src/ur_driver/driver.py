@@ -668,7 +668,7 @@ def main():
     (options, args) = parser.parse_args(rospy.myargv()[1:])
     if len(args) < 1:
         parser.error("You must specify the robot hostname")
-    elif len(args == 1:
+    elif len(args) == 1:
         robot_hostname = args[0]
         reverse_port = REVERSE_PORT
     elif len(args) == 2:
@@ -687,14 +687,13 @@ def main():
     max_velocity = rospy.get_param("~max_velocity", 2.0)
 
     # Sets up the server for the robot to connect to
-    server = TCPServer(("", REVERSE_PORT), CommanderTCPHandler)
+    server = TCPServer(("", reverse_port), CommanderTCPHandler)
     thread_commander = threading.Thread(name="CommanderHandler", target=server.serve_forever)
     thread_commander.daemon = True
     thread_commander.start()
 
     with open(roslib.packages.get_pkg_dir('ur_driver') + '/prog') as fin:
-        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, reverse_port)}
-        program = fin.read() % {"driver_reverseport": reverse_port}
+        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, reverse_port), "driver_reverseport": reverse_port}
     connection = URConnection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()

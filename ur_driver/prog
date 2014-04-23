@@ -1,6 +1,6 @@
 def driverProg():
   HOSTNAME = "%(driver_hostname)s"
-  PORT = driver_reverseport
+  PORT = %(driver_reverseport)d
   MSG_OUT = 1
   MSG_QUIT = 2
   MSG_JOINT_STATES = 3
