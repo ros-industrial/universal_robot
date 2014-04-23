@@ -693,7 +693,7 @@ def main():
     thread_commander.start()
 
     with open(roslib.packages.get_pkg_dir('ur_driver') + '/prog') as fin:
-        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, reverse_port), "driver_reverseport": reverse_port}
+        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, PORT), "driver_reverseport": reverse_port}
     connection = URConnection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()
