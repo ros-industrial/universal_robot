@@ -1,5 +1,6 @@
 def driverProg():
   HOSTNAME = "%(driver_hostname)s"
+  PORT = driver_reverseport
   MSG_OUT = 1
   MSG_QUIT = 2
   MSG_JOINT_STATES = 3
@@ -113,7 +114,7 @@ def driverProg():
     
   end
 
-  socket_open(HOSTNAME, 50001)
+  socket_open(HOSTNAME, PORT)
   send_out("hello")
 
   thread_state = run statePublisherThread()
