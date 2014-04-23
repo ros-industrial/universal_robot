@@ -148,45 +148,45 @@ def driverProg():
         break
       elif mtype == MSG_MOVEJ:
         send_out("Received movej")
-	params_mult = socket_read_binary_integer(1+6+4)
-	if params_mult[0] == 0:
-	  send_out("Received no parameters for movej message")
-	end
+  params_mult = socket_read_binary_integer(1+6+4)
+  if params_mult[0] == 0:
+    send_out("Received no parameters for movej message")
+  end
 
-	# Unpacks the parameters
-	waypoint_id = params_mult[1]
-	q = [params_mult[2] / MULT_jointstate,
+  # Unpacks the parameters
+  waypoint_id = params_mult[1]
+  q = [params_mult[2] / MULT_jointstate,
              params_mult[3] / MULT_jointstate,
              params_mult[4] / MULT_jointstate,
              params_mult[5] / MULT_jointstate,
              params_mult[6] / MULT_jointstate,
              params_mult[7] / MULT_jointstate]
-	a = params_mult[8] / MULT_jointstate
-	v = params_mult[9] / MULT_jointstate
-	t = params_mult[10] / MULT_time
-	r = params_mult[11] / MULT_blend
+  a = params_mult[8] / MULT_jointstate
+  v = params_mult[9] / MULT_jointstate
+  t = params_mult[10] / MULT_time
+  r = params_mult[11] / MULT_blend
 
-	# Sends the command
-	send_out("movej started")
-	movej(q, a, v, t, r)
-	send_waypoint_finished(waypoint_id)
-	send_out("movej finished")
+  # Sends the command
+  send_out("movej started")
+  movej(q, a, v, t, r)
+  send_waypoint_finished(waypoint_id)
+  send_out("movej finished")
       elif mtype == MSG_SERVOJ:
         # Reads the parameters
-	params_mult = socket_read_binary_integer(1+6+1)
-	if params_mult[0] == 0:
-	  send_out("Received no parameters for movej message")
-	end
+  params_mult = socket_read_binary_integer(1+6+1)
+  if params_mult[0] == 0:
+    send_out("Received no parameters for movej message")
+  end
 
-	# Unpacks the parameters
+  # Unpacks the parameters
         waypoint_id = params_mult[1]
-	q = [params_mult[2] / MULT_jointstate,
+  q = [params_mult[2] / MULT_jointstate,
              params_mult[3] / MULT_jointstate,
              params_mult[4] / MULT_jointstate,
              params_mult[5] / MULT_jointstate,
              params_mult[6] / MULT_jointstate,
              params_mult[7] / MULT_jointstate]
-	t = params_mult[8] / MULT_time
+  t = params_mult[8] / MULT_time
 
         # Servos
         #servoj(q, 3, 0.1, t)
@@ -194,7 +194,7 @@ def driverProg():
         set_servo_setpoint(waypoint_id, q, t)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
-	stopj(1.0)
+  stopj(1.0)
       else:
         send_out("Received unknown message type")
       end
