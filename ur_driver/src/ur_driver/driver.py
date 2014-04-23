@@ -673,7 +673,7 @@ def main():
         reverse_port = REVERSE_PORT
     elif len(args) == 2:
         robot_hostname = args[0]
-        reverse_port = args[1]
+        reverse_port = int(args[1])
     else:
         parser.error("Wrong number of parameters")
 
