@@ -78,7 +78,7 @@ end
 '''
 #RESET_PROGRAM = ''
     
-class UR5Connection(object):
+class URConnection(object):
     TIMEOUT = 1.0
     
     DISCONNECTED = 0
@@ -102,7 +102,7 @@ class UR5Connection(object):
         self.robot_state = self.CONNECTED
         self.__sock = socket.create_connection((self.hostname, self.port))
         self.__keep_running = True
-        self.__thread = threading.Thread(name="UR5Connection", target=self.__run)
+        self.__thread = threading.Thread(name="URConnection", target=self.__run)
         self.__thread.daemon = True
         self.__thread.start()
 
@@ -442,7 +442,7 @@ def within_tolerance(a_vec, b_vec, tol_vec):
             return False
     return True
 
-class UR5TrajectoryFollower(object):
+class URTrajectoryFollower(object):
     RATE = 0.02
     def __init__(self, robot, goal_time_tolerance=None):
         self.goal_time_tolerance = goal_time_tolerance or rospy.Duration(0.0)
@@ -687,7 +687,7 @@ def main():
 
     with open(roslib.packages.get_pkg_dir('ur_driver') + '/prog') as fin:
         program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, PORT)}
-    connection = UR5Connection(robot_hostname, PORT, program)
+    connection = URConnection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()
     
@@ -723,7 +723,7 @@ def main():
                 if action_server:
                     action_server.set_robot(r)
                 else:
-                    action_server = UR5TrajectoryFollower(r, rospy.Duration(1.0))
+                    action_server = URTrajectoryFollower(r, rospy.Duration(1.0))
                     action_server.start()
 
     except KeyboardInterrupt:
