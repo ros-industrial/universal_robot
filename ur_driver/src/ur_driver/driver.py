@@ -16,7 +16,7 @@ from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
-from deserialize import RobotState, RobotMode
+from ur_driver.deserialize import RobotState, RobotMode
 
 prevent_programming = False
 
