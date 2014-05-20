@@ -187,13 +187,31 @@ class ForceModeData(object):
          fmd.robot_dexterity) = struct.unpack_from("!IBddddddd", buf)
         return fmd
 
-class AdditionalInfo(object):
+class AdditionalInfoOld(object):
     __slots__ = ['ctrl_bits', 'teach_button']
     @staticmethod
     def unpack(buf):
-        ai = AdditionalInfo()
-        (_, _, ai.ctrl_bits, ai.teach_button) = struct.unpack_from("!IBIB", buf)
+        ai = AdditionalInfoOld()
+        (_,_,ai.ctrl_bits, ai.teach_button) = struct.unpack_from("!IBIB", buf)
         return ai
+        
+class AdditionalInfoNew(object):
+    __slots__ = ['teach_button_enabled','teach_button_pressed']
+    @staticmethod
+    def unpack(buf):
+        ai = AdditionalInfoNew()
+        (_,_,ai.teach_button_enabled, ai.teach_button_pressed) = struct.unpack_from("!IBBB", buf)
+        return ai
+        
+class AdditionalInfo(object):
+    @staticmethod
+    def unpack(buf):
+        ai = AdditionalInfo()
+        (plen, ptype) = struct.unpack_from("!IB", buf)
+        if plen == 10:
+            return AdditionalInfoOld.unpack(buf)
+        else:
+            return AdditionalInfoNew.unpack(buf)
 
 class RobotState(object):
     __slots__ = ['robot_mode_data', 'joint_data', 'tool_data',
