@@ -10,6 +10,7 @@ class PackageType(object):
     CONFIGURATION_DATA = 6
     FORCE_MODE_DATA = 7
     ADDITIONAL_INFO = 8
+    CALIBRATION_DATA = 9
 
 class RobotMode(object):
     RUNNING = 0
@@ -260,6 +261,8 @@ class RobotState(object):
                 rs.force_mode_data = ForceModeData.unpack(package_buf)
             elif ptype == PackageType.ADDITIONAL_INFO:
                 rs.additional_info = AdditionalInfo.unpack(package_buf)
+            elif ptype == PackageType.CALIBRATION_DATA:
+                pass # internal data, should be skipped
             else:
                 rs.unknown_ptypes.append(ptype)
         return rs
