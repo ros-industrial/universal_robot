@@ -5,10 +5,12 @@
       Drivers, description, and utilities for Universal Robot Arms.
   </description>
 
-  <maintainer email="sedwards@swri.org">Shaun Edwards</maintainer>
-  <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
+  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+
   <license>BSD</license>
+
   <url type="website">http://ros.org/wiki/universal_robot</url>
+
   <author email="sedwards@swri.org">Shaun Edwards</author>
   <author>Stuart Glaser</author>
   <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
