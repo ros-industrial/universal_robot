@@ -107,7 +107,7 @@ install(PROGRAMS src/ur_driver/driver.py
 # )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
-install(FILES test.launch prog prog_reset
+install(FILES prog prog_reset
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
