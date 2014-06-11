@@ -45,11 +45,15 @@ NOTE:
 As MoveIt! seems to have difficulties with finding plans for the UR with joint limits [-2pi, 2pi], there is a joint_limited version using joint limits [-pi,pi]. In order to use this joint limited version, simply use the launch file arguments 'limited':
 
 ```roslaunch ur_bringup ur5.launch limited:=true robot_ip:=IP_OF_THE_ROBOT```
+
 OR
+
 ```roslaunch ur_gazebo ur5.launch limited:=true```
 
 ```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true```
+
 OR
+
 ```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true sim:=true```
 
 ```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
