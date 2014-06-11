@@ -1,0 +1,25 @@
+<launch>
+  <arg name="sim" default="false" />
+  <arg name="limited" default="false"/>
+  <arg name="debug" default="false" />
+  
+  <!-- Launch moveit -->
+  <group if="$(arg sim)">
+    <!-- Remap follow_joint_trajectory -->
+    <remap from="/follow_joint_trajectory/cancel" to="/arm_controller/follow_joint_trajectory/cancel"/>
+    <remap from="/follow_joint_trajectory/feedback" to="/arm_controller/follow_joint_trajectory/feedback"/>
+    <remap from="/follow_joint_trajectory/goal" to="/arm_controller/follow_joint_trajectory/goal"/>
+    <remap from="/follow_joint_trajectory/result" to="/arm_controller/follow_joint_trajectory/result"/>
+    <remap from="/follow_joint_trajectory/status" to="/arm_controller/follow_joint_trajectory/status"/>
+    <include file="$(find ur10_moveit_config)/launch/move_group.launch">
+      <arg name="limited" default="$(arg limited)"/>
+      <arg name="debug" default="$(arg debug)" />
+    </include>
+  </group>
+  <group unless="$(arg sim)">
+    <include file="$(find ur10_moveit_config)/launch/move_group.launch">
+      <arg name="limited" default="$(arg limited)"/>
+      <arg name="debug" default="$(arg debug)" />
+    </include>
+  </group>
+</launch>
