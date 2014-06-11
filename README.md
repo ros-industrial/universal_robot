@@ -12,15 +12,15 @@ For each command use a new terminal (don't forget to source the setup shell file
 
 To bring up the REAL robot, run:
 
-'''roslaunch ur_bringup ur5.launch robot_ip:=IP_OF_THE_ROBOT'''
+```roslaunch ur_bringup ur5.launch robot_ip:=IP_OF_THE_ROBOT```
 
 To bring up the SIMULATED robots, run:
 
-'''roslaunch ur_gazebo ur5.launch'''
+```roslaunch ur_gazebo ur5.launch```
 
 A simple test script that moves the robot to predefined positions can be executed like this:
 
-'''roscd ur_driver; ./test_move.py'''
+```roscd ur_driver; ./test_move.py```
 
 
 BEWARE:
@@ -31,28 +31,28 @@ Remember that you should always have your hands on the big red button in case th
 Additionally, you can use MoveIt! to control the robot.
 For setting up the MoveIt! nodes to allow motion planning with the REAL robot, run:
 
-'''roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch'''
+```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch```
 
 For setting up the MoveIt! nodes to allow motion planning with the SIMULATED robot, run:
 
-'''roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch sim:=true'''
+```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch sim:=true```
 
 In order to be able to use RViz to trigger Planning Request using the MoveIt! Plugin for RViz, run:
 
-'''roslaunch ur5_moveit_config moveit_rviz.launch config:=true'''
+```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
 
 NOTE: 
 As MoveIt! seems to have difficulties with finding plans for the UR with joint limits [-2pi, 2pi], there is a joint_limited version using joint limits [-pi,pi]. In order to use this joint limited version, simply use the launch file arguments 'limited':
 
-'''roslaunch ur_bringup ur5.launch limited:=true robot_ip:=IP_OF_THE_ROBOT'''
+```roslaunch ur_bringup ur5.launch limited:=true robot_ip:=IP_OF_THE_ROBOT```
 OR
-'''roslaunch ur_gazebo ur5.launch limited:=true'''
+```roslaunch ur_gazebo ur5.launch limited:=true```
 
-'''roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true'''
+```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true```
 OR
-'''roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true sim:=true'''
+```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true sim:=true```
 
-'''roslaunch ur5_moveit_config moveit_rviz.launch config:=true'''
+```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
 
 
 
