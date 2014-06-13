@@ -28,7 +28,7 @@ prevent_programming = False
 joint_offsets = {}
 
 PORT=30002
-REVERSE_PORT = 50001
+DEFAULT_REVERSE_PORT = 50001
 
 MSG_OUT = 1
 MSG_QUIT = 2
@@ -670,10 +670,12 @@ def main():
         parser.error("You must specify the robot hostname")
     elif len(args) == 1:
         robot_hostname = args[0]
-        reverse_port = REVERSE_PORT
+        reverse_port = DEFAULT_REVERSE_PORT
     elif len(args) == 2:
         robot_hostname = args[0]
         reverse_port = int(args[1])
+        if not (0 <= reverse_port <= 65535):
+                parser.error("You entered an invalid port number")
     else:
         parser.error("Wrong number of parameters")
 
