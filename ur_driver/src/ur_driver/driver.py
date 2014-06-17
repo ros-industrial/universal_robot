@@ -16,7 +16,7 @@ from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
-from ur_driver.deserialize import RobotState, RobotMode
+from deserialize import RobotState, RobotMode
 
 prevent_programming = False
 
@@ -65,7 +65,7 @@ def dumpstacks():
         for filename, lineno, name, line in traceback.extract_stack(stack):
             code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
             if line:
-                code.append("  %s" % (line.strip()))
+                code.append(" %s" % (line.strip()))
     print "\n".join(code)
 
 def log(s):
@@ -73,7 +73,7 @@ def log(s):
 
 
 RESET_PROGRAM = '''def resetProg():
-  sleep(0.0)
+sleep(0.0)
 end
 '''
 #RESET_PROGRAM = ''
@@ -147,10 +147,10 @@ class URConnection(object):
         self.last_state = state
         #import deserialize; deserialize.pstate(self.last_state)
 
-        #log("Packet.  Mode=%s" % state.robot_mode_data.robot_mode)
+        #log("Packet. Mode=%s" % state.robot_mode_data.robot_mode)
 
         if not state.robot_mode_data.real_robot_enabled:
-            rospy.logfatal("Real robot is no longer enabled.  Driver is fuxored")
+            rospy.logfatal("Real robot is no longer enabled. Driver is fuxored")
             time.sleep(2)
             sys.exit(1)
 
@@ -251,7 +251,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                 now = rospy.get_rostime()
                 if self.last_joint_states and \
                         self.last_joint_states.header.stamp < now - rospy.Duration(1.0):
-                    rospy.logerr("Stopped hearing from robot (last heard %.3f sec ago).  Disconnected" % \
+                    rospy.logerr("Stopped hearing from robot (last heard %.3f sec ago). Disconnected" % \
                                      (now - self.last_joint_states.header.stamp).to_sec())
                     raise EOF()
 
@@ -316,6 +316,8 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     buf = buf + self.recv_more()
         except EOF, ex:
             print "Connection closed (command):", ex
+            print "Timeout for 10 s"
+            time.sleep(10)
             setConnectedRobot(None)
 
     def send_quit(self):
@@ -348,11 +350,11 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     
 
 class TCPServer(SocketServer.TCPServer):
-    allow_reuse_address = True  # Allows the program to restart gracefully on crash
+    allow_reuse_address = True # Allows the program to restart gracefully on crash
     timeout = 5
 
 
-# Waits until all threads have completed.  Allows KeyboardInterrupt to occur
+# Waits until all threads have completed. Allows KeyboardInterrupt to occur
 def joinAll(threads):
     while any(t.isAlive() for t in threads):
         for t in threads:
@@ -366,7 +368,7 @@ def get_segment_duration(traj, index):
     return (traj.points[index].time_from_start - traj.points[index-1].time_from_start).to_sec()
 
 # Reorders the JointTrajectory traj according to the order in
-# joint_names.  Destructive.
+# joint_names. Destructive.
 def reorder_traj_joints(traj, joint_names):
     order = [traj.joint_names.index(j) for j in joint_names]
 
@@ -596,7 +598,7 @@ class URTrajectoryFollower(object):
                 last_point = self.traj.points[-1]
                 state = self.robot.get_joint_states()
                 position_in_tol = within_tolerance(state.position, last_point.positions, self.joint_goal_tolerances)
-                # Performing this check to try and catch our error condition.  We will always
+                # Performing this check to try and catch our error condition. We will always
                 # send the last point just in case.
                 if not position_in_tol:
                     rospy.logwarn("Trajectory time exceeded and current robot state not at goal, last point required")
@@ -612,22 +614,22 @@ class URTrajectoryFollower(object):
                 except socket.error:
                     pass
                     
-            else:  # Off the end
+            else: # Off the end
                 if self.goal_handle:
                     last_point = self.traj.points[-1]
                     state = self.robot.get_joint_states()
                     position_in_tol = within_tolerance(state.position, last_point.positions, [0.1]*6)
                     velocity_in_tol = within_tolerance(state.velocity, last_point.velocities, [0.05]*6)
                     if position_in_tol and velocity_in_tol:
-                        # The arm reached the goal (and isn't moving).  Succeeding
+                        # The arm reached the goal (and isn't moving). Succeeding
                         self.goal_handle.set_succeeded()
                         self.goal_handle = None
                     #elif now - (self.traj_t0 + last_point.time_from_start.to_sec()) > self.goal_time_tolerance.to_sec():
-                    #    # Took too long to reach the goal.  Aborting
-                    #    rospy.logwarn("Took too long to reach the goal.\nDesired: %s\nactual: %s\nvelocity: %s" % \
-                    #                      (last_point.positions, state.position, state.velocity))
-                    #    self.goal_handle.set_aborted(text="Took too long to reach the goal")
-                    #    self.goal_handle = None
+                    # # Took too long to reach the goal. Aborting
+                    # rospy.logwarn("Took too long to reach the goal.\nDesired: %s\nactual: %s\nvelocity: %s" % \
+                    # (last_point.positions, state.position, state.velocity))
+                    # self.goal_handle.set_aborted(text="Took too long to reach the goal")
+                    # self.goal_handle = None
 
 # joint_names: list of joints
 #
@@ -695,14 +697,14 @@ def main():
     try:
         while not rospy.is_shutdown():
             # Checks for disconnect
-            if getConnectedRobot(wait=False):
+            if getConnectedRobot(wait=False, timeout=50):
                 time.sleep(0.2)
                 prevent_programming = rospy.get_param("prevent_programming", False)
                 if prevent_programming:
                     print "Programming now prevented"
                     connection.send_reset_program()
             else:
-                print "Disconnected.  Reconnecting"
+                print "Disconnected. Reconnecting"
                 if action_server:
                     action_server.set_robot(None)
 
@@ -715,7 +717,7 @@ def main():
                     prevent_programming = rospy.get_param("prevent_programming", False)
                     connection.send_program()
 
-                    r = getConnectedRobot(wait=True, timeout=1.0)
+                    r = getConnectedRobot(wait=True, timeout=50.0)
                     if r:
                         break
                 rospy.loginfo("Robot connected")
@@ -736,3 +738,5 @@ def main():
         raise
 
 if __name__ == '__main__': main()
+
+
