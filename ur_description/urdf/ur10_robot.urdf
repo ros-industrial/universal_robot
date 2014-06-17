@@ -6,22 +6,24 @@
 <robot name="ur10" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- common stuff -->
   <gazebo>
-    <plugin filename="libgazebo_ros_controller_manager.so" name="gazebo_ros_controller_manager">
-      <alwaysOn>true</alwaysOn>
-      <updateRate>1000.0</updateRate>
+    <plugin filename="libgazebo_ros_control.so" name="ros_control">
+      <!--robotNamespace>/</robotNamespace-->
+      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
     </plugin>
-    <plugin filename="libgazebo_ros_power_monitor.so" name="gazebo_ros_power_monitor_controller">
+    <!--
+    <plugin name="gazebo_ros_power_monitor_controller" filename="libgazebo_ros_power_monitor.so">
       <alwaysOn>true</alwaysOn>
       <updateRate>1.0</updateRate>
       <timeout>5</timeout>
       <powerStateTopic>power_state</powerStateTopic>
       <powerStateRate>10.0</powerStateRate>
-      <fullChargeCapacity>87.78</fullChargeCapacity>
+      <fullChargeCapacity>87.78</fullChargeCapacity>     
       <dischargeRate>-474</dischargeRate>
       <chargeRate>525</chargeRate>
       <dischargeVoltage>15.52</dischargeVoltage>
       <chargeVoltage>16.41</chargeVoltage>
     </plugin>
+-->
   </gazebo>
   <!-- ur10 -->
   <material name="UR/Blue">
