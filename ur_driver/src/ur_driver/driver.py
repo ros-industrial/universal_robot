@@ -679,7 +679,7 @@ def main():
 
     # Reads the maximum velocity
     global max_velocity
-    max_velocity = rospy.get_param("~max_velocity", 2.0)
+    max_velocity = rospy.get_param("~max_velocity", 3.14159265)
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)
