@@ -4,7 +4,7 @@ project(ur_kinematics)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs moveit_core pluginlib)
+find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs moveit_core moveit_ros_planning pluginlib tf_conversions)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
@@ -50,7 +50,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ur10_kin ur5_kin ur10_moveit_plugin ur5_moveit_plugin
   CATKIN_DEPENDS pluginlib
-  DEPENDS moveit_core
+  DEPENDS moveit_core 
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -82,6 +82,8 @@ set_target_properties(ur10_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR10_PA
 target_link_libraries(ur10_moveit_plugin 
     ${catkin_LIBRARIES} 
     ${Boost_LIBRARIES}
+    ${moveit_ros_planning_LIBRARIES}
+    /opt/ros/hydro/lib/libmoveit_kdl_kinematics_plugin.so
     ur10_kin)
 
 add_library(ur5_moveit_plugin src/ur_moveit_plugin.cpp)
@@ -89,6 +91,8 @@ set_target_properties(ur5_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR5_PARA
 target_link_libraries(ur5_moveit_plugin 
     ${catkin_LIBRARIES} 
     ${Boost_LIBRARIES}
+    ${moveit_ros_planning_LIBRARIES}
+    /opt/ros/hydro/lib/libmoveit_kdl_kinematics_plugin.so
     ur5_kin)
 
 ## Declare a cpp executable
