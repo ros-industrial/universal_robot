@@ -217,6 +217,8 @@ def driverProg():
         #servoj(q, 3, 0.1, t)
         #send_waypoint_finished(waypoint_id)
         set_servo_setpoint(waypoint_id, q, t)
+      elif mtype == MSG_SET_PAYLOAD:
+	send_out("Received new payload")
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
         stopj(1.0)
