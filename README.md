@@ -12,7 +12,7 @@ For each command use a new terminal (don't forget to source the setup shell file
 
 To bring up the REAL robot, run:
 
-```roslaunch ur_bringup ur5.launch robot_ip:=IP_OF_THE_ROBOT```
+```roslaunch ur_bringup ur5_bringup.launch robot_ip:=IP_OF_THE_ROBOT reverse_port:=REVERSE_PORT```
 
 To bring up the SIMULATED robots, run:
 
@@ -44,7 +44,7 @@ In order to be able to use RViz to trigger Planning Request using the MoveIt! Pl
 NOTE: 
 As MoveIt! seems to have difficulties with finding plans for the UR with joint limits [-2pi, 2pi], there is a joint_limited version using joint limits [-pi,pi]. In order to use this joint limited version, simply use the launch file arguments 'limited':
 
-```roslaunch ur_bringup ur5.launch limited:=true robot_ip:=IP_OF_THE_ROBOT```
+```roslaunch ur_bringup ur5_bringup.launch limited:=true robot_ip:=IP_OF_THE_ROBOT reverse_port:=REVERSE_PORT```
 
 OR
 

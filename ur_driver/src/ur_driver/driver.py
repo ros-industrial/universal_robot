@@ -28,7 +28,7 @@ prevent_programming = False
 joint_offsets = {}
 
 PORT=30002
-REVERSE_PORT = 50001
+DEFAULT_REVERSE_PORT = 50001
 
 MSG_OUT = 1
 MSG_QUIT = 2
@@ -664,11 +664,20 @@ def main():
     joint_names = [prefix + name for name in JOINT_NAMES]
 
     # Parses command line arguments
-    parser = optparse.OptionParser(usage="usage: %prog robot_hostname")
+    parser = optparse.OptionParser(usage="usage: %prog robot_hostname [reverse_port]")
     (options, args) = parser.parse_args(rospy.myargv()[1:])
-    if len(args) != 1:
+    if len(args) < 1:
         parser.error("You must specify the robot hostname")
-    robot_hostname = args[0]
+    elif len(args) == 1:
+        robot_hostname = args[0]
+        reverse_port = DEFAULT_REVERSE_PORT
+    elif len(args) == 2:
+        robot_hostname = args[0]
+        reverse_port = int(args[1])
+        if not (0 <= reverse_port <= 65535):
+                parser.error("You entered an invalid port number")
+    else:
+        parser.error("Wrong number of parameters")
 
     # Reads the calibrated joint offsets from the URDF
     global joint_offsets
@@ -680,13 +689,13 @@ def main():
     max_velocity = rospy.get_param("~max_velocity", 2.0)
 
     # Sets up the server for the robot to connect to
-    server = TCPServer(("", 50001), CommanderTCPHandler)
+    server = TCPServer(("", reverse_port), CommanderTCPHandler)
     thread_commander = threading.Thread(name="CommanderHandler", target=server.serve_forever)
     thread_commander.daemon = True
     thread_commander.start()
 
     with open(roslib.packages.get_pkg_dir('ur_driver') + '/prog') as fin:
-        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, PORT)}
+        program = fin.read() % {"driver_hostname": get_my_ip(robot_hostname, PORT), "driver_reverseport": reverse_port}
     connection = URConnection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()

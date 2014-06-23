@@ -11,16 +11,18 @@
 -->
 <launch>
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip" />
+  <arg name="robot_ip"/>
+  <arg name="reverse_port" default="50001"/>
   
   <!-- copy the specified IP address to be consistant with ROS-Industrial spec.
   NOTE: The ip address is actually passed to the driver on the command line -->
   <param name="/robot_ip_address" type="str" value="$(arg robot_ip)"/>
+  <param name="/robot_reverse_port" type="int" value="$(arg reverse_port)"/>
   
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <!-- driver -->
-  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="$(arg robot_ip)" output="screen" />
+  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="$(arg robot_ip) $(arg reverse_port)" output="screen" />
    
   <!-- TF Buffer Server -->
   <node pkg="tf2_ros" type="buffer_server" name="tf2_buffer_server">
