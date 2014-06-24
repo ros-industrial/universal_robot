@@ -21,6 +21,7 @@ from ur_driver.deserialize import RobotState, RobotMode
 
 from ur_msgs.srv import SetIO
 from ur_msgs.msg import *
+from ur_driver.srv import *
 
 # renaming classes
 DigitalIn = Digital
@@ -48,6 +49,7 @@ MSG_STOPJ = 6
 MSG_SERVOJ = 7
 MSG_SET_PAYLOAD = 8
 MSG_WRENCH = 9
+MULT_PAYLOAD = 1000.0
 MSG_SET_DIGITAL_OUT = 10
 MSG_GET_IO = 11
 MSG_SET_FLAG = 12
@@ -445,6 +447,12 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         buf = struct.pack("!%ii" % len(params), *params)
         with self.socket_lock:
             self.request.send(buf)
+        
+	#Experimental set_payload implementation
+    def send_payload(self,payload):
+        buf = struct.pack('!ii', MSG_SET_PAYLOAD, payload * MULT_PAYLOAD)
+        with self.socket_lock:
+            self.request.send(buf)
 
     #Experimental set_digital_output implementation
     def set_digital_out(self, pinnum, value):
@@ -594,6 +602,26 @@ def within_tolerance(a_vec, b_vec, tol_vec):
         if abs(a - b) > tol:
             return False
     return True
+
+#HERE
+class URServiceProvider(object):
+    def __init__(self, robot):
+        self.robot = robot
+        rospy.Service('ur_driver/setPayload', URSetPayload, self.setPayload)
+
+    def set_robot(self, robot):
+        self.robot = robot
+
+    def setPayload(self, req):
+        if req.payload < 0 or req.payload > 20.00:
+            print 'ERROR: Payload out of bounce'
+            return False
+        
+        if self.robot:
+            self.robot.send_payload(req.payload)
+        else:
+            return False
+        return True
 
 class URTrajectoryFollower(object):
     RATE = 0.02
@@ -874,6 +902,7 @@ def main():
     connection.connect()
     connection.send_reset_program()
     
+    provider = None
     set_io_server()
 
     action_server = None
@@ -905,6 +934,12 @@ def main():
                         break
                 rospy.loginfo("Robot connected")
 
+                #provider for service calls
+                if provider:
+                    provider.set_robot(r)
+                else:
+                    provider = URServiceProvider(r)
+                
                 if action_server:
                     action_server.set_robot(r)
                 else:
