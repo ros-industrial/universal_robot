@@ -8,8 +8,10 @@ def driverProg():
   MSG_WAYPOINT_FINISHED = 5
   MSG_STOPJ = 6
   MSG_SERVOJ = 7
+  MSG_SET_PAYLOAD = 8
   MSG_WRENCH = 9
   MULT_wrench = 10000.0
+  MULT_PAYLOAD = 1000.0
   MULT_jointstate = 10000.0
   MULT_time = 1000000.0
   MULT_blend = 1000.0
@@ -203,7 +205,14 @@ def driverProg():
         #send_waypoint_finished(waypoint_id)
         set_servo_setpoint(waypoint_id, q, t)
       elif mtype == MSG_SET_PAYLOAD:
-	send_out("Received new payload")
+	    params = socket_read_binary_integer(1)
+        if params[0] == 0:
+          send_out("Received no parameters for setPayload message")
+        end
+        
+        payload = params[1] / MULT_PAYLOAD
+        #send_out(payload)
+        send_out("Received new payload")
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
         stopj(1.0)
