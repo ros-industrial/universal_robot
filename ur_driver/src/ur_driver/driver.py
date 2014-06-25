@@ -284,7 +284,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                             raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
                     s, buf = buf[:i], buf[i+1:]
                     log("Out: %s" % s)
-#jHERE
+
                 elif mtype == MSG_JOINT_STATES:
                     while len(buf) < 4*(6*4):
                         buf = buf + self.recv_more()
