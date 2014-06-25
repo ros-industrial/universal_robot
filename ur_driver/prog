@@ -33,6 +33,7 @@ def driverProg():
       q = get_joint_positions()
       qdot = get_joint_speeds()
       tau = get_joint_torques()
+      tcp_force = get_tcp_force()
       enter_critical
       socket_send_int(MSG_JOINT_STATES)
       socket_send_int(floor(MULT_jointstate * q[0]))
@@ -53,6 +54,12 @@ def driverProg():
       socket_send_int(floor(MULT_jointstate * tau[3]))
       socket_send_int(floor(MULT_jointstate * tau[4]))
       socket_send_int(floor(MULT_jointstate * tau[5]))
+      socket_send_int(floor(MULT_jointstate * tcp_force[0]))
+      socket_send_int(floor(MULT_jointstate * tcp_force[1]))
+      socket_send_int(floor(MULT_jointstate * tcp_force[2]))
+      socket_send_int(floor(MULT_jointstate * tcp_force[3]))
+      socket_send_int(floor(MULT_jointstate * tcp_force[4]))
+      socket_send_int(floor(MULT_jointstate * tcp_force[5]))
       #socket_send_int(7895160)  # Recognizable  ".xxx" or 00787878
       exit_critical
     end
