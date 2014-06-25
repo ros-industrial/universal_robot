@@ -52,7 +52,7 @@ Q3 = [1.5,-0.2,-1.57,0,0,0]
 connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
-pub_joint_states = rospy.Publisher('joint_states', JointState)
+pub_joint_states = rospy.Publisher('/joint_states', JointState)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -633,7 +633,7 @@ class URTrajectoryFollower(object):
 #
 # returns: { "joint_name" : joint_offset }
 def load_joint_offsets(joint_names):
-    robot_description = rospy.get_param("robot_description")
+    robot_description = rospy.get_param("/robot_description")
     soup = BeautifulSoup(robot_description)
     
     result = {}
