@@ -15,6 +15,7 @@ import actionlib
 from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from geometry_msgs.msg import Wrench
 
 from ur_driver.deserialize import RobotState, RobotMode
 
@@ -52,7 +53,8 @@ Q3 = [1.5,-0.2,-1.57,0,0,0]
 connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
-pub_joint_states = rospy.Publisher('/joint_states', JointState)
+pub_joint_states = rospy.Publisher('joint_states', JointState)
+pub_wrench = rospy.Publisher('wrench', Wrench)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -282,12 +284,12 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                             raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
                     s, buf = buf[:i], buf[i+1:]
                     log("Out: %s" % s)
-
+#jHERE
                 elif mtype == MSG_JOINT_STATES:
-                    while len(buf) < 3*(6*4):
+                    while len(buf) < 4*(6*4):
                         buf = buf + self.recv_more()
-                    state_mult = struct.unpack_from("!%ii" % (3*6), buf, 0)
-                    buf = buf[3*6*4:]
+                    state_mult = struct.unpack_from("!%ii" % (4*6), buf, 0)
+                    buf = buf[4*6*4:]
                     state = [s / MULT_jointstate for s in state_mult]
 
                     msg = JointState()
@@ -300,6 +302,16 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     msg.effort = state[12:18]
                     self.last_joint_states = msg
                     pub_joint_states.publish(msg)
+                    #wrench
+                    wrench_msg = Wrench()
+                    wrench_msg.force.x = state[18]
+                    wrench_msg.force.y = state[19]
+                    wrench_msg.force.z = state[20]
+                    wrench_msg.torque.x = state[21]
+                    wrench_msg.torque.y = state[22]
+                    wrench_msg.torque.z = state[23]
+                    pub_wrench.publish(wrench_msg)
+
                 elif mtype == MSG_QUIT:
                     print "Quitting"
                     raise EOF("Received quit")
@@ -633,7 +645,7 @@ class URTrajectoryFollower(object):
 #
 # returns: { "joint_name" : joint_offset }
 def load_joint_offsets(joint_names):
-    robot_description = rospy.get_param("/robot_description")
+    robot_description = rospy.get_param("robot_description")
     soup = BeautifulSoup(robot_description)
     
     result = {}
