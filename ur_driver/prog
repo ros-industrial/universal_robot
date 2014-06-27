@@ -228,6 +228,7 @@ def driverProg():
         payload = params[1] / MULT_PAYLOAD
         #send_out(payload)
         send_out("Received new payload")
+        set_payload(payload)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
         stopj(1.0)
