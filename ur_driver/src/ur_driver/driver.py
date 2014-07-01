@@ -317,7 +317,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         except EOF, ex:
             print "Connection closed (command):", ex
             print "Timeout for 60 s"
-            time.sleep(60)
+            try:
+                input("Press enter to continue")
+            except SyntaxError:
+                pass
             setConnectedRobot(None)
 
     def send_quit(self):
@@ -679,7 +682,7 @@ def main():
 
     # Reads the maximum velocity
     global max_velocity
-    max_velocity = rospy.get_param("~max_velocity", 3.1416)
+    max_velocity = rospy.get_param("~max_velocity", 3.14159265)
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", 50001), CommanderTCPHandler)

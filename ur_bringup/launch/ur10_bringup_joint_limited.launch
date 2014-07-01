@@ -9,7 +9,7 @@
 <launch>
   
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip" />
+  <arg name="robot_ip" default="192.38.66.227"/>
 
   <include file="$(find ur_bringup)/launch/ur10_bringup.launch">
     <arg name="robot_ip" value="$(arg robot_ip)" />
