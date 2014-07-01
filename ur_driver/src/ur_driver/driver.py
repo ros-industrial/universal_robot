@@ -49,12 +49,12 @@ MSG_STOPJ = 6
 MSG_SERVOJ = 7
 MSG_SET_PAYLOAD = 8
 MSG_WRENCH = 9
-MULT_PAYLOAD = 1000.0
 MSG_SET_DIGITAL_OUT = 10
 MSG_GET_IO = 11
 MSG_SET_FLAG = 12
 MSG_SET_TOOL_VOLTAGE = 13
 MSG_SET_ANALOG_OUT = 14
+MULT_payload = 1000.0
 MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
 MULT_time = 1000000.0
@@ -435,7 +435,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def send_quit(self):
         with self.socket_lock:
             self.request.send(struct.pack("!i", MSG_QUIT))
-            
+
     def send_servoj(self, waypoint_id, q_actual, t):
         assert(len(q_actual) == 6)
         q_robot = [0.0] * 6
@@ -450,7 +450,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         
 	#Experimental set_payload implementation
     def send_payload(self,payload):
-        buf = struct.pack('!ii', MSG_SET_PAYLOAD, payload * MULT_PAYLOAD)
+        buf = struct.pack('!ii', MSG_SET_PAYLOAD, payload * MULT_payload)
         with self.socket_lock:
             self.request.send(buf)
 
@@ -603,7 +603,6 @@ def within_tolerance(a_vec, b_vec, tol_vec):
             return False
     return True
 
-#HERE
 class URServiceProvider(object):
     def __init__(self, robot):
         self.robot = robot
@@ -902,9 +901,9 @@ def main():
     connection.connect()
     connection.send_reset_program()
     
-    provider = None
     set_io_server()
-
+    
+    service_provider = None
     action_server = None
     try:
         while not rospy.is_shutdown():
@@ -935,10 +934,10 @@ def main():
                 rospy.loginfo("Robot connected")
 
                 #provider for service calls
-                if provider:
-                    provider.set_robot(r)
+                if service_provider:
+                    service_provider.set_robot(r)
                 else:
-                    provider = URServiceProvider(r)
+                    service_provider = URServiceProvider(r)
                 
                 if action_server:
                     action_server.set_robot(r)
