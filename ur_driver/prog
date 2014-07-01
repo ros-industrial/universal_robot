@@ -11,7 +11,7 @@ def driverProg():
   MSG_SET_PAYLOAD = 8
   MSG_WRENCH = 9
   MULT_wrench = 10000.0
-  MULT_PAYLOAD = 1000.0
+  MULT_payload = 1000.0
   MULT_jointstate = 10000.0
   MULT_time = 1000000.0
   MULT_blend = 1000.0
@@ -210,7 +210,7 @@ def driverProg():
           send_out("Received no parameters for setPayload message")
         end
         
-        payload = params[1] / MULT_PAYLOAD
+        payload = params[1] / MULT_payload
         #send_out(payload)
         send_out("Received new payload")
         set_payload(payload)
