@@ -15,7 +15,7 @@ import actionlib
 from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryAction
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from geometry_msgs.msg import Wrench
+from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
 
@@ -38,6 +38,8 @@ MSG_MOVEJ = 4
 MSG_WAYPOINT_FINISHED = 5
 MSG_STOPJ = 6
 MSG_SERVOJ = 7
+MSG_WRENCH = 9
+MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
@@ -54,7 +56,7 @@ connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
 pub_joint_states = rospy.Publisher('joint_states', JointState)
-pub_wrench = rospy.Publisher('wrench', Wrench)
+pub_wrench = rospy.Publisher('wrench', WrenchStamped)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -286,10 +288,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     log("Out: %s" % s)
 
                 elif mtype == MSG_JOINT_STATES:
-                    while len(buf) < 4*(6*4):
+                    while len(buf) < 3*(6*4):
                         buf = buf + self.recv_more()
-                    state_mult = struct.unpack_from("!%ii" % (4*6), buf, 0)
-                    buf = buf[4*6*4:]
+                    state_mult = struct.unpack_from("!%ii" % (3*6), buf, 0)
+                    buf = buf[3*6*4:]
                     state = [s / MULT_jointstate for s in state_mult]
 
                     msg = JointState()
@@ -302,14 +304,21 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     msg.effort = state[12:18]
                     self.last_joint_states = msg
                     pub_joint_states.publish(msg)
-                    #wrench
-                    wrench_msg = Wrench()
-                    wrench_msg.force.x = state[18]
-                    wrench_msg.force.y = state[19]
-                    wrench_msg.force.z = state[20]
-                    wrench_msg.torque.x = state[21]
-                    wrench_msg.torque.y = state[22]
-                    wrench_msg.torque.z = state[23]
+
+                elif mtype == MSG_WRENCH:
+                    while len(buf) < (6*4):
+                        buf = buf + self.recv_more()
+                    state_mult = struct.unpack_from("!%ii" % (6), buf, 0)
+                    buf = buf[6*4:]
+                    state = [s / MULT_wrench for s in state_mult]
+                    wrench_msg = WrenchStamped()
+                    wrench_msg.header.stamp = rospy.get_rostime()
+                    wrench_msg.wrench.force.x = state[0]
+                    wrench_msg.wrench.force.y = state[1]
+                    wrench_msg.wrench.force.z = state[2]
+                    wrench_msg.wrench.torque.x = state[3]
+                    wrench_msg.wrench.torque.y = state[4]
+                    wrench_msg.wrench.torque.z = state[5]
                     pub_wrench.publish(wrench_msg)
 
                 elif mtype == MSG_QUIT:

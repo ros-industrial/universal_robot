@@ -8,6 +8,8 @@ def driverProg():
   MSG_WAYPOINT_FINISHED = 5
   MSG_STOPJ = 6
   MSG_SERVOJ = 7
+  MSG_WRENCH = 9
+  MULT_wrench = 10000.0
   MULT_jointstate = 10000.0
   MULT_time = 1000000.0
   MULT_blend = 1000.0
@@ -54,12 +56,13 @@ def driverProg():
       socket_send_int(floor(MULT_jointstate * tau[3]))
       socket_send_int(floor(MULT_jointstate * tau[4]))
       socket_send_int(floor(MULT_jointstate * tau[5]))
-      socket_send_int(floor(MULT_jointstate * wrench[0]))
-      socket_send_int(floor(MULT_jointstate * wrench[1]))
-      socket_send_int(floor(MULT_jointstate * wrench[2]))
-      socket_send_int(floor(MULT_jointstate * wrench[3]))
-      socket_send_int(floor(MULT_jointstate * wrench[4]))
-      socket_send_int(floor(MULT_jointstate * wrench[5]))
+      socket_send_int(MSG_WRENCH)
+      socket_send_int(floor(MULT_wrench * wrench[0]))
+      socket_send_int(floor(MULT_wrench * wrench[1]))
+      socket_send_int(floor(MULT_wrench * wrench[2]))
+      socket_send_int(floor(MULT_wrench * wrench[3]))
+      socket_send_int(floor(MULT_wrench * wrench[4]))
+      socket_send_int(floor(MULT_wrench * wrench[5]))
       #socket_send_int(7895160)  # Recognizable  ".xxx" or 00787878
       exit_critical
     end
