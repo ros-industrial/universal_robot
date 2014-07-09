@@ -52,6 +52,15 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
 <xacro:macro name="ur5_robot" params="prefix">
 
   <link name="${prefix}base_link" >
+  </link>
+
+  <joint name="${prefix}base_link_joint" type="fixed">
+    <parent link="${prefix}base_link" />
+    <child link = "${prefix}ur_base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+  <link name="${prefix}ur_base_link" >
     <visual>
       <geometry>
 		    <mesh filename="package://ur_description/meshes/ur5/visual/Base.dae" />
@@ -71,7 +80,7 @@ center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 
   </link>
 
   <joint name="${prefix}shoulder_pan_joint" type="revolute">
-    <parent link="${prefix}base_link" />
+    <parent link="${prefix}ur_base_link" />
     <child link = "${prefix}shoulder_link" />
     <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
     <axis xyz="0 0 1" />
