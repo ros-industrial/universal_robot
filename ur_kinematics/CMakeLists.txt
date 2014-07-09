@@ -82,8 +82,6 @@ set_target_properties(ur10_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR10_PA
 target_link_libraries(ur10_moveit_plugin 
     ${catkin_LIBRARIES} 
     ${Boost_LIBRARIES}
-    ${moveit_ros_planning_LIBRARIES}
-    /opt/ros/hydro/lib/libmoveit_kdl_kinematics_plugin.so
     ur10_kin)
 
 add_library(ur5_moveit_plugin src/ur_moveit_plugin.cpp)
@@ -91,8 +89,6 @@ set_target_properties(ur5_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR5_PARA
 target_link_libraries(ur5_moveit_plugin 
     ${catkin_LIBRARIES} 
     ${Boost_LIBRARIES}
-    ${moveit_ros_planning_LIBRARIES}
-    /opt/ros/hydro/lib/libmoveit_kdl_kinematics_plugin.so
     ur5_kin)
 
 ## Declare a cpp executable
