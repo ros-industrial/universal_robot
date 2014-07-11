@@ -634,12 +634,6 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     // Convert into query for analytic solver
     tf::poseMsgToKDL(ik_pose, kdl_ik_pose);
     kdl_ik_pose_ur_chain = pose_base.Inverse() * kdl_ik_pose * pose_tip.Inverse();
-    printf("ik request:\n");
-    for(int i=0; i<4; i++) {
-      for(int j=0; j<4; j++)
-        printf("%1.6f ", kdl_ik_pose(i, j));
-      printf("\n");
-    }
     
     kdl_ik_pose_ur_chain.Make4x4((double*) homo_ik_pose);
     for(int i=0; i<3; i++) homo_ik_pose[i][3] *= 1000; // strange KDL fix
@@ -690,12 +684,14 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
         getPositionFK(fk_link_names, solution, fk_poses);
         KDL::Frame kdl_fk_pose;
         tf::poseMsgToKDL(fk_poses[0], kdl_fk_pose);
-        printf("FK sol\n");
+#if 0
+        printf("FK(solution) - pose \n");
         for(int i=0; i<4; i++) {
           for(int j=0; j<4; j++)
-            printf("%1.3f ", kdl_fk_pose(i, j)-kdl_ik_pose(i, j));
+            printf("%1.6f ", kdl_fk_pose(i, j)-kdl_ik_pose(i, j));
           printf("\n");
         }
+#endif
         return true;
       }
     }
