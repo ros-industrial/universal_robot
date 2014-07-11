@@ -270,7 +270,7 @@ namespace ur_kinematics
     std::vector<std::string> ur_joint_names_;
     std::vector<std::string> ur_link_names_;
     int ur_joint_inds_start_;
-    int ur_link_inds_start_;
+    std::string arm_prefix_;
 
     // kinematic chains representing the chain from the group base link to the
     // UR base link, and the UR tip link to the group tip link

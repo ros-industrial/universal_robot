@@ -323,24 +323,26 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   max_solver_iterations_ = max_solver_iterations;
   epsilon_ = epsilon;
 
-  ur_joint_names_.push_back("shoulder_pan_joint");
-  ur_joint_names_.push_back("shoulder_lift_joint");
-  ur_joint_names_.push_back("elbow_joint");
-  ur_joint_names_.push_back("wrist_1_joint");
-  ur_joint_names_.push_back("wrist_2_joint");
-  ur_joint_names_.push_back("wrist_3_joint");
+  private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
 
-  ur_link_names_.push_back("base_link"); // 0
-  ur_link_names_.push_back("shoulder_link"); // 1
-  ur_link_names_.push_back("upper_arm_link"); // 2
-  ur_link_names_.push_back("forearm_link"); // 3
-  ur_link_names_.push_back("wrist_1_link"); // 4
-  ur_link_names_.push_back("wrist_2_link"); // 5
-  ur_link_names_.push_back("wrist_3_link"); // 6
-  ur_link_names_.push_back("ee_link"); // 7 (FIXED)
+  ur_joint_names_.push_back(arm_prefix_ + "shoulder_pan_joint");
+  ur_joint_names_.push_back(arm_prefix_ + "shoulder_lift_joint");
+  ur_joint_names_.push_back(arm_prefix_ + "elbow_joint");
+  ur_joint_names_.push_back(arm_prefix_ + "wrist_1_joint");
+  ur_joint_names_.push_back(arm_prefix_ + "wrist_2_joint");
+  ur_joint_names_.push_back(arm_prefix_ + "wrist_3_joint");
+
+  ur_link_names_.push_back(arm_prefix_ + "base_link");       // 0
+  ur_link_names_.push_back(arm_prefix_ + "ur_base_link");    // 1
+  ur_link_names_.push_back(arm_prefix_ + "shoulder_link");   // 2
+  ur_link_names_.push_back(arm_prefix_ + "upper_arm_link");  // 3
+  ur_link_names_.push_back(arm_prefix_ + "forearm_link");    // 4
+  ur_link_names_.push_back(arm_prefix_ + "wrist_1_link");    // 5
+  ur_link_names_.push_back(arm_prefix_ + "wrist_2_link");    // 6
+  ur_link_names_.push_back(arm_prefix_ + "wrist_3_link");    // 7
+  ur_link_names_.push_back(arm_prefix_ + "ee_link");         // 8
 
   ur_joint_inds_start_ = getJointIndex(ur_joint_names_[0]);
-  ur_link_inds_start_ = getKDLSegmentIndex(ur_link_names_[0]);
 
   // check to make sure the serial chain is properly defined in the model
   int cur_ur_joint_ind, last_ur_joint_ind = ur_joint_inds_start_;
@@ -362,9 +364,8 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   }
   // if successful, the kinematic chain includes a serial chain of the UR joints
 
-  kdl_tree.getChain(getBaseFrame(), ur_link_names_[0], kdl_base_chain_);
-  kdl_tree.getChain(ur_link_names_[7], getTipFrame(), kdl_tip_chain_);
-  printf("dim %d st %d kdlbase %d tip %d\n", dimension_, ur_joint_inds_start_, kdl_base_chain_.getNrOfJoints(), kdl_tip_chain_.getNrOfJoints());
+  kdl_tree.getChain(getBaseFrame(), ur_link_names_.front(), kdl_base_chain_);
+  kdl_tree.getChain(ur_link_names_.back(), getTipFrame(), kdl_tip_chain_);
 
   // weights for redundant solution selection
   ik_weights_.resize(6);
@@ -381,7 +382,6 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
 
   active_ = true;
   ROS_DEBUG_NAMED("kdl","KDL solver initialized");
-printf("solver init\n");
   return true;
 }
 
@@ -564,7 +564,6 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &consistency_limits,
                                            const kinematics::KinematicsQueryOptions &options) const
 {
-  printf("IK in\n");
   ros::WallTime n1 = ros::WallTime::now();
   if(!active_) {
     ROS_ERROR_NAMED("kdl","kinematics not active");
@@ -620,7 +619,6 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     for(uint32_t i=0; i<jnt_seed_state.rows(); i++)
       solution[i] = jnt_pos_test(i);
 
-printf("FK in\n");
     if(fk_solver_base.JntToCart(jnt_pos_base, pose_base) < 0) {
       ROS_ERROR_NAMED("kdl", "Could not compute FK for base chain");
       return false;
@@ -630,13 +628,18 @@ printf("FK in\n");
       ROS_ERROR_NAMED("kdl", "Could not compute FK for tip chain");
       return false;
     }
-printf("FK out\n");
     /////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////
     // Convert into query for analytic solver
     tf::poseMsgToKDL(ik_pose, kdl_ik_pose);
     kdl_ik_pose_ur_chain = pose_base.Inverse() * kdl_ik_pose * pose_tip.Inverse();
+    printf("ik request:\n");
+    for(int i=0; i<4; i++) {
+      for(int j=0; j<4; j++)
+        printf("%1.6f ", kdl_ik_pose(i, j));
+      printf("\n");
+    }
     
     kdl_ik_pose_ur_chain.Make4x4((double*) homo_ik_pose);
     for(int i=0; i<3; i++) homo_ik_pose[i][3] *= 1000; // strange KDL fix
@@ -680,9 +683,21 @@ printf("FK out\n");
       else
         error_code.val = error_code.SUCCESS;
 
-printf("IK suc\n");
-      if(error_code.val == error_code.SUCCESS) 
+      if(error_code.val == error_code.SUCCESS) {
+        std::vector<std::string> fk_link_names;
+        fk_link_names.push_back(ur_link_names_.back());
+        std::vector<geometry_msgs::Pose> fk_poses;
+        getPositionFK(fk_link_names, solution, fk_poses);
+        KDL::Frame kdl_fk_pose;
+        tf::poseMsgToKDL(fk_poses[0], kdl_fk_pose);
+        printf("FK sol\n");
+        for(int i=0; i<4; i++) {
+          for(int j=0; j<4; j++)
+            printf("%1.3f ", kdl_fk_pose(i, j)-kdl_ik_pose(i, j));
+          printf("\n");
+        }
         return true;
+      }
     }
     // none of the solutions were both consistent and passed the solution callback
 
@@ -706,7 +721,6 @@ printf("IK suc\n");
 
   ROS_DEBUG_NAMED("kdl","An IK that satisifes the constraints and is collision free could not be found");
   error_code.val = error_code.NO_IK_SOLUTION;
-printf("IK fail\n");
   return false;
 }
 
