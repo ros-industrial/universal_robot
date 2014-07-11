@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 
 <!--
-  Author: Jimmy Da Silva
-  Contributers: Kelsey Hawkins, Ajit Krisshna N L, Muhammad Asif Rana 
-
+  Author: Kelsey Hawkins 
+  Contributers: Jimmy Da Silva, Ajit Krisshna N L, Muhammad Asif Rana 
 -->
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
@@ -36,29 +35,26 @@
   <property name="wrist_3_cog" value="0 -0.001156 -0.00149" />
 
   <!-- Kinematic model -->
-  <property name="shoulder_height" value="0.1273" /> <!-- d1 -->  
-  <property name="shoulder_offset" value="0.220941" /> <!-- Estimated -->  
-  <property name="upper_arm_length" value="0.612" /> <!-- -a2 -->
-  <property name="elbow_offset" value="0.163941" /> <!-- d4 -->       
-  <property name="forearm_length" value="0.5723" /> <!-- -a3 -->
-  <property name="wrist_1_length" value="0.1157" /> <!-- d5 -->     
-  <property name="wrist_2_length" value="0.0922" /> <!-- d6 -->
-  <property name="wrist_3_length" value="0.0857" /> <!-- This might be wrong -->
 
-  <property name="shoulder_radius" value="0.060" />   
-  <property name="upper_arm_radius" value="0.054" />  
-  <property name="elbow_radius" value="0.060" />      
-  <property name="forearm_radius" value="0.040" />    
-  <property name="wrist_radius" value="0.045" />
+  <!-- Properties from urcontrol.conf -->
+  <property name="ur10_d1" value="0.1273" />
+  <property name="ur10_a2" value="-0.612" />
+  <property name="ur10_a3" value="-0.5723" />
+  <property name="ur10_d4" value="0.163941" />
+  <property name="ur10_d5" value="0.1157" />
+  <property name="ur10_d6" value="0.0922" />
 
-  <!-- Collision model -->
-  <property name="base_collision_length" value="0.160" /> 
-  <property name="shoulder_collision_length" value="0.200" />  
-  <property name="shoulder_collision_offset" value="0.035" />  
-  <property name="elbow_collision_length" value="0.200" />     
-  <property name="elbow_collision_offset" value="0.035" />     
+  <!-- Arbitrary offsets for shoulder/elbow joints -->
+  <property name="shoulder_offset" value="0.220941" />  <!-- measured from model -->
+  <property name="elbow_offset" value="-0.1719" /> <!-- measured from model -->       
 
-
+  <!-- link lengths used in model -->
+  <property name="shoulder_height" value="${ur10_d1}" />
+  <property name="upper_arm_length" value="${-ur10_a2}" />
+  <property name="forearm_length" value="${-ur10_a3}" />
+  <property name="wrist_1_length" value="${ur10_d4 - elbow_offset - shoulder_offset}" />
+  <property name="wrist_2_length" value="${ur10_d5}" />
+  <property name="wrist_3_length" value="${ur10_d6}" />
 
   <xacro:macro name="ur10_robot" params="prefix">
 
@@ -160,7 +156,7 @@
 	<joint name="${prefix}elbow_joint" type="revolute">
 		<parent link="${prefix}upper_arm_link" />
 		<child link = "${prefix}forearm_link" />
-		<origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
+		<origin xyz="0.0 ${elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
 		<axis xyz="0.0 1.0 0.0" />
 		<limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="10.0" velocity="${pi}"/>
 		<dynamics damping="10" friction="0.1"/>
@@ -284,6 +280,14 @@
 		  <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
 		</inertial>
 	</link>
+  
+  <joint name="${prefix}ee_fixed_joint" type="fixed">
+    <parent link="${prefix}wrist_3_link" />
+    <child link = "${prefix}ee_link" />
+    <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+  </joint>
+
+  <link name="${prefix}ee_link" />
 
   <xacro:ur10_arm_transmission prefix="${prefix}" />
   <xacro:ur10_arm_gazebo prefix="${prefix}" />
