@@ -649,8 +649,8 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
       double cur_weighted_diff = 0;
       for(uint16_t j=0; j<6; j++) {
         // solution violates the consistency_limits, throw it out
-        double abs_diff = std::fabs(ik_seed_state[j] - q_ik_sols[i][j]);
-        if(!consistency_limits.empty() && abs_diff > consistency_limits[j]) {
+        double abs_diff = std::fabs(ik_seed_state[ur_joint_inds_start_+j] - q_ik_sols[i][j]);
+        if(!consistency_limits.empty() && abs_diff > consistency_limits[ur_joint_inds_start_+j]) {
           cur_weighted_diff = std::numeric_limits<double>::infinity();
           break;
         }
@@ -660,6 +660,16 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     }
 
     std::sort(weighted_diffs.begin(), weighted_diffs.end(), comparator);
+
+#if 0
+    printf("start\n");
+    printf("                     q %1.2f, %1.2f, %1.2f, %1.2f, %1.2f, %1.2f\n", ik_seed_state[1], ik_seed_state[2], ik_seed_state[3], ik_seed_state[4], ik_seed_state[5], ik_seed_state[6]);
+    for(uint16_t i=0; i<weighted_diffs.size(); i++) {
+      int cur_idx = weighted_diffs[i].first;
+      printf("diff %f, i %d, q %1.2f, %1.2f, %1.2f, %1.2f, %1.2f, %1.2f\n", weighted_diffs[i].second, cur_idx, q_ik_sols[cur_idx][0], q_ik_sols[cur_idx][1], q_ik_sols[cur_idx][2], q_ik_sols[cur_idx][3], q_ik_sols[cur_idx][4], q_ik_sols[cur_idx][5]);
+    }
+    printf("end\n");
+#endif
 
     for(uint16_t i=0; i<weighted_diffs.size(); i++) {
       if(weighted_diffs[i].second == std::numeric_limits<double>::infinity()) {
