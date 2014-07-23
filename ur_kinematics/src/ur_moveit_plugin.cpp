@@ -636,7 +636,10 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     kdl_ik_pose_ur_chain = pose_base.Inverse() * kdl_ik_pose * pose_tip.Inverse();
     
     kdl_ik_pose_ur_chain.Make4x4((double*) homo_ik_pose);
+#if KDL_OLD_BUG_FIX
+    // in older versions of KDL, setting this flag might be necessary
     for(int i=0; i<3; i++) homo_ik_pose[i][3] *= 1000; // strange KDL fix
+#endif
     /////////////////////////////////////////////////////////////////////////////
 
     // Do the analytic IK
