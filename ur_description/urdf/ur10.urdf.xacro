@@ -59,15 +59,6 @@
   <xacro:macro name="ur10_robot" params="prefix">
 
 	<link name="${prefix}base_link" >
-  </link>
-
-	<joint name="${prefix}base_joint" type="fixed">
-		<parent link="${prefix}base_link" />
-		<child link = "${prefix}ur_base_link" />
-		<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-	</joint>
-
-	<link name="${prefix}ur_base_link" >
 		<visual>
 		  <geometry>
 		    <mesh filename="package://ur_description/meshes/ur10/visual/Base.dae" scale="${scale}"/>
