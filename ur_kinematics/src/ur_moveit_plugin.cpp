@@ -691,13 +691,13 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
         error_code.val = error_code.SUCCESS;
 
       if(error_code.val == error_code.SUCCESS) {
+#if 0
         std::vector<std::string> fk_link_names;
         fk_link_names.push_back(ur_link_names_.back());
         std::vector<geometry_msgs::Pose> fk_poses;
         getPositionFK(fk_link_names, solution, fk_poses);
         KDL::Frame kdl_fk_pose;
         tf::poseMsgToKDL(fk_poses[0], kdl_fk_pose);
-#if 0
         printf("FK(solution) - pose \n");
         for(int i=0; i<4; i++) {
           for(int j=0; j<4; j++)
