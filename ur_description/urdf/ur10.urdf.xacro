@@ -55,6 +55,17 @@
   <property name="wrist_1_length" value="${ur10_d4 - elbow_offset - shoulder_offset}" />
   <property name="wrist_2_length" value="${ur10_d5}" />
   <property name="wrist_3_length" value="${ur10_d6}" />
+  
+  <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
+    <inertial>
+      <mass value="${mass}" />
+      <insert_block name="origin" />
+      <inertia ixx="${0.0833333 * mass * (3 * radius * radius + length * length)}" ixy="0.0" ixz="0.0"
+        iyy="${0.0833333 * mass * (3 * radius * radius + length * length)}" iyz="0.0"
+        izz="${0.5 * mass * radius * radius}" />
+    </inertial>
+  </xacro:macro>
+  
 
   <xacro:macro name="ur10_robot" params="prefix joint_limited">
 
@@ -74,10 +85,9 @@
       <origin xyz="0.0 0.0 0.0" rpy="${pi / 2.0} 0.0 0.0" />
     </collision>
 
-    <inertial>
-      <mass value="${base_mass}" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
+    <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${base_mass}">
+      <origin xyz="0.0 0.0 0.019" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
 
   <joint name="${prefix}shoulder_pan_joint" type="revolute">
@@ -91,7 +101,7 @@
     <xacro:if value="${joint_limited}">
       <limit lower="${-pi}" upper="${pi}" effort="330.0" velocity="2.16"/>
     </xacro:if>
-    <dynamics damping="10" friction="0.1"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
   
   <link name="${prefix}shoulder_link">
@@ -110,11 +120,9 @@
       <origin rpy="${pi / 2.0} 0.0 0.0" xyz="0.0 0.0 -0.127"/>   <!-- -0.127 ????  -->
     </collision>
 
-    <inertial>
-      <mass value="${shoulder_mass}" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-      <origin xyz="${shoulder_cog}" rpy="0.0 0.0 0.0" />
-    </inertial>
+    <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${shoulder_mass}">
+      <origin xyz="0.0 0.0 0.089" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
 
   <joint name="${prefix}shoulder_lift_joint" type="revolute">
@@ -128,7 +136,7 @@
     <xacro:if value="${joint_limited}">
       <limit lower="${-pi}" upper="${pi}" effort="330.0" velocity="2.16"/>
     </xacro:if>
-    <dynamics damping="10" friction="0.1"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="${prefix}upper_arm_link">
@@ -147,11 +155,10 @@
       <origin xyz="0.0 -0.221 -0.127" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset-->
     </collision>
 
-    <inertial>
-      <mass value="${upper_arm_mass}" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-      <origin xyz="${upper_arm_cog}" rpy="0.0 0.0 0.0" />
-    </inertial>
+
+    <xacro:cylinder_inertial radius="0.075" length="${-ur10_a2}" mass="${upper_arm_mass}">
+      <origin xyz="0.0 0.0 ${-ur10_a2/2.0}" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
 
   <joint name="${prefix}elbow_joint" type="revolute">
@@ -165,7 +172,7 @@
     <xacro:if value="${joint_limited}">
       <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
     </xacro:if>
-    <dynamics damping="10" friction="0.1"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="${prefix}forearm_link">
@@ -184,11 +191,9 @@
       <origin xyz="0.0 -0.049 -0.739" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset -->
     </collision>
 
-    <inertial>
-      <mass value="${forearm_mass}" />
-      <origin xyz="${forearm_cog}" rpy="0.0 0.0 0.0" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
+    <xacro:cylinder_inertial radius="0.075" length="${-ur10_a3}" mass="${forearm_mass}">
+      <origin xyz="0.0 0.0 ${-ur10_a3/2.0}" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
 
   <joint name="${prefix}wrist_1_joint" type="revolute">
@@ -202,7 +207,7 @@
     <xacro:if value="${joint_limited}">
       <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
     </xacro:if>
-    <dynamics damping="10" friction="0.1"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="${prefix}wrist_1_link">
@@ -221,11 +226,9 @@
       <origin xyz="0.0 -0.049 -1.312" rpy="${pi / 2.0} 0 0.0" />  <!-- new offset -->
     </collision>
 
-    <inertial>
-      <mass value="${wrist_1_mass}" />
-      <origin xyz="${wrist_1_cog}" rpy="0.0 0.0 0.0" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
+    <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_1_mass}">
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
 
     <joint name="${prefix}wrist_2_joint" type="revolute">
@@ -239,7 +242,7 @@
     <xacro:if value="${joint_limited}">
       <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
     </xacro:if>
-    <dynamics damping="10" friction="0.1"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="${prefix}wrist_2_link">
@@ -258,11 +261,9 @@
       <origin xyz="0.0 -0.164 -1.312" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset -->
     </collision>
 
-    <inertial>
-      <mass value="${wrist_2_mass}" />
-      <origin xyz="${wrist_2_cog}" rpy="0.0 0.0 0.0" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
+    <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_2_mass}">
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
 
   <joint name="${prefix}wrist_3_joint" type="revolute">
@@ -276,7 +277,7 @@
     <xacro:if value="${joint_limited}">
       <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
     </xacro:if>
-    <dynamics damping="10" friction="0.1"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="${prefix}wrist_3_link">
@@ -295,11 +296,9 @@
        <origin xyz="0.0 -0.164 -1.427" rpy="${pi / 2.0} 0.0 0" />   <!-- new offset -->
     </collision>
 
-    <inertial>
-       <mass value="${wrist_3_mass}" />
-      <origin xyz="${wrist_3_cog}" rpy="0.0 0.0 0.0" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
+    <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    </xacro:cylinder_inertial>
   </link>
   
   <joint name="${prefix}ee_fixed_joint" type="fixed">
