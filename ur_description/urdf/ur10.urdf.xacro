@@ -27,10 +27,10 @@
        The permutation was guessed by looking at the UR5 parameters.
        Serious use of these parameters needs further inspection. -->
   <property name="shoulder_cog" value="0.00008 0.00244 -0.037" />
-  <property name="upper_arm_cog" value="0.00001 0.15061 0.38757" />  
-  <property name="forearm_cog" value="-0.00012 0.06112 0.1984" />       
-  <property name="wrist_1_cog" value="-0.00021 -0.00112 0.02269" />     
-  <property name="wrist_2_cog" value="-0.00021 0.00112 0.002269" />       
+  <property name="upper_arm_cog" value="0.00001 0.15061 0.38757" />
+  <property name="forearm_cog" value="-0.00012 0.06112 0.1984" />
+  <property name="wrist_1_cog" value="-0.00021 -0.00112 0.02269" />
+  <property name="wrist_2_cog" value="-0.00021 0.00112 0.002269" />
   <property name="wrist_3_cog" value="0 -0.001156 -0.00149" />
 
   <!-- Kinematic model -->
@@ -82,7 +82,7 @@
         <origin xyz="0.0 0.0 0.0" rpy="${pi / 2.0} 0.0 0.0" />
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${base_mass}">
-        <origin xyz="0.0 0.0 0.019" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -90,7 +90,7 @@
       <parent link="${prefix}base_link" />
       <child link = "${prefix}shoulder_link" />
       <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
-      <axis xyz="0.0 0.0 1.0" />
+      <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
       </xacro:unless>
@@ -115,7 +115,7 @@
         <origin rpy="${pi / 2.0} 0.0 0.0" xyz="0.0 0.0 -0.127"/>   <!-- -0.127 ????  -->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${shoulder_mass}">
-        <origin xyz="0.0 0.0 0.089" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -123,7 +123,7 @@
       <parent link="${prefix}shoulder_link" />
       <child link = "${prefix}upper_arm_link" />
       <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
-      <axis xyz="0.0 1.0 0.0" />
+      <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
       </xacro:unless>
@@ -156,7 +156,7 @@
       <parent link="${prefix}upper_arm_link" />
       <child link = "${prefix}forearm_link" />
       <origin xyz="0.0 ${elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
-      <axis xyz="0.0 1.0 0.0" />
+      <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
       </xacro:unless>
@@ -186,10 +186,10 @@
     </link>
 
     <joint name="${prefix}wrist_1_joint" type="revolute">
-       <parent link="${prefix}forearm_link" />
+      <parent link="${prefix}forearm_link" />
       <child link = "${prefix}wrist_1_link" />
       <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
-      <axis xyz="0.0 1.0 0.0" />
+      <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
       </xacro:unless>
@@ -222,7 +222,7 @@
       <parent link="${prefix}wrist_1_link" />
       <child link = "${prefix}wrist_2_link" />
       <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
-      <axis xyz="0.0 0.0 1.0" />
+      <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
       </xacro:unless>
@@ -255,7 +255,7 @@
       <parent link="${prefix}wrist_2_link" />
       <child link = "${prefix}wrist_3_link" />
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
-      <axis xyz="0.0 1.0 0.0" />
+      <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
       </xacro:unless>
