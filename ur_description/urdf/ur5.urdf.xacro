@@ -6,9 +6,10 @@
   <xacro:include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 
   <property name="pi" value="3.14159265" />
+  <property name="scale" value="0.001 0.001 0.001" />
 
   <!-- Inertia parameters -->
-  <property name="base_mass" value="4.0" /> <!-- Invented number, only matters for simulator -->
+  <property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
   <property name="shoulder_mass" value="3.7000" />
   <property name="upper_arm_mass" value="8.3930" />
   <property name="forearm_mass" value="2.2750" />
@@ -17,10 +18,10 @@
   <property name="wrist_3_mass" value="0.1879" />
 
   <property name="shoulder_cog" value="0.0 0.00193 -0.02561" />
-  <property name="upper_arm_cog" value="0.0 -0.024201 0.2125" />   <!-- 0.11336 - 0.089159 =  -->
-  <property name="forearm_cog" value="0.0 0.0265 0.11993" />       <!-- 0.119 is not half of 0.39225, is this really correct? -->
-  <property name="wrist_1_cog" value="0.0 0.110949 0.01634" />     <!-- 0.0018 + 0.10915 = 0.110949 -->
-  <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />       <!-- 0.01634 + 0.09465 = 0.11099-->
+  <property name="upper_arm_cog" value="0.0 -0.024201 0.2125" />
+  <property name="forearm_cog" value="0.0 0.0265 0.11993" />
+  <property name="wrist_1_cog" value="0.0 0.110949 0.01634" />
+  <property name="wrist_2_cog" value="0.0 0.0018 0.11099" />
   <property name="wrist_3_cog" value="0.0 0.001159 0.0" />
 
   <!-- Kinematic model -->
@@ -35,32 +36,32 @@
     mass = [3.7000, 8.3930, 2.2750, 1.2190, 1.2190, 0.1879]
     center_of_mass = [ [0, -0.02561, 0.00193], [0.2125, 0, 0.11336], [0.11993, 0.0, 0.0265], [0, -0.0018, 0.01634], [0, 0.0018,0.01634], [0, 0, -0.001159] ]
   -->
-  <property name="ur5_d1" value="0.1273" />
-  <property name="ur5_a2" value="-0.612" />
-  <property name="ur5_a3" value="-0.5723" />
-  <property name="ur5_d4" value="0.163941" />
-  <property name="ur5_d5" value="0.1157" />
-  <property name="ur5_d6" value="0.0922" />
+  <property name="ur5_d1" value="0.089159" />
+  <property name="ur5_a2" value="-0.42500" />
+  <property name="ur5_a3" value="-0.39225" />
+  <property name="ur5_d4" value="0.10915" />
+  <property name="ur5_d5" value="0.09465" />
+  <property name="ur5_d6" value="0.0823" />
 
   <!-- Arbitrary offsets for shoulder/elbow joints -->
-  <!--property name="shoulder_offset" value="0.220941" /-->  <!-- measured from model -->
-  <!--property name="elbow_offset" value="-0.1719" /--> <!-- measured from model -->       
+  <property name="shoulder_offset" value="0.13585" />  <!-- measured from model -->
+  <property name="elbow_offset" value="-0.1197" /> <!-- measured from model -->       
 
   <!-- link lengths used in model -->
-  <!--property name="shoulder_height" value="${ur5_d1}" />
+  <property name="shoulder_height" value="${ur5_d1}" />
   <property name="upper_arm_length" value="${-ur5_a2}" />
   <property name="forearm_length" value="${-ur5_a3}" />
   <property name="wrist_1_length" value="${ur5_d4 - elbow_offset - shoulder_offset}" />
   <property name="wrist_2_length" value="${ur5_d5}" />
-  <property name="wrist_3_length" value="${ur5_d6}" /-->
-  <property name="shoulder_height" value="0.089159" />  
-  <property name="shoulder_offset" value="0.13585" />  <!-- shoulder_offset - elbow_offset + wrist_1_length = 0.10915 -->
-  <property name="upper_arm_length" value="0.42500" />
-  <property name="elbow_offset" value="0.1197" />       <!-- CAD measured -->
-  <property name="forearm_length" value="0.39225" />
-  <property name="wrist_1_length" value="0.093" />     <!-- CAD measured -->
-  <property name="wrist_2_length" value="0.09465" />   <!-- In CAD this distance is 0.930, but in the spec it is 0.09465 -->
-  <property name="wrist_3_length" value="0.0823" />
+  <property name="wrist_3_length" value="${ur5_d6}" />
+  <!--property name="shoulder_height" value="0.089159" /-->  
+  <!--property name="shoulder_offset" value="0.13585" /-->  <!-- shoulder_offset - elbow_offset + wrist_1_length = 0.10915 -->
+  <!--property name="upper_arm_length" value="0.42500" /-->
+  <!--property name="elbow_offset" value="0.1197" /-->       <!-- CAD measured -->
+  <!--property name="forearm_length" value="0.39225" /-->
+  <!--property name="wrist_1_length" value="0.093" /-->     <!-- CAD measured -->
+  <!--property name="wrist_2_length" value="0.09465" /-->   <!-- In CAD this distance is 0.930, but in the spec it is 0.09465 -->
+  <!--property name="wrist_3_length" value="0.0823" /-->
 
   <property name="shoulder_radius" value="0.060" />   <!-- manually measured -->
   <property name="upper_arm_radius" value="0.054" />  <!-- manually measured -->
@@ -94,8 +95,8 @@
         </geometry>
         <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.009159"/> -->
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${base_mass}">
-        <origin xyz="0.0 0.0 0.019" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="0.05" mass="${base_mass}">
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -105,10 +106,10 @@
       <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="330.0" velocity="2.16"/>
+        <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
@@ -125,8 +126,8 @@
         </geometry>
         <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.009159"/> -->
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${shoulder_mass}">
-        <origin xyz="0.0 0.0 0.089" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="0.15" mass="${shoulder_mass}">
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -136,10 +137,10 @@
       <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />    
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="330.0" velocity="2.16"/>
+        <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
@@ -157,15 +158,15 @@
         </geometry>
         <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.2125"/> -->
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="${-ur5_a2}" mass="${upper_arm_mass}">
-        <origin xyz="0.0 0.0 ${-ur5_a2/2.0}" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="0.56" mass="${upper_arm_mass}">
+        <origin xyz="0.0 0.0 0.28" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
     <joint name="${prefix}elbow_joint" type="revolute">
       <parent link="${prefix}upper_arm_link" />
       <child link = "${prefix}forearm_link" />
-      <origin xyz="0.0 ${-elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 ${elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
@@ -188,8 +189,8 @@
         </geometry>
         <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.196125"/> -->
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="${-ur5_a3}" mass="${forearm_mass}">
-        <origin xyz="0.0 0.0 ${-ur5_a3/2.0}" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="0.5" mass="${forearm_mass}">
+        <origin xyz="0.0 0.0 0.25" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -199,10 +200,10 @@
       <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="28.0" velocity="3.2"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
+        <limit lower="${-pi}" upper="${pi}" effort="28.0" velocity="3.2"/>
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
@@ -220,11 +221,9 @@
         </geometry>
         <origin rpy="0.0 1.570796325 0.0" xyz="0.0 0.093 0.0"/>
       </collision>
-      <inertial>
-        <mass value="${wrist_1_mass}" />
-        <origin xyz="${wrist_1_cog}" rpy="0.0 0.0 0.0" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-      </inertial>
+      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_1_mass}">
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
     </link>
 
     <joint name="${prefix}wrist_2_joint" type="revolute">
@@ -233,10 +232,10 @@
       <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="28.0" velocity="3.2"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
+        <limit lower="${-pi}" upper="${pi}" effort="28.0" velocity="3.2"/>
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
@@ -254,7 +253,7 @@
         </geometry>
          <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.09465"/> 
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_2_mass}">
+      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_2_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -265,10 +264,10 @@
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="28.0" velocity="3.2"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
+        <limit lower="${-pi}" upper="${pi}" effort="28.0" velocity="3.2"/>
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
@@ -284,7 +283,7 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/Wrist3.dae" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
+      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_3_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
