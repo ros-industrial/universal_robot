@@ -86,6 +86,11 @@ namespace ur_kinematics {
   // @param T       The 4x4 end effector pose in row-major ordering
   void forward(const double* q, double* T);
 
+  // @param q       The 6 joint values 
+  // @param Ti      The 4x4 link i pose in row-major ordering. If NULL, nothing is stored.
+  void forward_all(const double* q, double* T1, double* T2, double* T3, 
+                                    double* T4, double* T5, double* T6);
+
   // @param T       The 4x4 end effector pose in row-major ordering
   // @param q_sols  An 8x6 array of doubles returned, all angles should be in [0,2*PI)
   // @param q6_des  An optional parameter which designates what the q6 value should take
