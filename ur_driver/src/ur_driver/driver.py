@@ -19,8 +19,13 @@ from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
 
-from ur_driver.srv import SetIO
-from ur_driver.msg import *
+from ur_msgs.srv import SetIO
+from ur_msgs.msg import *
+
+# renaming classes
+DigitalIn = Digital
+DigitalOut = Digital
+Flag  = Digital
 
 prevent_programming = False
 
