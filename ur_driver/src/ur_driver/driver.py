@@ -55,8 +55,8 @@ Q3 = [1.5,-0.2,-1.57,0,0,0]
 connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
-pub_joint_states = rospy.Publisher('joint_states', JointState)
-pub_wrench = rospy.Publisher('wrench', WrenchStamped)
+pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
+pub_wrench = rospy.Publisher('wrench', WrenchStamped, queue_size=1)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
