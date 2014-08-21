@@ -15,10 +15,6 @@ catkin_python_setup()
 catkin_package()
 
 
-###########
-## Build ##
-###########
-
 #############
 ## Install ##
 #############
