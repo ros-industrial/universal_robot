@@ -342,7 +342,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     wrench_msg.wrench.torque.z = state[5]
                     pub_wrench.publish(wrench_msg)
 
-#gets all IO States and publishes them into a message
+                #gets all IO States and publishes them into a message
                 elif mtype == MSG_GET_IO:
 
                     #gets digital in states
@@ -445,13 +445,13 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(buf)
 
-   #Experimental set_digital_output implementation
+    #Experimental set_digital_output implementation
     def set_digital_out(self, pinnum, value):
         params = [MSG_SET_DIGITAL_OUT] + \
                  [pinnum] + \
                  [value]
         buf = struct.pack("!%ii" % len(params), *params)
-	    #print params
+        #print params
         with self.socket_lock:
             self.request.send(buf) 
         time.sleep(IO_SLEEP_TIME)
@@ -461,7 +461,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                  [pinnum] + \
                  [value * 1000000]
         buf = struct.pack("!%ii" % len(params), *params)
-	    #print params
+        #print params
         with self.socket_lock:
             self.request.send(buf) 
         time.sleep(IO_SLEEP_TIME)
@@ -471,7 +471,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                  [value] + \
                  [0]
         buf = struct.pack("!%ii" % len(params), *params)
-	    #print params
+        #print params
         with self.socket_lock:
             self.request.send(buf) 
         time.sleep(IO_SLEEP_TIME+.5)
@@ -481,7 +481,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                  [pin] + \
                  [val]
         buf = struct.pack("!%ii" % len(params), *params)
-	    #print params
+        #print params
         with self.socket_lock:
             self.request.send(buf) 
         #set_flag will fail if called too closely together--added delay
