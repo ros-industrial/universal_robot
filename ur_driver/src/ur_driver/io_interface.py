@@ -2,8 +2,8 @@
 
 import sys
 import rospy
-from ur_driver.srv import *
-from ur_driver.msg import *
+from ur_msgs.srv import *
+from ur_msgs.msg import *
 
 FUN_SET_DIGITAL_OUT = 1
 FUN_SET_FLAG = 2
