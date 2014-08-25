@@ -8,10 +8,8 @@
 
   <xacro:include filename="$(find ur_description)/urdf/ur10.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur10.gazebo.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 
   <property name="pi" value="3.14159265" />
-  <property name="scale" value="0.001 0.001 0.001" />
 
   <!-- Inertia parameters -->
   <property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
@@ -70,16 +68,13 @@
     <link name="${prefix}base_link" >
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/Base.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Base.dae"/>
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="${pi / 2.0} 0.0 0.0" />
-        <material name="UR/Blue" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/Base.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/Base.dae"/>
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="${pi / 2.0} 0.0 0.0" />
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${base_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -103,16 +98,13 @@
     <link name="${prefix}shoulder_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/Shoulder.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Shoulder.dae"/>
         </geometry>
-        <origin rpy="${pi / 2.0} 0.0 0.0" xyz="0.0 0.0 -0.127"/>   <!-- -0.127 ????  -->
-        <material name="UR/Grey" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/Shoulder.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/Shoulder.dae"/>
         </geometry>
-        <origin rpy="${pi / 2.0} 0.0 0.0" xyz="0.0 0.0 -0.127"/>   <!-- -0.127 ????  -->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${shoulder_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -136,16 +128,13 @@
     <link name="${prefix}upper_arm_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/UpperArm.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/UpperArm.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.221 -0.127" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset-->
-        <material name="UR/Blue" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/UpperArm.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/UpperArm.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.221 -0.127" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset-->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="${-ur10_a2}" mass="${upper_arm_mass}">
         <origin xyz="0.0 0.0 ${-ur10_a2/2.0}" rpy="0 0 0" />
@@ -169,16 +158,13 @@
     <link name="${prefix}forearm_link">
       <visual>
          <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/Forearm.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Forearm.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.049 -0.739" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset -->
-        <material name="UR/Grey" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/Forearm.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/Forearm.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.049 -0.739" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset -->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="${-ur10_a3}" mass="${forearm_mass}">
         <origin xyz="0.0 0.0 ${-ur10_a3/2.0}" rpy="0 0 0" />
@@ -202,16 +188,13 @@
     <link name="${prefix}wrist_1_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/Wrist1.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Wrist1.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.049 -1.312" rpy="${pi / 2.0} 0 0.0" />  <!-- new offset -->
-        <material name="UR/Blue" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/Wrist1.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/Wrist1.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.049 -1.312" rpy="${pi / 2.0} 0 0.0" />  <!-- new offset -->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_1_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -235,16 +218,13 @@
     <link name="${prefix}wrist_2_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/Wrist2.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Wrist2.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.164 -1.312" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset -->
-        <material name="UR/Grey" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/Wrist2.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/Wrist2.dae"/>
         </geometry>
-        <origin xyz="0.0 -0.164 -1.312" rpy="${pi / 2.0} 0.0 0.0" />  <!-- new offset -->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_2_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -268,16 +248,13 @@
     <link name="${prefix}wrist_3_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/visual/Wrist3.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/visual/Wrist3.dae"/>
         </geometry>
-         <origin xyz="0.0 -0.164 -1.427" rpy="${pi / 2.0} 0.0 0" />   <!-- new offset -->
-        <material name="UR/Blue" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur10/collision/Wrist3.dae" scale="${scale}"/>
+          <mesh filename="package://ur_description/meshes/ur10/collision/Wrist3.dae"/>
         </geometry>
-         <origin xyz="0.0 -0.164 -1.427" rpy="${pi / 2.0} 0.0 0" />   <!-- new offset -->
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
