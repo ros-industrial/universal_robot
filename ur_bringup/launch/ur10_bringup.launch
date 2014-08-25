@@ -9,7 +9,8 @@
 <launch>
   
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip" />
+  <arg name="robot_ip"/>
+  <arg name="reverse_port" default="50001"/>
   <arg name="limited" default="false"/>
 
   <!-- robot model -->
@@ -19,7 +20,8 @@
   
   <!-- ur common -->
   <include file="$(find ur_bringup)/launch/ur_common.launch">
-    <arg name="robot_ip"   value="$(arg robot_ip)" />
+    <arg name="robot_ip" value="$(arg robot_ip)"/>
+    <arg name="reverse_port" value="$(arg reverse_port)"/>
   </include>
 
 </launch>

@@ -9,8 +9,14 @@
   <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur10_robot prefix="">
-  </xacro:ur10_robot>
+  <xacro:ur10_robot prefix="" joint_limited="false"/>
 
+  <link name="world" />
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
 
 </robot>
