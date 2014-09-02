@@ -3,10 +3,8 @@
 
   <xacro:include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/materials.urdf.xacro" />
 
   <property name="pi" value="3.14159265" />
-  <property name="scale" value="0.001 0.001 0.001" />
 
   <!-- Inertia parameters -->
   <property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
@@ -87,13 +85,11 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/visual/Base.dae" />
         </geometry>
-        <origin xyz="0.0 0.0 0.003" rpy="0.0 0.0 ${3.0 * pi / 4.0}" />
       </visual>
       <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/Base.dae" />
         </geometry>
-        <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.009159"/> -->
       </collision>
       <xacro:cylinder_inertial radius="0.06" length="0.05" mass="${base_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -124,7 +120,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/Shoulder.dae" />
         </geometry>
-        <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.009159"/> -->
       </collision>
       <xacro:cylinder_inertial radius="0.06" length="0.15" mass="${shoulder_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -150,13 +145,11 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/visual/UpperArm.dae" />
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
       </visual>
       <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/UpperArm.dae" />
         </geometry>
-        <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.2125"/> -->
       </collision>
       <xacro:cylinder_inertial radius="0.06" length="0.56" mass="${upper_arm_mass}">
         <origin xyz="0.0 0.0 0.28" rpy="0 0 0" />
@@ -187,7 +180,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/Forearm.dae" />
         </geometry>
-        <!-- <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.196125"/> -->
       </collision>
       <xacro:cylinder_inertial radius="0.06" length="0.5" mass="${forearm_mass}">
         <origin xyz="0.0 0.0 0.25" rpy="0 0 0" />
@@ -213,13 +205,11 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/visual/Wrist1.dae" />
         </geometry>
-        <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
       </visual>
       <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/Wrist1.dae" />
         </geometry>
-        <origin rpy="0.0 1.570796325 0.0" xyz="0.0 0.093 0.0"/>
       </collision>
       <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_1_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -245,13 +235,11 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/visual/Wrist2.dae" />
         </geometry>
-        <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
       </visual>
       <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/Wrist2.dae" />
         </geometry>
-         <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.09465"/> 
       </collision>
       <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_2_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
