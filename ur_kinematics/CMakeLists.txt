@@ -4,11 +4,10 @@ project(ur_kinematics)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs moveit_core moveit_ros_planning pluginlib tf_conversions)
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(Boost REQUIRED COMPONENTS system)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -49,7 +48,8 @@ find_package(catkin REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ur10_kin ur5_kin
+  LIBRARIES ur10_kin ur5_kin ur10_moveit_plugin ur5_moveit_plugin
+  CATKIN_DEPENDS pluginlib moveit_core
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -60,7 +60,11 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 include_directories(include ${catkin_INCLUDE_DIRS})
+
+link_directories(${Boost_LIBRARY_DIRS})
+link_directories(${catkin_LIBRARY_DIRS})
 
 ## Declare a cpp library
 # add_library(ur_kinematics
@@ -71,6 +75,20 @@ set_target_properties(ur10_kin PROPERTIES COMPILE_DEFINITIONS "UR10_PARAMS")
 
 add_library(ur5_kin src/ur_kin.cpp)
 set_target_properties(ur5_kin PROPERTIES COMPILE_DEFINITIONS "UR5_PARAMS")
+
+add_library(ur10_moveit_plugin src/ur_moveit_plugin.cpp)
+set_target_properties(ur10_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR10_PARAMS")
+target_link_libraries(ur10_moveit_plugin 
+    ${catkin_LIBRARIES} 
+    ${Boost_LIBRARIES}
+    ur10_kin)
+
+add_library(ur5_moveit_plugin src/ur_moveit_plugin.cpp)
+set_target_properties(ur5_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR5_PARAMS")
+target_link_libraries(ur5_moveit_plugin 
+    ${catkin_LIBRARIES} 
+    ${Boost_LIBRARIES}
+    ur5_kin)
 
 ## Declare a cpp executable
 # add_executable(ur_kinematics_node src/ur_kinematics_node.cpp)
@@ -88,7 +106,7 @@ set_target_properties(ur5_kin PROPERTIES COMPILE_DEFINITIONS "UR5_PARAMS")
 ## Install ##
 #############
 
-install(TARGETS ur5_kin ur10_kin
+install(TARGETS ur5_kin ur10_kin ur5_moveit_plugin ur10_moveit_plugin
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -124,11 +142,10 @@ install(DIRECTORY include/${PROJECT_NAME}/
 # )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-#   # myfile1
-#   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
+install(FILES
+    ur_moveit_plugins.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 #############
 ## Testing ##

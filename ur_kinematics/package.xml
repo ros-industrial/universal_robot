@@ -4,6 +4,7 @@
   <version>1.0.3</version>
   <description>
      Provides forward and inverse kinematics for Universal robot designs.
+     See http://hdl.handle.net/1853/50782 for details.
   </description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
@@ -42,15 +43,26 @@
   <!--   <run_depend>message_runtime</run_depend> -->
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
+
   <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_ros_planning</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>tf_conversions</build_depend>
+
+  <run_depend>moveit_core</run_depend>
+  <run_depend>moveit_ros_planning</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>tf_conversions</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- You can specify that this package is a metapackage here: -->
-    <!-- <metapackage/> -->
-
-    <!-- Other tools can request additional information be placed here -->
-
+    <moveit_core plugin="${prefix}/ur_moveit_plugins.xml"/>
   </export>
 </package>
