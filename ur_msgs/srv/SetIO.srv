@@ -1,0 +1,5 @@
+int8 fun
+int8 pin
+float32 state
+---
+bool success

@@ -19,6 +19,14 @@ from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
 
+from ur_msgs.srv import SetIO
+from ur_msgs.msg import *
+
+# renaming classes
+DigitalIn = Digital
+DigitalOut = Digital
+Flag  = Digital
+
 prevent_programming = False
 
 # Joint offsets, pulled from calibration information stored in the URDF
@@ -39,10 +47,22 @@ MSG_WAYPOINT_FINISHED = 5
 MSG_STOPJ = 6
 MSG_SERVOJ = 7
 MSG_WRENCH = 9
+MSG_SET_DIGITAL_OUT = 10
+MSG_GET_IO = 11
+MSG_SET_FLAG = 12
+MSG_SET_TOOL_VOLTAGE = 13
+MSG_SET_ANALOG_OUT = 14
 MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
+
+FUN_SET_DIGITAL_OUT = 1
+FUN_SET_FLAG = 2
+FUN_SET_ANALOG_OUT = 3
+FUN_SET_TOOL_VOLTAGE = 4
+
+IO_SLEEP_TIME = 0.05
 
 JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
                'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
@@ -57,6 +77,7 @@ connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
 pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
 pub_wrench = rospy.Publisher('wrench', WrenchStamped, queue_size=1)
+pub_io_states = rospy.Publisher('io_states', IOStates, queue_size=1)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -321,6 +342,75 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     wrench_msg.wrench.torque.z = state[5]
                     pub_wrench.publish(wrench_msg)
 
+                #gets all IO States and publishes them into a message
+                elif mtype == MSG_GET_IO:
+
+                    #gets digital in states
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    buf = buf[4:]
+                    msg = IOStates()
+                    for i in range(0, 10):
+                        msg.digital_in_states.append(DigitalIn(i, (inp & (1<<i))>>i))
+                    #gets digital out states
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    buf = buf[4:]
+                    for i in range(0, 10):
+                        msg.digital_out_states.append(DigitalOut(i, (inp & (1<<i))>>i))
+                    #gets flag states
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    buf = buf[4:]
+                    for i in range(0, 32):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets analog_out[0] state
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    inp /= 1000000.0
+                    buf = buf[4:]
+                    msg.analog_out_states.append(Analog(0, inp))
+                    #gets analog_out[1] state
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    inp /= 1000000.0
+                    buf = buf[4:]
+                    msg.analog_out_states.append(Analog(1, inp))
+                    #gets analog_in[0] state
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    inp /= 1000000.0
+                    buf = buf[4:]
+                    msg.analog_in_states.append(Analog(0, inp))
+                    #gets analog_in[1] state
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    inp /= 1000000.0
+                    buf = buf[4:]
+                    msg.analog_in_states.append(Analog(1, inp))
+                    #gets analog_in[2] state
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    inp /= 1000000.0
+                    buf = buf[4:]
+                    msg.analog_in_states.append(Analog(2, inp))
+                    #gets analog_in[3] state
+                    while len(buf) < 4:
+                        buf = buf + self.recv_more()
+                    inp = struct.unpack_from("!i", buf, 0)[0]
+                    inp /= 1000000.0
+                    buf = buf[4:]
+                    msg.analog_in_states.append(Analog(3, inp))
+                    pub_io_states.publish(msg)
+
                 elif mtype == MSG_QUIT:
                     print "Quitting"
                     raise EOF("Received quit")
@@ -354,7 +444,48 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         buf = struct.pack("!%ii" % len(params), *params)
         with self.socket_lock:
             self.request.send(buf)
-        
+
+    #Experimental set_digital_output implementation
+    def set_digital_out(self, pinnum, value):
+        params = [MSG_SET_DIGITAL_OUT] + \
+                 [pinnum] + \
+                 [value]
+        buf = struct.pack("!%ii" % len(params), *params)
+        #print params
+        with self.socket_lock:
+            self.request.send(buf) 
+        time.sleep(IO_SLEEP_TIME)
+
+    def set_analog_out(self, pinnum, value):
+        params = [MSG_SET_ANALOG_OUT] + \
+                 [pinnum] + \
+                 [value * 1000000]
+        buf = struct.pack("!%ii" % len(params), *params)
+        #print params
+        with self.socket_lock:
+            self.request.send(buf) 
+        time.sleep(IO_SLEEP_TIME)
+
+    def set_tool_voltage(self, value):
+        params = [MSG_SET_TOOL_VOLTAGE] + \
+                 [value] + \
+                 [0]
+        buf = struct.pack("!%ii" % len(params), *params)
+        #print params
+        with self.socket_lock:
+            self.request.send(buf) 
+        time.sleep(IO_SLEEP_TIME+.5)
+
+    def set_flag(self, pin, val):
+        params = [MSG_SET_FLAG] + \
+                 [pin] + \
+                 [val]
+        buf = struct.pack("!%ii" % len(params), *params)
+        #print params
+        with self.socket_lock:
+            self.request.send(buf) 
+        #set_flag will fail if called too closely together--added delay
+        time.sleep(IO_SLEEP_TIME)
 
     def send_stopj(self):
         with self.socket_lock:
@@ -673,6 +804,27 @@ def get_my_ip(robot_ip, port):
     s.close()
     return tmp
 
+def handle_set_io(req):
+    r = getConnectedRobot(wait=False)
+    if r:
+        if req.fun == FUN_SET_DIGITAL_OUT:
+            r.set_digital_out(req.pin, req.state)
+            return True
+        elif req.fun == FUN_SET_FLAG:
+            r.set_flag(req.pin, req.state)
+            return True
+        elif req.fun == FUN_SET_ANALOG_OUT:
+            r.set_analog_out(req.pin, req.state)
+            return True
+        elif req.fun == FUN_SET_TOOL_VOLTAGE:
+            r.set_tool_voltage(req.pin)
+            return True
+    else:
+        raise ROSServiceException("Robot not connected")
+
+def set_io_server():
+    s= rospy.Service('set_io', SetIO, handle_set_io)
+
 def main():
     rospy.init_node('ur_driver', disable_signals=True)
     if rospy.get_param("use_sim_time", False):
@@ -721,6 +873,8 @@ def main():
     connection.connect()
     connection.send_reset_program()
     
+    set_io_server()
+
     action_server = None
     try:
         while not rospy.is_shutdown():
