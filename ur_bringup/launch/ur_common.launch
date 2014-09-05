@@ -13,6 +13,8 @@
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
   <arg name="robot_ip"/>
   <arg name="reverse_port" default="50001"/>
+  <arg name="min_payload"/>
+  <arg name="max_payload"/>
   
   <!-- copy the specified IP address to be consistant with ROS-Industrial spec.
   NOTE: The ip address is actually passed to the driver on the command line -->
@@ -22,7 +24,10 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <!-- driver -->
-  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="$(arg robot_ip) $(arg reverse_port)" output="screen" />
+  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="$(arg robot_ip) $(arg reverse_port)" output="screen">
+    <param name="min_payload" type="double" value="$(arg min_payload)"/>
+    <param name="max_payload" type="double" value="$(arg max_payload)"/>
+  </node>
    
   <!-- TF Buffer Server -->
   <node pkg="tf2_ros" type="buffer_server" name="tf2_buffer_server">

@@ -49,8 +49,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ur10_kin ur5_kin ur10_moveit_plugin ur5_moveit_plugin
-  CATKIN_DEPENDS pluginlib
-  DEPENDS moveit_core 
+  CATKIN_DEPENDS pluginlib moveit_core
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -107,7 +106,7 @@ target_link_libraries(ur5_moveit_plugin
 ## Install ##
 #############
 
-install(TARGETS ur5_kin ur10_kin
+install(TARGETS ur5_kin ur10_kin ur5_moveit_plugin ur10_moveit_plugin
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

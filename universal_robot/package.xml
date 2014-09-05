@@ -1,6 +1,6 @@
 <package>
   <name>universal_robot</name>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <description>
       Drivers, description, and utilities for Universal Robot Arms.
   </description>
@@ -24,6 +24,7 @@
   <run_depend>ur_driver</run_depend>
   <run_depend>ur_gazebo</run_depend>
   <run_depend>ur_kinematics</run_depend>
+  <run_depend>ur_msgs</run_depend>
 
   <export>
     <metapackage/>

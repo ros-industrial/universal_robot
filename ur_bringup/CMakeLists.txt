@@ -84,9 +84,6 @@ catkin_package(
 #############
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(FILES ur_common.launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(FILES ur5.launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(FILES ur10.launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html

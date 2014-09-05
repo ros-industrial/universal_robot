@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_gazebo</name>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <description>
       Gazebo wrapper for the Universal UR5/10 robot arms.
   </description>
@@ -53,7 +53,6 @@
   <run_depend>joint_trajectory_controller</run_depend>
   <run_depend>effort_controllers</run_depend>
   <run_depend>robot_state_publisher</run_depend>
-  <run_depend>pr2_mechanism_diagnostics</run_depend>
   
 
 
