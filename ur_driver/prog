@@ -220,7 +220,7 @@ def driverProg():
         #send_waypoint_finished(waypoint_id)
         set_servo_setpoint(waypoint_id, q, t)
       elif mtype == MSG_SET_PAYLOAD:
-	    params = socket_read_binary_integer(1)
+        params = socket_read_binary_integer(1)
         if params[0] == 0:
           send_out("Received no parameters for setPayload message")
         end
@@ -240,7 +240,7 @@ def driverProg():
           send_out("Received no parameters for set_out message")
         end
         if params_mult[2] > 0:
-	  set_digital_out(params_mult[1], True)
+      set_digital_out(params_mult[1], True)
         elif params_mult[2] == 0:
           set_digital_out(params_mult[1], False)
         end
@@ -252,7 +252,7 @@ def driverProg():
           send_out("Received no parameters for set_out message")
         end
         if params_mult[2] != 0:
-	  set_flag(params_mult[1], True)
+      set_flag(params_mult[1], True)
         elif params_mult[2] == 0:
           set_flag(params_mult[1], False)
         end

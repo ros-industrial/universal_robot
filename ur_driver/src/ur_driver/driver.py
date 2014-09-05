@@ -19,9 +19,8 @@ from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
 
-from ur_msgs.srv import SetIO
+from ur_msgs.srv import SetPayload, SetIO
 from ur_msgs.msg import *
-from ur_driver.srv import *
 
 # renaming classes
 DigitalIn = Digital
@@ -59,6 +58,12 @@ MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
+
+#Bounds for SetPayload service
+MIN_PAYLOAD = 0.0
+MAX_PAYLOAD = 5.0    #UR5
+#MAX_PAYLOAD = 10.0    #UR10
+
 
 FUN_SET_DIGITAL_OUT = 1
 FUN_SET_FLAG = 2
@@ -448,7 +453,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         with self.socket_lock:
             self.request.send(buf)
         
-	#Experimental set_payload implementation
+    #Experimental set_payload implementation
     def send_payload(self,payload):
         buf = struct.pack('!ii', MSG_SET_PAYLOAD, payload * MULT_payload)
         with self.socket_lock:
@@ -606,14 +611,14 @@ def within_tolerance(a_vec, b_vec, tol_vec):
 class URServiceProvider(object):
     def __init__(self, robot):
         self.robot = robot
-        rospy.Service('ur_driver/setPayload', URSetPayload, self.setPayload)
+        rospy.Service('ur_driver/setPayload', SetPayload, self.setPayload)
 
     def set_robot(self, robot):
         self.robot = robot
 
     def setPayload(self, req):
-        if req.payload < 0 or req.payload > 20.00:
-            print 'ERROR: Payload out of bounce'
+        if req.payload < MIN_PAYLOAD or req.payload > MAX_PAYLOAD:
+            print 'ERROR: Payload out of bounds'
             return False
         
         if self.robot:
