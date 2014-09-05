@@ -8,6 +8,7 @@ def driverProg():
   MSG_WAYPOINT_FINISHED = 5
   MSG_STOPJ = 6
   MSG_SERVOJ = 7
+  MSG_SET_PAYLOAD = 8
   MSG_WRENCH = 9
   MSG_SET_DIGITAL_OUT = 10
   MSG_GET_IO = 11
@@ -15,6 +16,7 @@ def driverProg():
   MSG_SET_TOOL_VOLTAGE = 13
   MSG_SET_ANALOG_OUT = 14
   MULT_wrench = 10000.0
+  MULT_payload = 1000.0
   MULT_jointstate = 10000.0
   MULT_time = 1000000.0
   MULT_blend = 1000.0
@@ -217,6 +219,16 @@ def driverProg():
         #servoj(q, 3, 0.1, t)
         #send_waypoint_finished(waypoint_id)
         set_servo_setpoint(waypoint_id, q, t)
+      elif mtype == MSG_SET_PAYLOAD:
+        params = socket_read_binary_integer(1)
+        if params[0] == 0:
+          send_out("Received no parameters for setPayload message")
+        end
+        
+        payload = params[1] / MULT_payload
+        #send_out(payload)
+        send_out("Received new payload")
+        set_payload(payload)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
         stopj(1.0)
@@ -228,7 +240,7 @@ def driverProg():
           send_out("Received no parameters for set_out message")
         end
         if params_mult[2] > 0:
-	  set_digital_out(params_mult[1], True)
+          set_digital_out(params_mult[1], True)
         elif params_mult[2] == 0:
           set_digital_out(params_mult[1], False)
         end
@@ -240,7 +252,7 @@ def driverProg():
           send_out("Received no parameters for set_out message")
         end
         if params_mult[2] != 0:
-	  set_flag(params_mult[1], True)
+          set_flag(params_mult[1], True)
         elif params_mult[2] == 0:
           set_flag(params_mult[1], False)
         end

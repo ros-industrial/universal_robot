@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS message_generation std_msgs)
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
+   SetPayload.srv
    SetIO.srv
  )
 
@@ -34,7 +35,7 @@ find_package(catkin REQUIRED COMPONENTS message_generation std_msgs)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ur_msgs
-#  CATKIN_DEPENDS other_catkin_pkg
+   CATKIN_DEPENDS message_runtime std_msgs
 #  DEPENDS system_lib
 )
 
