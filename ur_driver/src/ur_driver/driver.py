@@ -61,8 +61,8 @@ MULT_blend = 1000.0
 
 #Bounds for SetPayload service
 MIN_PAYLOAD = 0.0
-MAX_PAYLOAD = 5.0    #UR5
-#MAX_PAYLOAD = 10.0    #UR10
+MAX_PAYLOAD = 1.0
+#Using a very conservative value as it should be set throught the parameter server
 
 
 FUN_SET_DIGITAL_OUT = 1
@@ -617,8 +617,8 @@ class URServiceProvider(object):
         self.robot = robot
 
     def setPayload(self, req):
-        if req.payload < MIN_PAYLOAD or req.payload > MAX_PAYLOAD:
-            print 'ERROR: Payload out of bounds'
+        if req.payload < min_payload or req.payload > max_payload:
+            print 'ERROR: Payload ' + str(req.payload) + ' out of bounds (' + str(min_payload) + ', ' + str(max_payload) + ')'
             return False
         
         if self.robot:
@@ -893,6 +893,15 @@ def main():
     # Reads the maximum velocity
     global max_velocity
     max_velocity = rospy.get_param("~max_velocity", 2.0)
+    
+    # Reads the minimum payload
+    global min_payload
+    min_payload = rospy.get_param("~min_payload", MIN_PAYLOAD)
+    # Reads the maximum payload
+    global max_payload
+    max_payload = rospy.get_param("~max_payload", MAX_PAYLOAD)
+    rospy.loginfo("Bounds for Payload: [%s, %s]" % (min_payload, max_payload))
+    
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", reverse_port), CommanderTCPHandler)
