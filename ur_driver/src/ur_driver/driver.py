@@ -57,6 +57,7 @@ MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
+MULT_analog = 1000000.0
 
 #Bounds for SetPayload service
 MIN_PAYLOAD = 0.0
@@ -378,42 +379,42 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= 1000000.0
+                    inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_out_states.append(Analog(0, inp))
                     #gets analog_out[1] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= 1000000.0
+                    inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_out_states.append(Analog(1, inp))
                     #gets analog_in[0] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= 1000000.0
+                    inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_in_states.append(Analog(0, inp))
                     #gets analog_in[1] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= 1000000.0
+                    inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_in_states.append(Analog(1, inp))
                     #gets analog_in[2] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= 1000000.0
+                    inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_in_states.append(Analog(2, inp))
                     #gets analog_in[3] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= 1000000.0
+                    inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_in_states.append(Analog(3, inp))
                     pub_io_states.publish(msg)
@@ -472,7 +473,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def set_analog_out(self, pinnum, value):
         params = [MSG_SET_ANALOG_OUT] + \
                  [pinnum] + \
-                 [value * 1000000]
+                 [value * MULT_analog]
         buf = struct.pack("!%ii" % len(params), *params)
         #print params
         with self.socket_lock:
