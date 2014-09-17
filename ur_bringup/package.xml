@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_bringup</name>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <description>The ur_bringup package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
