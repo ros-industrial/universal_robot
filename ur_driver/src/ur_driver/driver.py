@@ -8,7 +8,6 @@ import struct
 import traceback, code
 import optparse
 import SocketServer
-from BeautifulSoup import BeautifulSoup
 
 import rospy
 import actionlib
@@ -814,20 +813,28 @@ class URTrajectoryFollower(object):
                     #    self.goal_handle.set_aborted(text="Took too long to reach the goal")
                     #    self.goal_handle = None
 
+
 # joint_names: list of joints
 #
 # returns: { "joint_name" : joint_offset }
 def load_joint_offsets(joint_names):
+    from lxml import etree
     robot_description = rospy.get_param("robot_description")
-    soup = BeautifulSoup(robot_description)
-    
+    doc = etree.fromstring(robot_description)
+
+    # select only 'calibration_offset' elements whose parent is a joint
+    # element with a specific value for the name attribute
+    expr = "/robot/joint[@name=$name]/calibration_offset"
     result = {}
     for joint in joint_names:
-        try:
-            joint_elt = soup.find('joint', attrs={'name': joint})
-            calibration_offset = float(joint_elt.calibration_offset["value"])
+        joint_elt = doc.xpath(expr, name=joint)
+        if len(joint_elt) == 1:
+            calibration_offset = float(joint_elt[0].get("value"))
             result[joint] = calibration_offset
-        except Exception, ex:
+            rospy.loginfo("Found calibration offset for joint \"%s\": %.4f" % (joint, calibration_offset))
+        elif len(joint_elt) > 1:
+            rospy.logerr("Too many joints matched on \"%s\". Please report to package maintainer(s)." % joint)
+        else:
             rospy.logwarn("No calibration offset for joint \"%s\"" % joint)
     return result
 
@@ -888,7 +895,10 @@ def main():
     # Reads the calibrated joint offsets from the URDF
     global joint_offsets
     joint_offsets = load_joint_offsets(joint_names)
-    rospy.logerr("Loaded calibration offsets: %s" % joint_offsets)
+    if len(joint_offsets) > 0:
+        rospy.loginfo("Loaded calibration offsets from urdf: %s" % joint_offsets)
+    else:
+        rospy.loginfo("No calibration offsets loaded from urdf")
 
     # Reads the maximum velocity
     global max_velocity

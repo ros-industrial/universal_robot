@@ -12,18 +12,13 @@
   <author>Stuart Glaser</author>
   <author email="sedwards@swri.org">Shaun Edwards</author>
 
-
   <buildtool_depend>catkin</buildtool_depend>
-  
+
   <run_depend>rospy</run_depend>
   <run_depend>actionlib</run_depend>
   <run_depend>control_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>trajectory_msgs</run_depend>
   <run_depend>ur_msgs</run_depend>
-  <run_depend>python-beautifulsoup</run_depend>
-
-
-  <export>
-  </export>
+  <run_depend>python-lxml</run_depend>
 </package>
