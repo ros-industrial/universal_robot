@@ -223,41 +223,41 @@ def driverProg():
       elif mtype == MSG_SET_DIGITAL_OUT:
         #send_out("Received Digital Out Signal")
         # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_digital_out message")
         end
         if params_mult[2] > 0:
-	  set_digital_out(params_mult[1], True)
+           set_digital_out(params_mult[1], True)
         elif params_mult[2] == 0:
           set_digital_out(params_mult[1], False)
         end
       elif mtype == MSG_SET_FLAG:
         #send_out("Received Set Flag Signal")
         # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_flag message")
         end
         if params_mult[2] != 0:
-	  set_flag(params_mult[1], True)
+          set_flag(params_mult[1], True)
         elif params_mult[2] == 0:
           set_flag(params_mult[1], False)
         end
       elif mtype == MSG_SET_ANALOG_OUT:
         #send_out("Received Analog Out Signal")
         # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_analog_out message")
         end
         set_analog_out(params_mult[1], (params_mult[2] / 1000000))
       elif mtype == MSG_SET_TOOL_VOLTAGE:
         #send_out("Received Tool Voltage Signal")
-        # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        # Reads the parameters (also reads second dummy '0' integer)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_tool_voltage message")
         end
         set_tool_voltage(params_mult[1])
       else:
