@@ -356,6 +356,10 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     #gets digital in states
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
+                    #print "MSG_GET_IO"
+                    #print type(buf)
+                    #print len(buf)
+                    #print "Buf:", [ord(b) for b in buf]
                     inp = struct.unpack_from("!i", buf, 0)[0]
                     buf = buf[4:]
                     msg = IOStates()
@@ -368,13 +372,34 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     buf = buf[4:]
                     for i in range(0, 10):
                         msg.digital_out_states.append(DigitalOut(i, (inp & (1<<i))>>i))
-                    #gets flag states
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
-                    for i in range(0, 32):
-                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    ##gets flag states (0-7)
+                    #while len(buf) < 4:
+                        #buf = buf + self.recv_more()
+                    #inp = struct.unpack_from("!i", buf, 0)[0]
+                    #buf = buf[4:]
+                    #for i in range(0, 8):
+                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    ##gets flag states (8-15)
+                    #while len(buf) < 4:
+                        #buf = buf + self.recv_more()
+                    #inp = struct.unpack_from("!i", buf, 0)[0]
+                    #buf = buf[4:]
+                    #for i in range(8, 16):
+                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    ##gets flag states (16-23)
+                    #while len(buf) < 4:
+                        #buf = buf + self.recv_more()
+                    #inp = struct.unpack_from("!i", buf, 0)[0]
+                    #buf = buf[4:]
+                    #for i in range(16, 24):
+                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    ##gets flag states (24-31)
+                    #while len(buf) < 4:
+                        #buf = buf + self.recv_more()
+                    #inp = struct.unpack_from("!i", buf, 0)[0]
+                    #buf = buf[4:]
+                    #for i in range(24, 32):
+                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
                     #gets analog_out[0] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
@@ -488,7 +513,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         #print params
         with self.socket_lock:
             self.request.send(buf) 
-        time.sleep(IO_SLEEP_TIME+.5)
+        time.sleep(IO_SLEEP_TIME)
 
     def set_flag(self, pin, val):
         params = [MSG_SET_FLAG] + \
