@@ -116,18 +116,9 @@ def driverProg():
       exit_critical
     end
     
-    #temporarily reduce publish rate for io_states
-    io_count = 0
-    io_slowdown_ratio = 10
-    
     send_io_state()
     while True:
-      if io_count != io_slowdown_ratio:
-        io_count=io_count+1
-      else:
-        send_io_state()
-        io_count=0
-      end
+      send_io_state()
       sync()
     end
     sync()
