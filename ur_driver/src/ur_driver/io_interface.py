@@ -50,9 +50,9 @@ def set_flag(pin, val):
         set_digital_out(pin, val)
 
 def callback(data):
-    for i in range(0,32):
-        del Flag_States[i]
-        Flag_States.insert(i, data.flag_states[i].state)
+    #for i in range(0,32):
+        #del Flag_States[i]
+        #Flag_States.insert(i, data.flag_states[i].state)
     for i in range(0,10):
         del Digital_Out_States[i]
         Digital_Out_States.insert(i, data.digital_out_states[i].state)
