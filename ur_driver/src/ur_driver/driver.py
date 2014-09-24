@@ -58,6 +58,7 @@ MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
 MULT_analog = 1000000.0
+MULT_analog_robotstate = 0.1
 
 #Bounds for SetPayload service
 MIN_PAYLOAD = 0.0
@@ -86,6 +87,7 @@ connected_robot_cond = threading.Condition(connected_robot_lock)
 pub_joint_states = rospy.Publisher('joint_states', JointState)
 pub_wrench = rospy.Publisher('wrench', WrenchStamped)
 pub_io_states = rospy.Publisher('io_states', IOStates)
+pub_io_states2 = rospy.Publisher('io_states2', IOStates)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -202,6 +204,36 @@ class URConnection(object):
             msg.effort = [0]*6
             pub_joint_states.publish(msg)
             self.last_joint_states = msg
+        
+        # Use information from the robot state packet to publish IOStates        
+        msg = IOStates()
+        #gets digital in states
+        for i in range(0, 10):
+            msg.digital_in_states.append(DigitalIn(i, (state.masterboard_data.digital_input_bits & (1<<i))>>i))
+        #gets digital out states
+        for i in range(0, 10):
+            msg.digital_out_states.append(DigitalOut(i, (state.masterboard_data.digital_output_bits & (1<<i))>>i))
+        #gets analog_in[0] state
+        inp = state.masterboard_data.analog_input0 / MULT_analog_robotstate
+        msg.analog_in_states.append(Analog(0, inp))
+        #gets analog_in[1] state
+        inp = state.masterboard_data.analog_input1 / MULT_analog_robotstate
+        msg.analog_in_states.append(Analog(1, inp))      
+        #gets analog_out[0] state
+        inp = state.masterboard_data.analog_output0 / MULT_analog_robotstate
+        msg.analog_out_states.append(Analog(0, inp))     
+        #gets analog_out[1] state
+        inp = state.masterboard_data.analog_output1 / MULT_analog_robotstate
+        msg.analog_out_states.append(Analog(1, inp))     
+        #print "Publish IO-Data from robot state data"
+        pub_io_states.publish(msg)
+        
+        # Notes: 
+        # - analog_input2 and analog_input3 are within ToolData
+        # - Where are the flags coming from?
+        #
+        # - Shall we have appropriate ur_msgs definitions in order to reflect MasterboardData, ToolData,...?
+        
 
         # Updates the state machine that determines whether we can program the robot.
         can_execute = (state.robot_mode_data.robot_mode in [RobotMode.READY, RobotMode.RUNNING])
@@ -353,81 +385,39 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                 #gets all IO States and publishes them into a message
                 elif mtype == MSG_GET_IO:
 
-                    #gets digital in states
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
                     #print "MSG_GET_IO"
                     #print type(buf)
                     #print len(buf)
                     #print "Buf:", [ord(b) for b in buf]
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
                     msg = IOStates()
-                    for i in range(0, 10):
-                        msg.digital_in_states.append(DigitalIn(i, (inp & (1<<i))>>i))
-                    #gets digital out states
+                    #gets flag states (0-7)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
                     buf = buf[4:]
-                    for i in range(0, 10):
-                        msg.digital_out_states.append(DigitalOut(i, (inp & (1<<i))>>i))
-                    ##gets flag states (0-7)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(0, 8):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    ##gets flag states (8-15)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(8, 16):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    ##gets flag states (16-23)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(16, 24):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    ##gets flag states (24-31)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(24, 32):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    #gets analog_out[0] state
+                    for i in range(0, 8):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets flag states (8-15)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
                     buf = buf[4:]
-                    msg.analog_out_states.append(Analog(0, inp))
-                    #gets analog_out[1] state
+                    for i in range(8, 16):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets flag states (16-23)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
                     buf = buf[4:]
-                    msg.analog_out_states.append(Analog(1, inp))
-                    #gets analog_in[0] state
+                    for i in range(16, 24):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets flag states (24-31)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
                     buf = buf[4:]
-                    msg.analog_in_states.append(Analog(0, inp))
-                    #gets analog_in[1] state
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
-                    buf = buf[4:]
-                    msg.analog_in_states.append(Analog(1, inp))
+                    for i in range(24, 32):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
                     #gets analog_in[2] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
@@ -442,7 +432,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_in_states.append(Analog(3, inp))
-                    pub_io_states.publish(msg)
+                    pub_io_states2.publish(msg)
 
                 elif mtype == MSG_QUIT:
                     print "Quitting"

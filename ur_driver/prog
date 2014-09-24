@@ -100,17 +100,11 @@ def driverProg():
     def send_io_state():
       enter_critical
       socket_send_int(MSG_GET_IO)
-      socket_send_int(1*get_digital_in(0) + 2*get_digital_in(1) + 4 * get_digital_in(2) + 8 * get_digital_in(3) + 16 * get_digital_in(4) + 32 * get_digital_in(5) + 64 * get_digital_in(6) + 128 * get_digital_in(7) + 256 * get_digital_in(8) + 512 * get_digital_in(9))
-      socket_send_int(1*get_digital_out(0) + 2*get_digital_out(1) + 4 * get_digital_out(2) + 8 * get_digital_out(3) + 16 * get_digital_out(4) + 32 * get_digital_out(5) + 64 * get_digital_out(6) + 128 * get_digital_out(7) + 256 * get_digital_out(8) + 512 * get_digital_out(9))
-      ####socket_send_int(pow(2,0)*get_flag(0) + pow(2,1)*get_flag(1) + pow(2,2)*get_flag(2) + pow(2,3)*get_flag(3) + pow(2,4)*get_flag(4) + pow(2,5)*get_flag(5) + pow(2,6)*get_flag(6) + pow(2,7)*get_flag(7) + pow(2,8)*get_flag(8) + pow(2,9)*get_flag(9) + pow(2,10)*get_flag(10) + pow(2,11)*get_flag(11) + pow(2,12)*get_flag(12) + pow(2,13)*get_flag(13) + pow(2,14)*get_flag(14) + pow(2,15)*get_flag(15) + pow(2,16)*get_flag(16) + pow(2,17)*get_flag(17) + pow(2,18)*get_flag(18) + pow(2,19)*get_flag(19) + pow(2,20)*get_flag(20) + pow(2,21)*get_flag(21) + pow(2,22)*get_flag(22) + pow(2,23)*get_flag(23) + pow(2,24)*get_flag(24) + pow(2,25)*get_flag(25) + pow(2,26)*get_flag(26) + pow(2,27)*get_flag(27) + pow(2,28)*get_flag(28) + pow(2,29)*get_flag(29) + pow(2,30)*get_flag(30) + pow(2,31)*get_flag(31))
-      #socket_send_int(1*get_flag(0) + 2*get_flag(1) + 4*get_flag(2) + 8*get_flag(3) + 16*get_flag(4) + 32*get_flag(5) + 64*get_flag(6) + 128*get_flag(7))
-      #socket_send_int(1*get_flag(8) + 2*get_flag(9) + 4*get_flag(10) + 8*get_flag(11) + 16*get_flag(12) + 32*get_flag(13) + 64*get_flag(14) + 128*get_flag(15))
-      #socket_send_int(1*get_flag(16) + 2*get_flag(17) + 4*get_flag(18) + 8*get_flag(19) + 16*get_flag(20) + 32*get_flag(21) + 64*get_flag(22) + 128*get_flag(23))
-      #socket_send_int(1*get_flag(24) + 2*get_flag(25) + 4*get_flag(26) + 8*get_flag(27) + 16*get_flag(28) + 32*get_flag(29) + 64*get_flag(30) + 128*get_flag(31))
-      socket_send_int(get_analog_out(0) * MULT_analog)
-      socket_send_int(get_analog_out(1) * MULT_analog)
-      socket_send_int(get_analog_in(0) * MULT_analog)
-      socket_send_int(get_analog_in(1) * MULT_analog)
+      ###socket_send_int(pow(2,0)*get_flag(0) + pow(2,1)*get_flag(1) + pow(2,2)*get_flag(2) + pow(2,3)*get_flag(3) + pow(2,4)*get_flag(4) + pow(2,5)*get_flag(5) + pow(2,6)*get_flag(6) + pow(2,7)*get_flag(7) + pow(2,8)*get_flag(8) + pow(2,9)*get_flag(9) + pow(2,10)*get_flag(10) + pow(2,11)*get_flag(11) + pow(2,12)*get_flag(12) + pow(2,13)*get_flag(13) + pow(2,14)*get_flag(14) + pow(2,15)*get_flag(15) + pow(2,16)*get_flag(16) + pow(2,17)*get_flag(17) + pow(2,18)*get_flag(18) + pow(2,19)*get_flag(19) + pow(2,20)*get_flag(20) + pow(2,21)*get_flag(21) + pow(2,22)*get_flag(22) + pow(2,23)*get_flag(23) + pow(2,24)*get_flag(24) + pow(2,25)*get_flag(25) + pow(2,26)*get_flag(26) + pow(2,27)*get_flag(27) + pow(2,28)*get_flag(28) + pow(2,29)*get_flag(29) + pow(2,30)*get_flag(30) + pow(2,31)*get_flag(31))
+      socket_send_int(1*get_flag(0) + 2*get_flag(1) + 4*get_flag(2) + 8*get_flag(3) + 16*get_flag(4) + 32*get_flag(5) + 64*get_flag(6) + 128*get_flag(7))
+      socket_send_int(1*get_flag(8) + 2*get_flag(9) + 4*get_flag(10) + 8*get_flag(11) + 16*get_flag(12) + 32*get_flag(13) + 64*get_flag(14) + 128*get_flag(15))
+      socket_send_int(1*get_flag(16) + 2*get_flag(17) + 4*get_flag(18) + 8*get_flag(19) + 16*get_flag(20) + 32*get_flag(21) + 64*get_flag(22) + 128*get_flag(23))
+      socket_send_int(1*get_flag(24) + 2*get_flag(25) + 4*get_flag(26) + 8*get_flag(27) + 16*get_flag(28) + 32*get_flag(29) + 64*get_flag(30) + 128*get_flag(31))
       socket_send_int(get_analog_in(2) * MULT_analog)
       socket_send_int(get_analog_in(3) * MULT_analog)
       exit_critical
