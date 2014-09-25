@@ -17,6 +17,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
+from ur_driver.deserializeRT import RobotStateRT
 
 from ur_msgs.srv import SetPayload, SetIO
 from ur_msgs.msg import *
@@ -36,6 +37,7 @@ prevent_programming = False
 joint_offsets = {}
 
 PORT=30002
+RT_PORT=30003
 DEFAULT_REVERSE_PORT = 50001
 
 MSG_OUT = 1
@@ -58,6 +60,7 @@ MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
 MULT_analog = 1000000.0
+MULT_analog_robotstate = 0.1
 
 #Bounds for SetPayload service
 MIN_PAYLOAD = 0.0
@@ -83,9 +86,12 @@ Q3 = [1.5,-0.2,-1.57,0,0,0]
 connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
-pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
-pub_wrench = rospy.Publisher('wrench', WrenchStamped, queue_size=1)
-pub_io_states = rospy.Publisher('io_states', IOStates, queue_size=1)
+pub_joint_states = rospy.Publisher('joint_states', JointState)
+pub_joint_statesRT = rospy.Publisher('joint_statesRT', JointState)
+pub_robot_stateRT = rospy.Publisher('robot_stateRT', RobotStateRTMsg)
+pub_wrench = rospy.Publisher('wrench', WrenchStamped)
+pub_io_states = rospy.Publisher('io_states', IOStates)
+pub_io_states2 = rospy.Publisher('io_states2', IOStates)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -202,6 +208,36 @@ class URConnection(object):
             msg.effort = [0]*6
             pub_joint_states.publish(msg)
             self.last_joint_states = msg
+        
+        # Use information from the robot state packet to publish IOStates        
+        msg = IOStates()
+        #gets digital in states
+        for i in range(0, 10):
+            msg.digital_in_states.append(DigitalIn(i, (state.masterboard_data.digital_input_bits & (1<<i))>>i))
+        #gets digital out states
+        for i in range(0, 10):
+            msg.digital_out_states.append(DigitalOut(i, (state.masterboard_data.digital_output_bits & (1<<i))>>i))
+        #gets analog_in[0] state
+        inp = state.masterboard_data.analog_input0 / MULT_analog_robotstate
+        msg.analog_in_states.append(Analog(0, inp))
+        #gets analog_in[1] state
+        inp = state.masterboard_data.analog_input1 / MULT_analog_robotstate
+        msg.analog_in_states.append(Analog(1, inp))      
+        #gets analog_out[0] state
+        inp = state.masterboard_data.analog_output0 / MULT_analog_robotstate
+        msg.analog_out_states.append(Analog(0, inp))     
+        #gets analog_out[1] state
+        inp = state.masterboard_data.analog_output1 / MULT_analog_robotstate
+        msg.analog_out_states.append(Analog(1, inp))     
+        #print "Publish IO-Data from robot state data"
+        pub_io_states.publish(msg)
+        
+        # Notes: 
+        # - analog_input2 and analog_input3 are within ToolData
+        # - Where are the flags coming from?
+        #
+        # - Shall we have appropriate ur_msgs definitions in order to reflect MasterboardData, ToolData,...?
+        
 
         # Updates the state machine that determines whether we can program the robot.
         can_execute = (state.robot_mode_data.robot_mode in [RobotMode.READY, RobotMode.RUNNING])
@@ -251,6 +287,118 @@ class URConnection(object):
             else:
                 self.__trigger_disconnected()
                 self.__keep_running = False
+
+
+
+
+class URConnectionRT(object):
+    TIMEOUT = 1.0
+    
+    DISCONNECTED = 0
+    CONNECTED = 1
+    READY_TO_PROGRAM = 2
+    EXECUTING = 3
+    
+    def __init__(self, hostname, port):
+        self.__thread = None
+        self.__sock = None
+        self.robot_state = self.DISCONNECTED
+        self.hostname = hostname
+        self.port = port
+        self.last_stateRT = None
+
+    def connect(self):
+        if self.__sock:
+            self.disconnect()
+        self.__buf = ""
+        self.robot_state = self.CONNECTED
+        self.__sock = socket.create_connection((self.hostname, self.port))
+        self.__keep_running = True
+        self.__thread = threading.Thread(name="URConnectionRT", target=self.__run)
+        self.__thread.daemon = True
+        self.__thread.start()
+        
+    def disconnect(self):
+        if self.__thread:
+            self.__keep_running = False
+            self.__thread.join()
+            self.__thread = None
+        if self.__sock:
+            self.__sock.close()
+            self.__sock = None
+        self.last_state = None
+        self.robot_state = self.DISCONNECTED
+
+    def __trigger_disconnected(self):
+        log("Robot disconnected")
+        self.robot_state = self.DISCONNECTED
+    def __trigger_ready_to_program(self):
+        rospy.loginfo("Robot ready to program")
+    def __trigger_halted(self):
+        log("Halted")
+
+    def __on_packet(self, buf):
+        stateRT = RobotStateRT.unpack(buf)
+        self.last_stateRT = stateRT
+        
+        msg = RobotStateRTMsg()
+        msg.time = stateRT.time
+        msg.q_target = stateRT.q_target
+        msg.qd_target = stateRT.qd_target
+        msg.qdd_target = stateRT.qdd_target
+        msg.i_target = stateRT.i_target
+        msg.m_target = stateRT.m_target
+        msg.q_actual = stateRT.q_actual
+        msg.qd_actual = stateRT.qd_actual
+        msg.i_actual = stateRT.i_actual
+        msg.tool_acc_values = stateRT.tool_acc_values
+        msg.tcp_force = stateRT.tcp_force
+        msg.tool_vector = stateRT.tool_vector
+        msg.tcp_speed = stateRT.tcp_speed
+        msg.digital_input_bits = stateRT.digital_input_bits
+        msg.motor_temperatures = stateRT.motor_temperatures
+        msg.controller_timer = stateRT.controller_timer
+        msg.test_value = stateRT.test_value
+        msg.robot_mode = stateRT.robot_mode
+        msg.joint_modes = stateRT.joint_modes
+        pub_robot_stateRT.publish(msg)       
+        
+
+        msg = JointState()
+        msg.header.stamp = rospy.get_rostime()
+        msg.header.frame_id = "From real-time state data"
+        msg.name = joint_names
+        msg.position = [0.0] * 6
+        for i, q in enumerate(stateRT.q_actual):
+            msg.position[i] = q + joint_offsets.get(joint_names[i], 0.0)
+        msg.velocity = stateRT.qd_actual
+        msg.effort = [0]*6
+        pub_joint_statesRT.publish(msg)
+        #self.last_joint_states = msg
+
+    def __run(self):
+        while self.__keep_running:
+            r, _, _ = select.select([self.__sock], [], [], self.TIMEOUT)
+            if r:
+                more = self.__sock.recv(4096)
+                if more:
+                    self.__buf = self.__buf + more
+
+                    # Attempts to extract a packet
+                    packet_length = struct.unpack_from("!i", self.__buf)[0]
+                    print("PacketLength: ", packet_length, "; BufferSize: ", len(self.__buf))
+                    if len(self.__buf) >= packet_length:
+                        packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
+                        self.__on_packet(packet)
+                else:
+                    self.__trigger_disconnected()
+                    self.__keep_running = False
+                    
+            else:
+                self.__trigger_disconnected()
+                self.__keep_running = False
+
+
 
 
 def setConnectedRobot(r):
@@ -353,81 +501,39 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                 #gets all IO States and publishes them into a message
                 elif mtype == MSG_GET_IO:
 
-                    #gets digital in states
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
                     #print "MSG_GET_IO"
                     #print type(buf)
                     #print len(buf)
                     #print "Buf:", [ord(b) for b in buf]
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
                     msg = IOStates()
-                    for i in range(0, 10):
-                        msg.digital_in_states.append(DigitalIn(i, (inp & (1<<i))>>i))
-                    #gets digital out states
+                    #gets flag states (0-7)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
                     buf = buf[4:]
-                    for i in range(0, 10):
-                        msg.digital_out_states.append(DigitalOut(i, (inp & (1<<i))>>i))
-                    ##gets flag states (0-7)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(0, 8):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    ##gets flag states (8-15)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(8, 16):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    ##gets flag states (16-23)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(16, 24):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    ##gets flag states (24-31)
-                    #while len(buf) < 4:
-                        #buf = buf + self.recv_more()
-                    #inp = struct.unpack_from("!i", buf, 0)[0]
-                    #buf = buf[4:]
-                    #for i in range(24, 32):
-                        #msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    #gets analog_out[0] state
+                    for i in range(0, 8):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets flag states (8-15)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
                     buf = buf[4:]
-                    msg.analog_out_states.append(Analog(0, inp))
-                    #gets analog_out[1] state
+                    for i in range(8, 16):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets flag states (16-23)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
                     buf = buf[4:]
-                    msg.analog_out_states.append(Analog(1, inp))
-                    #gets analog_in[0] state
+                    for i in range(16, 24):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
+                    #gets flag states (24-31)
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
                     buf = buf[4:]
-                    msg.analog_in_states.append(Analog(0, inp))
-                    #gets analog_in[1] state
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
-                    buf = buf[4:]
-                    msg.analog_in_states.append(Analog(1, inp))
+                    for i in range(24, 32):
+                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
                     #gets analog_in[2] state
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
@@ -442,7 +548,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     inp /= MULT_analog
                     buf = buf[4:]
                     msg.analog_in_states.append(Analog(3, inp))
-                    pub_io_states.publish(msg)
+                    pub_io_states2.publish(msg)
 
                 elif mtype == MSG_QUIT:
                     print "Quitting"
@@ -950,6 +1056,9 @@ def main():
     connection = URConnection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()
+    
+    connectionRT = URConnectionRT(robot_hostname, RT_PORT)
+    connectionRT.connect()
     
     set_io_server()
     
