@@ -138,7 +138,7 @@ void URKinematicsPlugin::getRandomConfiguration(const KDL::JntArray &seed_state,
   }
 
   joint_model_group_->getVariableRandomPositionsNearBy(state_->getRandomNumberGenerator(), values, near, consistency_limits_mimic);
-  
+
   for (std::size_t i = 0; i < dimension_; ++i)
   {
     bool skip = false;
@@ -189,7 +189,7 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   robot_model::JointModelGroup* joint_model_group = robot_model_->getJointModelGroup(group_name);
   if (!joint_model_group)
     return false;
-  
+
   if(!joint_model_group->isChain())
   {
     ROS_ERROR_NAMED("kdl","Group '%s' is not a chain", group_name.c_str());
@@ -271,7 +271,7 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   for (std::size_t i = 0; i < kdl_chain_.getNrOfSegments(); ++i)
   {
     const robot_model::JointModel *jm = robot_model_->getJointModel(kdl_chain_.segments[i].getJoint().getName());
-    
+
     //first check whether it belongs to the set of active joints in the group
     if (jm->getMimic() == NULL && jm->getVariableCount() > 0)
     {
@@ -323,7 +323,14 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   max_solver_iterations_ = max_solver_iterations;
   epsilon_ = epsilon;
 
-  private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
+  //private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
+
+  ROS_WARN("HACKING INTERFACE: reading arm_prefix from beginning of base frame.");
+  size_t prefix_end = base_frame.find("base_link") ;
+  if(prefix_end == std::string::npos )
+    ROS_FATAL_STREAM("Base of the UR10 arm doesn't contain base_frame, can't find the prefix. " << base_frame);
+
+  arm_prefix_ = base_frame.substr(0, prefix_end);
 
   ur_joint_names_.push_back(arm_prefix_ + "shoulder_pan_joint");
   ur_joint_names_.push_back(arm_prefix_ + "shoulder_lift_joint");
@@ -349,14 +356,14 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   for(int i=1; i<6; i++) {
     cur_ur_joint_ind = getJointIndex(ur_joint_names_[i]);
     if(cur_ur_joint_ind < 0) {
-      ROS_ERROR_NAMED("kdl", 
-        "Kin chain provided in model doesn't contain standard UR joint '%s'.", 
+      ROS_ERROR_NAMED("kdl",
+        "Kin chain provided in model doesn't contain standard UR joint '%s'.",
         ur_joint_names_[i].c_str());
       return false;
     }
     if(cur_ur_joint_ind != last_ur_joint_ind + 1) {
-      ROS_ERROR_NAMED("kdl", 
-        "Kin chain provided in model doesn't have proper serial joint order: '%s'.", 
+      ROS_ERROR_NAMED("kdl",
+        "Kin chain provided in model doesn't have proper serial joint order: '%s'.",
         ur_joint_names_[i].c_str());
       return false;
     }
@@ -634,7 +641,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     // Convert into query for analytic solver
     tf::poseMsgToKDL(ik_pose, kdl_ik_pose);
     kdl_ik_pose_ur_chain = pose_base.Inverse() * kdl_ik_pose * pose_tip.Inverse();
-    
+
     kdl_ik_pose_ur_chain.Make4x4((double*) homo_ik_pose);
 #if KDL_OLD_BUG_FIX
     // in older versions of KDL, setting this flag might be necessary
@@ -643,9 +650,9 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     /////////////////////////////////////////////////////////////////////////////
 
     // Do the analytic IK
-    num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, 
+    num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols,
                        jnt_pos_test(ur_joint_inds_start_+5));
-     
+
     // use weighted absolute deviations to determine the solution closest the seed state
     std::vector<idx_double> weighted_diffs;
     for(uint16_t i=0; i<num_sols; i++) {
