@@ -17,6 +17,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
+from ur_driver.deserializeRT import RobotStateRT
 
 from ur_msgs.srv import SetPayload, SetIO
 from ur_msgs.msg import *
@@ -36,6 +37,7 @@ prevent_programming = False
 joint_offsets = {}
 
 PORT=30002
+RT_PORT=30003
 DEFAULT_REVERSE_PORT = 50001
 
 MSG_OUT = 1
@@ -85,6 +87,8 @@ connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
 pub_joint_states = rospy.Publisher('joint_states', JointState)
+pub_joint_statesRT = rospy.Publisher('joint_statesRT', JointState)
+pub_robot_stateRT = rospy.Publisher('robot_stateRT', RobotStateRTMsg)
 pub_wrench = rospy.Publisher('wrench', WrenchStamped)
 pub_io_states = rospy.Publisher('io_states', IOStates)
 pub_io_states2 = rospy.Publisher('io_states2', IOStates)
@@ -283,6 +287,118 @@ class URConnection(object):
             else:
                 self.__trigger_disconnected()
                 self.__keep_running = False
+
+
+
+
+class URConnectionRT(object):
+    TIMEOUT = 1.0
+    
+    DISCONNECTED = 0
+    CONNECTED = 1
+    READY_TO_PROGRAM = 2
+    EXECUTING = 3
+    
+    def __init__(self, hostname, port):
+        self.__thread = None
+        self.__sock = None
+        self.robot_state = self.DISCONNECTED
+        self.hostname = hostname
+        self.port = port
+        self.last_stateRT = None
+
+    def connect(self):
+        if self.__sock:
+            self.disconnect()
+        self.__buf = ""
+        self.robot_state = self.CONNECTED
+        self.__sock = socket.create_connection((self.hostname, self.port))
+        self.__keep_running = True
+        self.__thread = threading.Thread(name="URConnectionRT", target=self.__run)
+        self.__thread.daemon = True
+        self.__thread.start()
+        
+    def disconnect(self):
+        if self.__thread:
+            self.__keep_running = False
+            self.__thread.join()
+            self.__thread = None
+        if self.__sock:
+            self.__sock.close()
+            self.__sock = None
+        self.last_state = None
+        self.robot_state = self.DISCONNECTED
+
+    def __trigger_disconnected(self):
+        log("Robot disconnected")
+        self.robot_state = self.DISCONNECTED
+    def __trigger_ready_to_program(self):
+        rospy.loginfo("Robot ready to program")
+    def __trigger_halted(self):
+        log("Halted")
+
+    def __on_packet(self, buf):
+        stateRT = RobotStateRT.unpack(buf)
+        self.last_stateRT = stateRT
+        
+        msg = RobotStateRTMsg()
+        msg.time = stateRT.time
+        msg.q_target = stateRT.q_target
+        msg.qd_target = stateRT.qd_target
+        msg.qdd_target = stateRT.qdd_target
+        msg.i_target = stateRT.i_target
+        msg.m_target = stateRT.m_target
+        msg.q_actual = stateRT.q_actual
+        msg.qd_actual = stateRT.qd_actual
+        msg.i_actual = stateRT.i_actual
+        msg.tool_acc_values = stateRT.tool_acc_values
+        msg.tcp_force = stateRT.tcp_force
+        msg.tool_vector = stateRT.tool_vector
+        msg.tcp_speed = stateRT.tcp_speed
+        msg.digital_input_bits = stateRT.digital_input_bits
+        msg.motor_temperatures = stateRT.motor_temperatures
+        msg.controller_timer = stateRT.controller_timer
+        msg.test_value = stateRT.test_value
+        msg.robot_mode = stateRT.robot_mode
+        msg.joint_modes = stateRT.joint_modes
+        pub_robot_stateRT.publish(msg)       
+        
+
+        msg = JointState()
+        msg.header.stamp = rospy.get_rostime()
+        msg.header.frame_id = "From real-time state data"
+        msg.name = joint_names
+        msg.position = [0.0] * 6
+        for i, q in enumerate(stateRT.q_actual):
+            msg.position[i] = q + joint_offsets.get(joint_names[i], 0.0)
+        msg.velocity = stateRT.qd_actual
+        msg.effort = [0]*6
+        pub_joint_statesRT.publish(msg)
+        #self.last_joint_states = msg
+
+    def __run(self):
+        while self.__keep_running:
+            r, _, _ = select.select([self.__sock], [], [], self.TIMEOUT)
+            if r:
+                more = self.__sock.recv(4096)
+                if more:
+                    self.__buf = self.__buf + more
+
+                    # Attempts to extract a packet
+                    packet_length = struct.unpack_from("!i", self.__buf)[0]
+                    print("PacketLength: ", packet_length, "; BufferSize: ", len(self.__buf))
+                    if len(self.__buf) >= packet_length:
+                        packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
+                        self.__on_packet(packet)
+                else:
+                    self.__trigger_disconnected()
+                    self.__keep_running = False
+                    
+            else:
+                self.__trigger_disconnected()
+                self.__keep_running = False
+
+
 
 
 def setConnectedRobot(r):
@@ -940,6 +1056,9 @@ def main():
     connection = URConnection(robot_hostname, PORT, program)
     connection.connect()
     connection.send_reset_program()
+    
+    connectionRT = URConnectionRT(robot_hostname, RT_PORT)
+    connectionRT.connect()
     
     set_io_server()
     
