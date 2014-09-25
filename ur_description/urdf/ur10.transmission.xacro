@@ -3,7 +3,7 @@
 
   <xacro:macro name="ur10_arm_transmission" params="prefix">
 
-    <transmission name="${prefix}shoulder_pan_trans">
+    <transmission type="sr_mechanism_model/SimpleTransmission" name="${prefix}shoulder_pan_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_pan_joint">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
@@ -12,8 +12,8 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
-    <transmission name="${prefix}shoulder_lift_trans">
+
+    <transmission type="sr_mechanism_model/SimpleTransmission" name="${prefix}shoulder_lift_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_lift_joint">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
@@ -22,8 +22,8 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
-    <transmission name="${prefix}elbow_trans">
+
+    <transmission type="sr_mechanism_model/SimpleTransmission" name="${prefix}elbow_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}elbow_joint">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
@@ -32,8 +32,8 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
-    <transmission name="${prefix}wrist_1_trans">
+
+    <transmission type="sr_mechanism_model/SimpleTransmission" name="${prefix}wrist_1_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_1_joint">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
@@ -42,8 +42,8 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
-    <transmission name="${prefix}wrist_2_trans">
+
+    <transmission type="sr_mechanism_model/SimpleTransmission" name="${prefix}wrist_2_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_2_joint">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
@@ -52,8 +52,8 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
-    <transmission name="${prefix}wrist_3_trans">
+
+    <transmission type="sr_mechanism_model/SimpleTransmission" name="${prefix}wrist_3_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_3_joint">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
