@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 2.6)
  
 project(UR-C-API)
  
-set(CPACK_PACKAGE_VERSION "1.8.11117")
+set(CPACK_PACKAGE_VERSION "1.8.14035")
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "8")
-set(CPACK_PACKAGE_VERSION_PATCH "11117")
+set(CPACK_PACKAGE_VERSION_PATCH "14035")
 
 export(PACKAGE UR-C-API)
  
@@ -26,5 +26,5 @@ include(CPack)
 # mkdir build && cd build
 # cmake ..
 # make package
-# sudo dpkg -i UR-C-API-1.8.11117-Linux.deb
+# sudo dpkg -i UR-C-API-1.8.14035-Linux.deb
 # Now the location of the C-API files is installed such that it can be found with find_package

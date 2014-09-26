@@ -48,8 +48,8 @@ find_package(catkin REQUIRED COMPONENTS controller_interface hardware_interface 
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES ur_controllers
+  INCLUDE_DIRS include
+  LIBRARIES ur_controllers
   CATKIN_DEPENDS controller_interface hardware_interface std_msgs ur_ctrl_client urdf
 #  DEPENDS system_lib
 )
