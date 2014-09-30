@@ -89,10 +89,6 @@ def main():
                 __on_packet(packet)
         else:
             print("There is no more...")
-        
-        
-        
-        
     
     rt_socket.close()
 
