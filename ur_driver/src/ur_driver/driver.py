@@ -36,9 +36,9 @@ prevent_programming = False
 # q_actual = q_from_driver + offset
 joint_offsets = {}
 
-PORT=30002
-RT_PORT=30003
-DEFAULT_REVERSE_PORT = 50001
+PORT=30002       # 10 Hz, RobotState 
+RT_PORT=30003    #125 Hz, RobotStateRT
+DEFAULT_REVERSE_PORT = 50001     #125 Hz, custom data (from prog)
 
 MSG_OUT = 1
 MSG_QUIT = 2
@@ -86,12 +86,11 @@ Q3 = [1.5,-0.2,-1.57,0,0,0]
 connected_robot = None
 connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
+last_joint_states = None
+last_joint_states_lock = threading.Lock()
 pub_joint_states = rospy.Publisher('joint_states', JointState)
-pub_joint_statesRT = rospy.Publisher('joint_statesRT', JointState)
-pub_robot_stateRT = rospy.Publisher('robot_stateRT', RobotStateRTMsg)
 pub_wrench = rospy.Publisher('wrench', WrenchStamped)
 pub_io_states = rospy.Publisher('io_states', IOStates)
-pub_io_states2 = rospy.Publisher('io_states2', IOStates)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
@@ -192,22 +191,16 @@ class URConnection(object):
             rospy.logfatal("Real robot is no longer enabled.  Driver is fuxored")
             time.sleep(2)
             sys.exit(1)
-
-        # If the urscript program is not executing, then the driver
-        # needs to publish joint states using information from the
-        # robot state packet.
-        if self.robot_state != self.EXECUTING:
-            msg = JointState()
-            msg.header.stamp = rospy.get_rostime()
-            msg.header.frame_id = "From binary state data"
-            msg.name = joint_names
-            msg.position = [0.0] * 6
-            for i, jd in enumerate(state.joint_data):
-                msg.position[i] = jd.q_actual + joint_offsets.get(joint_names[i], 0.0)
-            msg.velocity = [jd.qd_actual for jd in state.joint_data]
-            msg.effort = [0]*6
-            pub_joint_states.publish(msg)
-            self.last_joint_states = msg
+        
+        ###
+        # IO-Support is EXPERIMENTAL
+        # 
+        # Notes: 
+        # - Where are the flags coming from? Do we need flags? No, as 'prog' does not use them and other scripts are not running!
+        # - analog_input2 and analog_input3 are within ToolData
+        # - What to do with the different analog_input/output_range/domain?
+        # - Shall we have appropriate ur_msgs definitions in order to reflect MasterboardData, ToolData,...?
+        ###
         
         # Use information from the robot state packet to publish IOStates        
         msg = IOStates()
@@ -231,12 +224,6 @@ class URConnection(object):
         msg.analog_out_states.append(Analog(1, inp))     
         #print "Publish IO-Data from robot state data"
         pub_io_states.publish(msg)
-        
-        # Notes: 
-        # - analog_input2 and analog_input3 are within ToolData
-        # - Where are the flags coming from?
-        #
-        # - Shall we have appropriate ur_msgs definitions in order to reflect MasterboardData, ToolData,...?
         
 
         # Updates the state machine that determines whether we can program the robot.
@@ -275,11 +262,17 @@ class URConnection(object):
                 if more:
                     self.__buf = self.__buf + more
 
-                    # Attempts to extract a packet
-                    packet_length, ptype = struct.unpack_from("!IB", self.__buf)
-                    if len(self.__buf) >= packet_length:
-                        packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
-                        self.__on_packet(packet)
+                    #unpack_from requires a buffer of at least 48 bytes
+                    while len(self.__buf) >= 48:
+                        # Attempts to extract a packet
+                        packet_length, ptype = struct.unpack_from("!IB", self.__buf)
+                        #print("PacketLength: ", packet_length, "; BufferSize: ", len(self.__buf))
+                        if len(self.__buf) >= packet_length:
+                            packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
+                            self.__on_packet(packet)
+                        else:
+                            break
+
                 else:
                     self.__trigger_disconnected()
                     self.__keep_running = False
@@ -289,15 +282,11 @@ class URConnection(object):
                 self.__keep_running = False
 
 
-
-
 class URConnectionRT(object):
     TIMEOUT = 1.0
     
     DISCONNECTED = 0
     CONNECTED = 1
-    READY_TO_PROGRAM = 2
-    EXECUTING = 3
     
     def __init__(self, hostname, port):
         self.__thread = None
@@ -332,40 +321,14 @@ class URConnectionRT(object):
     def __trigger_disconnected(self):
         log("Robot disconnected")
         self.robot_state = self.DISCONNECTED
-    def __trigger_ready_to_program(self):
-        rospy.loginfo("Robot ready to program")
-    def __trigger_halted(self):
-        log("Halted")
 
     def __on_packet(self, buf):
+        now = rospy.get_rostime()
         stateRT = RobotStateRT.unpack(buf)
         self.last_stateRT = stateRT
         
-        msg = RobotStateRTMsg()
-        msg.time = stateRT.time
-        msg.q_target = stateRT.q_target
-        msg.qd_target = stateRT.qd_target
-        msg.qdd_target = stateRT.qdd_target
-        msg.i_target = stateRT.i_target
-        msg.m_target = stateRT.m_target
-        msg.q_actual = stateRT.q_actual
-        msg.qd_actual = stateRT.qd_actual
-        msg.i_actual = stateRT.i_actual
-        msg.tool_acc_values = stateRT.tool_acc_values
-        msg.tcp_force = stateRT.tcp_force
-        msg.tool_vector = stateRT.tool_vector
-        msg.tcp_speed = stateRT.tcp_speed
-        msg.digital_input_bits = stateRT.digital_input_bits
-        msg.motor_temperatures = stateRT.motor_temperatures
-        msg.controller_timer = stateRT.controller_timer
-        msg.test_value = stateRT.test_value
-        msg.robot_mode = stateRT.robot_mode
-        msg.joint_modes = stateRT.joint_modes
-        pub_robot_stateRT.publish(msg)       
-        
-
         msg = JointState()
-        msg.header.stamp = rospy.get_rostime()
+        msg.header.stamp = now
         msg.header.frame_id = "From real-time state data"
         msg.name = joint_names
         msg.position = [0.0] * 6
@@ -373,8 +336,20 @@ class URConnectionRT(object):
             msg.position[i] = q + joint_offsets.get(joint_names[i], 0.0)
         msg.velocity = stateRT.qd_actual
         msg.effort = [0]*6
-        pub_joint_statesRT.publish(msg)
-        #self.last_joint_states = msg
+        pub_joint_states.publish(msg)
+        with last_joint_states_lock:
+            last_joint_states = msg
+        
+        wrench_msg = WrenchStamped()
+        wrench_msg.header.stamp = now
+        wrench_msg.wrench.force.x = stateRT.tcp_force[0]
+        wrench_msg.wrench.force.y = stateRT.tcp_force[1]
+        wrench_msg.wrench.force.z = stateRT.tcp_force[2]
+        wrench_msg.wrench.torque.x = stateRT.tcp_force[3]
+        wrench_msg.wrench.torque.y = stateRT.tcp_force[4]
+        wrench_msg.wrench.torque.z = stateRT.tcp_force[5]
+        pub_wrench.publish(wrench_msg)
+        
 
     def __run(self):
         while self.__keep_running:
@@ -383,13 +358,17 @@ class URConnectionRT(object):
                 more = self.__sock.recv(4096)
                 if more:
                     self.__buf = self.__buf + more
-
-                    # Attempts to extract a packet
-                    packet_length = struct.unpack_from("!i", self.__buf)[0]
-                    print("PacketLength: ", packet_length, "; BufferSize: ", len(self.__buf))
-                    if len(self.__buf) >= packet_length:
-                        packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
-                        self.__on_packet(packet)
+                    
+                    #unpack_from requires a buffer of at least 48 bytes
+                    while len(self.__buf) >= 48:
+                        # Attempts to extract a packet
+                        packet_length = struct.unpack_from("!i", self.__buf)[0]
+                        #print("PacketLength: ", packet_length, "; BufferSize: ", len(self.__buf))
+                        if len(self.__buf) >= packet_length:
+                            packet, self.__buf = self.__buf[:packet_length], self.__buf[packet_length:]
+                            self.__on_packet(packet)
+                        else:
+                            break
                 else:
                     self.__trigger_disconnected()
                     self.__keep_running = False
@@ -397,8 +376,6 @@ class URConnectionRT(object):
             else:
                 self.__trigger_disconnected()
                 self.__keep_running = False
-
-
 
 
 def setConnectedRobot(r):
@@ -430,15 +407,14 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                 return more
             else:
                 now = rospy.get_rostime()
-                if self.last_joint_states and \
-                        self.last_joint_states.header.stamp < now - rospy.Duration(1.0):
+                if last_joint_states and \
+                        last_joint_states.header.stamp < now - rospy.Duration(1.0):
                     rospy.logerr("Stopped hearing from robot (last heard %.3f sec ago).  Disconnected" % \
-                                     (now - self.last_joint_states.header.stamp).to_sec())
-                    raise EOF()
+                                     (now - last_joint_states.header.stamp).to_sec())
+                    #raise EOF()
 
     def handle(self):
         self.socket_lock = threading.Lock()
-        self.last_joint_states = None
         setConnectedRobot(self)
         print "Handling a request"
         try:
@@ -463,93 +439,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                             raise Exception("Probably forgot to terminate a string: %s..." % buf[:150])
                     s, buf = buf[:i], buf[i+1:]
                     log("Out: %s" % s)
-
-                elif mtype == MSG_JOINT_STATES:
-                    while len(buf) < 3*(6*4):
-                        buf = buf + self.recv_more()
-                    state_mult = struct.unpack_from("!%ii" % (3*6), buf, 0)
-                    buf = buf[3*6*4:]
-                    state = [s / MULT_jointstate for s in state_mult]
-
-                    msg = JointState()
-                    msg.header.stamp = rospy.get_rostime()
-                    msg.name = joint_names
-                    msg.position = [0.0] * 6
-                    for i, q_meas in enumerate(state[:6]):
-                        msg.position[i] = q_meas + joint_offsets.get(joint_names[i], 0.0)
-                    msg.velocity = state[6:12]
-                    msg.effort = state[12:18]
-                    self.last_joint_states = msg
-                    pub_joint_states.publish(msg)
-
-                elif mtype == MSG_WRENCH:
-                    while len(buf) < (6*4):
-                        buf = buf + self.recv_more()
-                    state_mult = struct.unpack_from("!%ii" % (6), buf, 0)
-                    buf = buf[6*4:]
-                    state = [s / MULT_wrench for s in state_mult]
-                    wrench_msg = WrenchStamped()
-                    wrench_msg.header.stamp = rospy.get_rostime()
-                    wrench_msg.wrench.force.x = state[0]
-                    wrench_msg.wrench.force.y = state[1]
-                    wrench_msg.wrench.force.z = state[2]
-                    wrench_msg.wrench.torque.x = state[3]
-                    wrench_msg.wrench.torque.y = state[4]
-                    wrench_msg.wrench.torque.z = state[5]
-                    pub_wrench.publish(wrench_msg)
-
-                #gets all IO States and publishes them into a message
-                elif mtype == MSG_GET_IO:
-
-                    #print "MSG_GET_IO"
-                    #print type(buf)
-                    #print len(buf)
-                    #print "Buf:", [ord(b) for b in buf]
-                    msg = IOStates()
-                    #gets flag states (0-7)
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
-                    for i in range(0, 8):
-                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    #gets flag states (8-15)
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
-                    for i in range(8, 16):
-                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    #gets flag states (16-23)
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
-                    for i in range(16, 24):
-                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    #gets flag states (24-31)
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    buf = buf[4:]
-                    for i in range(24, 32):
-                        msg.flag_states.append(Flag(i, (inp & (1<<i))>>i))
-                    #gets analog_in[2] state
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
-                    buf = buf[4:]
-                    msg.analog_in_states.append(Analog(2, inp))
-                    #gets analog_in[3] state
-                    while len(buf) < 4:
-                        buf = buf + self.recv_more()
-                    inp = struct.unpack_from("!i", buf, 0)[0]
-                    inp /= MULT_analog
-                    buf = buf[4:]
-                    msg.analog_in_states.append(Analog(3, inp))
-                    pub_io_states2.publish(msg)
-
+                
                 elif mtype == MSG_QUIT:
                     print "Quitting"
                     raise EOF("Received quit")
@@ -641,7 +531,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
     # Returns the last JointState message sent out
     def get_joint_states(self):
-        return self.last_joint_states
+        return last_joint_states
     
 
 class TCPServer(SocketServer.TCPServer):
