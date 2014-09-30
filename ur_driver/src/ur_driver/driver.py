@@ -323,6 +323,7 @@ class URConnectionRT(object):
         self.robot_state = self.DISCONNECTED
 
     def __on_packet(self, buf):
+        global last_joint_states, last_joint_states_lock
         now = rospy.get_rostime()
         stateRT = RobotStateRT.unpack(buf)
         self.last_stateRT = stateRT
@@ -398,6 +399,7 @@ def getConnectedRobot(wait=False, timeout=-1):
 class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
     def recv_more(self):
+        global last_joint_states, last_joint_states_lock
         while True:
             r, _, _ = select.select([self.request], [], [], 0.2)
             if r:
@@ -411,7 +413,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                         last_joint_states.header.stamp < now - rospy.Duration(1.0):
                     rospy.logerr("Stopped hearing from robot (last heard %.3f sec ago).  Disconnected" % \
                                      (now - last_joint_states.header.stamp).to_sec())
-                    #raise EOF()
+                    raise EOF()
 
     def handle(self):
         self.socket_lock = threading.Lock()
@@ -531,6 +533,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
     # Returns the last JointState message sent out
     def get_joint_states(self):
+        global last_joint_states, last_joint_states_lock
         return last_joint_states
     
 
