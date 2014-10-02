@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_description</name>
-  <version>0.0.0</version>
+  <version>1.0.4</version>
   <description>
       URDF description for Universal UR5/10 robot arms
   </description>
@@ -21,7 +21,7 @@
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://ros.org/wiki/ur_description</url> -->
+  <url type="website">http://ros.org/wiki/ur_description</url>
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
@@ -45,7 +45,6 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>urdf</build_depend>
   <run_depend>urdf</run_depend>
 
 

@@ -1,24 +1,29 @@
 <package>
   <name>universal_robot</name>
-  <version>1.0.0</version>
+  <version>1.0.4</version>
   <description>
       Drivers, description, and utilities for Universal Robot Arms.
   </description>
 
-  <maintainer email="sedwards@swri.org">Shaun Edwards</maintainer>
-  <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
+  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+
   <license>BSD</license>
+
   <url type="website">http://ros.org/wiki/universal_robot</url>
+
   <author email="sedwards@swri.org">Shaun Edwards</author>
   <author>Stuart Glaser</author>
   <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
   <author>Wim Meeussen</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>ur5_moveit_config</run_depend>
+  <run_depend>ur10_moveit_config</run_depend>
   <run_depend>ur_bringup</run_depend>
   <run_depend>ur_description</run_depend>
-  <run_depend>ur_kinematics</run_depend>
+  <run_depend>ur_driver</run_depend>
   <run_depend>ur_gazebo</run_depend>
+  <run_depend>ur_kinematics</run_depend>
 
   <export>
     <metapackage/>

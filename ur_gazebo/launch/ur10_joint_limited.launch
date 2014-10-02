@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find ur_gazebo)/launch/ur10.launch">
+    <arg name="limited" value="true"/>
+  </include>
+
+</launch>
