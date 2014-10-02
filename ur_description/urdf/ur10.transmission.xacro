@@ -2,32 +2,32 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="ur10_arm_transmission" params="prefix">
-		<transmission name="${prefix}shoulder_pan_trans" type="ros_ethercat_model/Transmission">
+		<transmission name="${prefix}shoulder_pan_trans" type="sr_mechanism_model/SimpleTransmission">
 			<actuator name="${prefix}shoulder_pan_motor"/>
 			<joint name="${prefix}shoulder_pan_joint"/>
 		</transmission>
 	
-		<transmission name="${prefix}shoulder_lift_trans" type="ros_ethercat_model/Transmission">
+		<transmission name="${prefix}shoulder_lift_trans" type="sr_mechanism_model/SimpleTransmission">
 			<actuator name="${prefix}shoulder_lift_motor"/>
 			<joint name="${prefix}shoulder_lift_joint"/>
 		</transmission>
 	
-		<transmission name="${prefix}elbow_trans" type="ros_ethercat_model/Transmission">
+		<transmission name="${prefix}elbow_trans" type="sr_mechanism_model/SimpleTransmission">
 			<actuator name="${prefix}elbow_motor"/>
 			<joint name="${prefix}elbow_joint"/>
 		</transmission>
 	
-		<transmission name="${prefix}wrist_1_trans" type="ros_ethercat_model/Transmission">
+		<transmission name="${prefix}wrist_1_trans" type="sr_mechanism_model/SimpleTransmission">
 			<actuator name="${prefix}wrist_1_motor"/>
 			<joint name="${prefix}wrist_1_joint"/>
 		</transmission>
 	
-		<transmission name="${prefix}wrist_2_trans" type="ros_ethercat_model/Transmission">
+		<transmission name="${prefix}wrist_2_trans" type="sr_mechanism_model/SimpleTransmission">
 			<actuator name="${prefix}wrist_2_motor"/>
 			<joint name="${prefix}wrist_2_joint"/>
 		</transmission>
 	
-		<transmission name="${prefix}wrist_3_trans" type="ros_ethercat_model/Transmission">
+		<transmission name="${prefix}wrist_3_trans" type="sr_mechanism_model/SimpleTransmission">
 			<actuator name="${prefix}wrist_3_motor"/>
 			<joint name="${prefix}wrist_3_joint"/>
 		</transmission> 
