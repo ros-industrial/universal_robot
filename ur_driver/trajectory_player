@@ -28,18 +28,18 @@ class SrUrTrajectoryPlayer(object):
                     JointTrajectoryPoint(positions=positions_, velocities=self.velocities_, time_from_start=time_from_start_))
 
     def play_trajectory(self):
-        sefl.client.send_goal(self.trajectoy_goal)
+        self.client.send_goal(self.trajectoy_goal)
         try:
-            sefl.client.wait_for_result()
+            self.client.wait_for_result()
         except KeyboardInterrupt:
-            sefl.client.cancel_goal()
+            self.client.cancel_goal()
             raise
 
     def run(self):
         try:
             init_node("TrajectoryPlayer", anonymous=True, disable_signals=True)
             print("Waiting for server...")
-            sefl.client.wait_for_server()
+            self.client.wait_for_server()
             print("Connected to server. Reading trajectory")
             self.parse_trajectory()
             print("Trajectory parsed. Start playing")            
