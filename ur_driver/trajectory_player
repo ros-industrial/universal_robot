@@ -4,6 +4,14 @@ from actionlib import SimpleActionClient
 from trajectory_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal, JointTrajectory
 from sys import argv
 
+"""
+Plays back a recorded trajectory
+example usage
+
+./trajectory_player trajectory.txt
+
+"""
+
 
 class SrUrTrajectoryPlayer(object):
 
@@ -27,8 +35,8 @@ class SrUrTrajectoryPlayer(object):
                 data = traj_pont_text.split(',')
                 time_from_start_ = Duration(float(data[0]))
                 positions_ = [float(i) for i in data[1:]]
-                self.trajectory_goal.trajectory.points.append(
-                    JointTrajectoryPoint(positions=positions_, velocities=self.velocities_, time_from_start=time_from_start_))
+                self.trajectory_goal.trajectory.points.append(JointTrajectoryPoint(
+                    positions=positions_, velocities=self.velocities_, time_from_start=time_from_start_))
 
     def play_trajectory(self):
         self.client.send_goal(self.trajectoy_goal)
