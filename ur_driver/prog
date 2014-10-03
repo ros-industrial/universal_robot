@@ -14,6 +14,7 @@ def driverProg():
   MSG_SET_FLAG = 12
   MSG_SET_TOOL_VOLTAGE = 13
   MSG_SET_ANALOG_OUT = 14
+  MSG_SET_TEACH_MODE = 15
   MULT_wrench = 10000.0
   MULT_jointstate = 10000.0
   MULT_time = 1000000.0
@@ -260,6 +261,19 @@ def driverProg():
           send_out("Received no parameters for set_out message")
         end
         set_tool_voltage(params_mult[1])
+      elif mtype == MSG_SET_TEACH_MODE:
+        #send_out("Received set_teach_mode")
+        # Reads the parameters
+        params_mult = socket_read_binary_integer(1)
+        if params_mult[0] == 0:
+          send_out("Received no parameters for set_teach_mode message")
+        else:
+          if params_mult[1] != 0:
+            teach_mode()
+          else:
+            end_teach_mode()
+          end
+        end
       else:
         send_out("Received unknown message type")
       end
