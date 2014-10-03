@@ -26,7 +26,7 @@ class SrUrTrajectoryRecorder(object):
         self.joint_space_coordinates = msg.position
 
     def run(self):
-        rate = Rate(10)
+        rate = Rate(5)
         time_zero = Time.now().to_sec()
         loginfo("Recording started")
         while not is_shutdown():
