@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS message_generation std_msgs)
  add_service_files(
    FILES
    SetIO.srv
+   SetTeachMode.srv
  )
 
 
