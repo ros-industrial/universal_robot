@@ -56,9 +56,10 @@ class SrUrTrajectoryPlayer(object):
             self.parse_trajectory()
             loginfo("Trajectory parsed. Start playing")
             self.play_trajectory()
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, SystemExit):
             signal_shutdown("KeyboardInterrupt")
             raise
+
 
 if __name__ == '__main__':
     trajectroy_player = SrUrTrajectoryPlayer()

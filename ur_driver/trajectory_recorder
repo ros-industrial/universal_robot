@@ -1,16 +1,14 @@
 #!/usr/bin/env python
-from rospy import init_node, signal_shutdown, Duration
-from actionlib import SimpleActionClient
-from trajectory_msgs.msg import JointTrajectory
-from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
+from rospy import init_node, is_shutdown, Duration, loginfo, Subscriber, Rate, Time
+from sensor_msgs.msg import JointState
 from sys import argv
 
 """
-Records a trajectory for future playback
+Records the trajectory of a single UR arm for future play back with trajectory_player
 It will create a file with given name or overwrite it if it exists
 example usage
 
-./trajectory_recorder trajectory.txt
+./trajectory_recorder my_trajectory.txt
 
 """
 
@@ -18,50 +16,35 @@ example usage
 class SrUrTrajectoryRecorder(object):
 
     def __init__(self):
-        self.client = SimpleActionClient(
-            'follow_joint_trajectory', FollowJointTrajectoryAction)
-        self.trajectoy_goal = FollowJointTrajectoryGoal()
-        self.trajectoy_goal.trajectory = JointTrajectory()
-        self.trajectoy_goal.trajectory.joint_names = ['ra_shoulder_pan_joint',
-                                                      'ra_shoulder_lift_joint',
-                                                      'ra_elbow_joint',
-                                                      'ra_wrist_1_joint',
-                                                      'ra_wrist_2_joint',
-                                                      'ra_wrist_3_joint']
-        self.velocities = [0] * 6
+        init_node("TrajectoryRecorder", anonymous=True)
+        self.trajectory_file = open(argv[1], 'w')
+        self.joint_subscriber = Subscriber(
+            "/joint_states", JointState, self.joint_state_callback)
+        self.joint_space_coordinates = [0.0] * 6
 
-    def read_trajectory(self):
-        self.trajectory_goal.trajectory.points = []
-        with open(argv[1]) as trajectory_text_file:
-            for traj_point_text in trajectory_text_file:
-                data = traj_pont_text.split(',')
-                time_from_start_ = Duration(float(data[0]))
-                positions_ = [float(i) for i in data[1:]]
-                self.trajectory_goal.trajectory.points.append(JointTrajectoryPoint(
-                    positions=positions_, velocities=self.velocities_, time_from_start=time_from_start_))
-
-    def play_trajectory(self):
-        self.client.send_goal(self.trajectoy_goal)
-        try:
-            self.client.wait_for_result()
-        except KeyboardInterrupt:
-            self.client.cancel_goal()
-            raise
+    def joint_state_callback(self, msg):
+        self.joint_space_coordinates = msg.position
 
     def run(self):
-        try:
-            init_node(
-                "TrajectoryRecorder", anonymous=True, disable_signals=True)
-            print("Waiting for server...")
-            self.client.wait_for_server()
-            print("Connected to server. Reading trajectory")
-            self.parse_trajectory()
-            print("Trajectory parsed. Start playing")
-            self.play_trajectory()
-        except KeyboardInterrupt:
-            signal_shutdown("KeyboardInterrupt")
-            raise
+        rate = Rate(10)
+        time_zero = Time.now().to_sec()
+        loginfo("Recording started")
+        while not is_shutdown():
+            now = Time.now().to_sec()
+            line = "{0: 20.15f}, {1: 20.15f}, {2: 20.15f}, {3: 20.15f}, {4: 20.15f}, {5: 20.15f}, {6: 20.15f}\n".format(
+                now - time_zero,
+                self.joint_space_coordinates[0],
+                self.joint_space_coordinates[1],
+                self.joint_space_coordinates[2],
+                self.joint_space_coordinates[3],
+                self.joint_space_coordinates[4],
+                self.joint_space_coordinates[5])
+            self.trajectory_file.write(line)
+            rate.sleep()
+
 
 if __name__ == '__main__':
     trajectroy_recorder = SrUrTrajectoryRecorder()
     trajectroy_recorder.run()
+    trajectroy_recorder.trajectory_file.close()
+    loginfo("Recording has finished")
