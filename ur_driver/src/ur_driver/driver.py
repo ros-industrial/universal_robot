@@ -64,13 +64,8 @@ FUN_SET_TOOL_VOLTAGE = 4
 
 IO_SLEEP_TIME = 0.05
 
-JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
-               'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
-
-Q1 = [2.2,0,-1.57,0,0,0]
-Q2 = [1.5,0,-1.57,0,0,0]
-Q3 = [1.5,-0.2,-1.57,0,0,0]
-  
+JOINT_NAMES = ['ra_shoulder_pan_joint', 'ra_shoulder_lift_joint', 'ra_elbow_joint',
+               'ra_wrist_1_joint', 'ra_wrist_2_joint', 'ra_wrist_3_joint']
 
 connected_robot = None
 connected_robot_lock = threading.Lock()

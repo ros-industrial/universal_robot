@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+from rospy import init_node, signal_shutdown, Duration
+from actionlib import SimpleActionClient
+from trajectory_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal, JointTrajectory
+from sys import argv 
+
+class SrUrTrajectoryPlayer(object):
+    def __init__(self):
+        self.client = SimpleActionClient('follow_joint_trajectory', FollowJointTrajectoryAction)
+        self.trajectoy_goal = FollowJointTrajectoryGoal()
+        self.trajectoy_goal.trajectory = JointTrajectory()
+        self.trajectoy_goal.trajectory.joint_names = ['ra_shoulder_pan_joint',
+                                                      'ra_shoulder_lift_joint',
+                                                      'ra_elbow_joint',
+                                                      'ra_wrist_1_joint',
+                                                      'ra_wrist_2_joint',
+                                                      'ra_wrist_3_joint']
+        self.velocities = [0]*6
+
+    def read_trajectory(self):
+        self.trajectory_goal.trajectory.points = []   
+        with open(argv[1]) as trajectory_text_file:
+            for traj_point_text in trajectory_text_file:
+                data = traj_pont_text.split(',')
+                time_from_start_ = Duration(float(data[0]))
+                positions_ = [float(i) for i in data[1:]]
+                self.trajectory_goal.trajectory.points.append(
+                    JointTrajectoryPoint(positions=positions_, velocities=self.velocities_, time_from_start=time_from_start_))
+
+    def play_trajectory(self):
+        sefl.client.send_goal(self.trajectoy_goal)
+        try:
+            sefl.client.wait_for_result()
+        except KeyboardInterrupt:
+            sefl.client.cancel_goal()
+            raise
+
+    def run(self):
+        try:
+            init_node("TrajectoryPlayer", anonymous=True, disable_signals=True)
+            print("Waiting for server...")
+            sefl.client.wait_for_server()
+            print("Connected to server. Reading trajectory")
+            self.parse_trajectory()
+            print("Trajectory parsed. Start playing")            
+            self.play_trajectory()
+        except KeyboardInterrupt:
+            signal_shutdown("KeyboardInterrupt")
+            raise
+
+if __name__ == '__main__':
+    trajectroy_player = SrUrTrajectoryPlayer()
+    trajectroy_player.run()
