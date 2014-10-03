@@ -2,11 +2,14 @@
 from rospy import init_node, signal_shutdown, Duration
 from actionlib import SimpleActionClient
 from trajectory_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal, JointTrajectory
-from sys import argv 
+from sys import argv
+
 
 class SrUrTrajectoryPlayer(object):
+
     def __init__(self):
-        self.client = SimpleActionClient('follow_joint_trajectory', FollowJointTrajectoryAction)
+        self.client = SimpleActionClient(
+            'follow_joint_trajectory', FollowJointTrajectoryAction)
         self.trajectoy_goal = FollowJointTrajectoryGoal()
         self.trajectoy_goal.trajectory = JointTrajectory()
         self.trajectoy_goal.trajectory.joint_names = ['ra_shoulder_pan_joint',
@@ -15,10 +18,10 @@ class SrUrTrajectoryPlayer(object):
                                                       'ra_wrist_1_joint',
                                                       'ra_wrist_2_joint',
                                                       'ra_wrist_3_joint']
-        self.velocities = [0]*6
+        self.velocities = [0] * 6
 
     def read_trajectory(self):
-        self.trajectory_goal.trajectory.points = []   
+        self.trajectory_goal.trajectory.points = []
         with open(argv[1]) as trajectory_text_file:
             for traj_point_text in trajectory_text_file:
                 data = traj_pont_text.split(',')
@@ -42,7 +45,7 @@ class SrUrTrajectoryPlayer(object):
             self.client.wait_for_server()
             print("Connected to server. Reading trajectory")
             self.parse_trajectory()
-            print("Trajectory parsed. Start playing")            
+            print("Trajectory parsed. Start playing")
             self.play_trajectory()
         except KeyboardInterrupt:
             signal_shutdown("KeyboardInterrupt")
