@@ -18,7 +18,7 @@ catkin_package()
 #############
 ## Install ##
 #############
-install(PROGRAMS test_move.py test_io.py
+install(PROGRAMS test_move.py test_io.py trajectory_player trajectory_recorder
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -26,7 +26,7 @@ install(PROGRAMS src/ur_driver/driver.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(FILES prog prog_reset
+install(FILES prog prog_reset trajectory.txt
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
