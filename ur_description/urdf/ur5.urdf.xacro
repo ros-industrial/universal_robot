@@ -282,7 +282,14 @@
       <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
     </joint>
 
-    <link name="${prefix}ee_link" />
+    <link name="${prefix}ee_link">
+      <collision>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+      </collision>
+    </link>
 
     <xacro:ur5_arm_transmission prefix="${prefix}" />
     <xacro:ur5_arm_gazebo prefix="${prefix}" />
