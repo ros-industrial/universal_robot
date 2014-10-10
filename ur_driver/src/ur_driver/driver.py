@@ -19,7 +19,7 @@ from geometry_msgs.msg import WrenchStamped
 
 from ur_driver.deserialize import RobotState, RobotMode
 
-from ur_msgs.srv import SetIO
+from ur_msgs.srv import SetPayload, SetIO
 from ur_msgs.msg import *
 
 # renaming classes
@@ -46,16 +46,24 @@ MSG_MOVEJ = 4
 MSG_WAYPOINT_FINISHED = 5
 MSG_STOPJ = 6
 MSG_SERVOJ = 7
+MSG_SET_PAYLOAD = 8
 MSG_WRENCH = 9
 MSG_SET_DIGITAL_OUT = 10
 MSG_GET_IO = 11
 MSG_SET_FLAG = 12
 MSG_SET_TOOL_VOLTAGE = 13
 MSG_SET_ANALOG_OUT = 14
+MULT_payload = 1000.0
 MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
 MULT_time = 1000000.0
 MULT_blend = 1000.0
+
+#Bounds for SetPayload service
+MIN_PAYLOAD = 0.0
+MAX_PAYLOAD = 1.0
+#Using a very conservative value as it should be set throught the parameter server
+
 
 FUN_SET_DIGITAL_OUT = 1
 FUN_SET_FLAG = 2
@@ -432,7 +440,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def send_quit(self):
         with self.socket_lock:
             self.request.send(struct.pack("!i", MSG_QUIT))
-            
+
     def send_servoj(self, waypoint_id, q_actual, t):
         assert(len(q_actual) == 6)
         q_robot = [0.0] * 6
@@ -442,6 +450,12 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                  [MULT_jointstate * qq for qq in q_robot] + \
                  [MULT_time * t]
         buf = struct.pack("!%ii" % len(params), *params)
+        with self.socket_lock:
+            self.request.send(buf)
+        
+    #Experimental set_payload implementation
+    def send_payload(self,payload):
+        buf = struct.pack('!ii', MSG_SET_PAYLOAD, payload * MULT_payload)
         with self.socket_lock:
             self.request.send(buf)
 
@@ -593,6 +607,25 @@ def within_tolerance(a_vec, b_vec, tol_vec):
         if abs(a - b) > tol:
             return False
     return True
+
+class URServiceProvider(object):
+    def __init__(self, robot):
+        self.robot = robot
+        rospy.Service('ur_driver/setPayload', SetPayload, self.setPayload)
+
+    def set_robot(self, robot):
+        self.robot = robot
+
+    def setPayload(self, req):
+        if req.payload < min_payload or req.payload > max_payload:
+            print 'ERROR: Payload ' + str(req.payload) + ' out of bounds (' + str(min_payload) + ', ' + str(max_payload) + ')'
+            return False
+        
+        if self.robot:
+            self.robot.send_payload(req.payload)
+        else:
+            return False
+        return True
 
 class URTrajectoryFollower(object):
     RATE = 0.02
@@ -860,6 +893,15 @@ def main():
     # Reads the maximum velocity
     global max_velocity
     max_velocity = rospy.get_param("~max_velocity", 2.0)
+    
+    # Reads the minimum payload
+    global min_payload
+    min_payload = rospy.get_param("~min_payload", MIN_PAYLOAD)
+    # Reads the maximum payload
+    global max_payload
+    max_payload = rospy.get_param("~max_payload", MAX_PAYLOAD)
+    rospy.loginfo("Bounds for Payload: [%s, %s]" % (min_payload, max_payload))
+    
 
     # Sets up the server for the robot to connect to
     server = TCPServer(("", reverse_port), CommanderTCPHandler)
@@ -874,7 +916,8 @@ def main():
     connection.send_reset_program()
     
     set_io_server()
-
+    
+    service_provider = None
     action_server = None
     try:
         while not rospy.is_shutdown():
@@ -904,6 +947,12 @@ def main():
                         break
                 rospy.loginfo("Robot connected")
 
+                #provider for service calls
+                if service_provider:
+                    service_provider.set_robot(r)
+                else:
+                    service_provider = URServiceProvider(r)
+                
                 if action_server:
                     action_server.set_robot(r)
                 else:
