@@ -1,3 +1,11 @@
+# Data structure for the realtime communications interface (aka Matlab interface)
+# used by the Universal Robots controller
+# 
+# This data structure is send at 125 Hz on TCP port 30003
+# 
+# Dokumentation can be found on the Universal Robots Support Wiki
+# (http://wiki03.lynero.net/Technical/RealTimeClientInterface?rev=9)
+
 float64 time
 float64[] q_target
 float64[] qd_target
