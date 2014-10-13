@@ -1,8 +1,0 @@
-<library path="lib/libur_controllers">
-  <class name="ur_ctrl_client/TestController" type="ur::URTestController" base_class_type="controller_interface::ControllerBase">
-  <description>
-    Test
-  </description>
-  </class>
-
-</library>

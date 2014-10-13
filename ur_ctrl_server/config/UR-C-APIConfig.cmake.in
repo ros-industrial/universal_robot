@@ -1,3 +1,0 @@
- 
-set(UR-C-API_LIBRARIES robotcomm kinematics configuration dev collision m math legacy)
-set(UR-C-API_INCLUDE_DIRS "@INSTALL_DIR@")

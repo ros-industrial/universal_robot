@@ -21,6 +21,7 @@ def driverProg():
   MULT_time = 1000000.0
   MULT_blend = 1000.0
   MULT_analog = 1000000.0
+  pi = 3.14159265359
   
   def send_out(msg):
     enter_critical
@@ -29,6 +30,14 @@ def driverProg():
     socket_send_string("~")
     exit_critical
   end
+  
+  def send_waypoint_finished(waypoint_id):
+    enter_critical
+    socket_send_int(MSG_WAYPOINT_FINISHED)
+    socket_send_int(waypoint_id)
+    exit_critical
+  end
+
   
   SERVO_IDLE = 0
   SERVO_RUNNING = 1
@@ -61,6 +70,8 @@ def driverProg():
       cmd_servo_state = SERVO_IDLE
       exit_critical
       
+      #do_brake = False
+      
       # Executes the command
       if do_brake:
         #stopj(1.0)  # TODO
@@ -68,7 +79,9 @@ def driverProg():
         sync()
       elif state == SERVO_RUNNING:
         servoj(q, 0, 0, dt)
+        #send_out("Servoed")
       else:
+        #send_out("Idle")
         sync()
       end
     end
@@ -79,9 +92,29 @@ def driverProg():
   
   thread_servo = run servoThread()
   
+  # Servoes in a circle
+  #movej([1.5,-0.4,-1.57,0,0,0], 3, 0.75, 1.0)
+  #t = 0
+  #while True:
+  #  q = [1.5,0,-1.57,0,0,0]
+  #  q[0] = q[0] + 0.2 * sin(0.25 * t*(2*pi))
+  #  q[1] = q[1] - 0.2 + 0.2 * cos(0.25 * t*(2*pi))
+  #  #servoj(q, 3, 1, 0.08)
+  #  #send_out("servoed")
+  #  set_servo_setpoint(t, q, 0.08)
+  #  t = t + 0.08
+  #  sleep(0.08)
+  #end
+  
   while True:
+    #send_out("Listening")
     ll = socket_read_binary_integer(1)
-    if ll[0] == 1:
+    
+    if ll[0] == 0:
+      #send_out("Received nothing")
+    elif ll[0] > 1:
+      send_out("Received too many things")
+    else:
       mtype = ll[1]
       if mtype == MSG_QUIT:
         send_out("Received QUIT")
@@ -105,7 +138,7 @@ def driverProg():
         v = params_mult[9] / MULT_jointstate
         t = params_mult[10] / MULT_time
         r = params_mult[11] / MULT_blend
-
+        
         # Sends the command
         send_out("movej started")
         movej(q, a, v, t, r)
@@ -127,23 +160,70 @@ def driverProg():
                    params_mult[6] / MULT_jointstate,
                    params_mult[7] / MULT_jointstate]
         t = params_mult[8] / MULT_time
+        
+        # Servos
+        #servoj(q, 3, 0.1, t)
+        #send_waypoint_finished(waypoint_id)
         set_servo_setpoint(waypoint_id, q, t)
       elif mtype == MSG_SET_PAYLOAD:
         params = socket_read_binary_integer(1)
         if params[0] == 0:
           send_out("Received no parameters for setPayload message")
         end
+        
         payload = params[1] / MULT_payload
+        #send_out(payload)
         send_out("Received new payload")
         set_payload(payload)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
         stopj(1.0)
+      elif mtype == MSG_SET_DIGITAL_OUT:
+        #send_out("Received Digital Out Signal")
+        # Reads the parameters
+        params_mult = socket_read_binary_integer(2)
+        if params_mult[0] == 0:
+          send_out("Received no parameters for set_digital_out message")
+        end
+        if params_mult[2] > 0:
+           set_digital_out(params_mult[1], True)
+        elif params_mult[2] == 0:
+          set_digital_out(params_mult[1], False)
+        end
+      elif mtype == MSG_SET_FLAG:
+        #send_out("Received Set Flag Signal")
+        # Reads the parameters
+        params_mult = socket_read_binary_integer(2)
+        if params_mult[0] == 0:
+          send_out("Received no parameters for set_flag message")
+        end
+        if params_mult[2] != 0:
+          set_flag(params_mult[1], True)
+        elif params_mult[2] == 0:
+          set_flag(params_mult[1], False)
+        end
+      elif mtype == MSG_SET_ANALOG_OUT:
+        #send_out("Received Analog Out Signal")
+        # Reads the parameters
+        params_mult = socket_read_binary_integer(2)
+        if params_mult[0] == 0:
+          send_out("Received no parameters for set_analog_out message")
+        end
+        set_analog_out(params_mult[1], (params_mult[2] / MULT_analog))
+      elif mtype == MSG_SET_TOOL_VOLTAGE:
+        #send_out("Received Tool Voltage Signal")
+        # Reads the parameters (also reads second dummy '0' integer)
+        params_mult = socket_read_binary_integer(2)
+        if params_mult[0] == 0:
+          send_out("Received no parameters for set_tool_voltage message")
+        end
+        set_tool_voltage(params_mult[1])
       else:
         send_out("Received unknown message type")
       end
     end
   end
+  
   socket_send_int(MSG_QUIT)
 end
 driverProg()

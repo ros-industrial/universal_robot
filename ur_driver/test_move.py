@@ -6,15 +6,11 @@ import actionlib
 from control_msgs.msg import *
 from trajectory_msgs.msg import *
 
-JOINT_NAMES = ['ra_shoulder_pan_joint', 'ra_shoulder_lift_joint', 'ra_elbow_joint',
-               'ra_wrist_1_joint', 'ra_wrist_2_joint', 'ra_wrist_3_joint']
-#Q1 = [2.2,0,-1.57,0,0,0]
-#Q2 = [1.5,0,-1.57,0,0,0]
-#Q3 = [1.5,-0.2,-1.57,0,0,0]
-
-Q1 = [-2.9881782123394918, -1.4566517937144674, 2.108183203483951, -0.47413467136892455, 1.8516001403064819, 0.3584906283596353]
-Q2 = [-2.9881782123394918, -1.4566517937144674, 2.100183203483951, -0.45413467136892455, 1.8316001403064819, 0.3584906283596353]
-Q3 = [-2.9881782123394918, -1.4566517937144674, 2.109183203483951, -0.40413467136892455, 1.8016001403064819, 0.3584906283596353]
+JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+               'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+Q1 = [2.2,0,-1.57,0,0,0]
+Q2 = [1.5,0,-1.57,0,0,0]
+Q3 = [1.5,-0.2,-1.57,0,0,0]
 
 client = None
 
