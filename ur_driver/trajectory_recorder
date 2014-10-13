@@ -39,7 +39,8 @@ class SrUrTrajectoryRecorder(object):
                 self.joint_space_coordinates[3],
                 self.joint_space_coordinates[4],
                 self.joint_space_coordinates[5])
-            self.trajectory_file.write(line)
+            if self.joint_space_coordinates != [0.0] * 6:
+                self.trajectory_file.write(line)
             rate.sleep()
 
 

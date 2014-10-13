@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from rospy import init_node, signal_shutdown, Duration, loginfo, logfatal
+from rospy import init_node, signal_shutdown, Duration, loginfo
 from actionlib import SimpleActionClient
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
@@ -32,6 +32,9 @@ class SrUrTrajectoryPlayer(object):
     def parse_trajectory(self):
         self.trajectory_goal.trajectory.points = []
         with open(argv[1]) as trajectory_text_file:
+            if trajectory_text_file.read() != 'Work Space':
+                logfatal("incompatible trajectory file")
+                break
             for traj_point_text in trajectory_text_file:
                 data = traj_point_text.split(',')
                 time_from_start_ = Duration(float(data[0]))
