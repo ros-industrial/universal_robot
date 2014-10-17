@@ -65,7 +65,7 @@ MULT_analog_robotstate = 0.1
 #Bounds for SetPayload service
 MIN_PAYLOAD = 0.0
 MAX_PAYLOAD = 1.0
-#Using a very conservative value as it should be set throught the parameter server
+#Using a very conservative value as it should be set through the parameter server
 
 
 FUN_SET_DIGITAL_OUT = 1
@@ -77,11 +77,6 @@ IO_SLEEP_TIME = 0.05
 
 JOINT_NAMES = ['ra_shoulder_pan_joint', 'ra_shoulder_lift_joint', 'ra_elbow_joint',
                'ra_wrist_1_joint', 'ra_wrist_2_joint', 'ra_wrist_3_joint']
-
-Q1 = [2.2,0,-1.57,0,0,0]
-Q2 = [1.5,0,-1.57,0,0,0]
-Q3 = [1.5,-0.2,-1.57,0,0,0]
-  
 
 connected_robot = None
 connected_robot_lock = threading.Lock()
