@@ -10,9 +10,9 @@
   
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
   <arg name="robot_ip"/>
-  <arg name="reverse_port" default="50001"/>
   <arg name="limited" default="false"/>
-
+  <arg name="prefix" default="ra_"/>
+  
   <!-- robot model -->
   <include file="$(find ur_description)/launch/ur10_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
@@ -21,7 +21,7 @@
   <!-- ur common -->
   <include file="$(find ur_bringup)/launch/ur_common.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>
-    <arg name="reverse_port" value="$(arg reverse_port)"/>
+    <arg name="prefix" value="$(arg prefix)"/>
   </include>
-
+  
 </launch>
