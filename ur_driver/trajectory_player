@@ -17,41 +17,63 @@ example usage
 class SrUrTrajectoryPlayer(object):
 
     def __init__(self):
-        self.client = SimpleActionClient(
-            'follow_joint_trajectory', FollowJointTrajectoryAction)
-        self.trajectory_goal = FollowJointTrajectoryGoal()
-        self.trajectory_goal.trajectory = JointTrajectory()
-        self.trajectory_goal.trajectory.joint_names = ['ra_shoulder_pan_joint',
-                                                       'ra_shoulder_lift_joint',
-                                                       'ra_elbow_joint',
-                                                       'ra_wrist_1_joint',
-                                                       'ra_wrist_2_joint',
-                                                       'ra_wrist_3_joint']
-        self.velocities = [0] * 6
+        self.ra_client = SimpleActionClient(
+            'ra_follow_joint_trajectory', FollowJointTrajectoryAction)
+        self.ra_trajectory_goal = FollowJointTrajectoryGoal()
+        self.ra_trajectory_goal.trajectory = JointTrajectory()
+        self.ra_trajectory_goal.trajectory.joint_names = ['ra_shoulder_pan_joint',
+                                                          'ra_shoulder_lift_joint',
+                                                          'ra_elbow_joint',
+                                                          'ra_wrist_1_joint',
+                                                          'ra_wrist_2_joint',
+                                                          'ra_wrist_3_joint']
+        self.ra_velocities = [0] * 6
+
+        self.la_client = SimpleActionClient(
+            'la_follow_joint_trajectory', FollowJointTrajectoryAction)
+        self.la_trajectory_goal = FollowJointTrajectoryGoal()
+        self.la_trajectory_goal.trajectory = JointTrajectory()
+        self.la_trajectory_goal.trajectory.joint_names = ['la_shoulder_pan_joint',
+                                                          'la_shoulder_lift_joint',
+                                                          'la_elbow_joint',
+                                                          'la_wrist_1_joint',
+                                                          'la_wrist_2_joint',
+                                                          'la_wrist_3_joint']
+        self.la_velocities = [0] * 6
 
     def parse_trajectory(self):
-        self.trajectory_goal.trajectory.points = []
+        self.ra_trajectory_goal.trajectory.points = []
+        self.la_trajectory_goal.trajectory.points = []
         with open(argv[1]) as trajectory_text_file:
             for traj_point_text in trajectory_text_file:
                 data = traj_point_text.split(',')
+
                 time_from_start_ = Duration(float(data[0]))
-                positions_ = [float(i) for i in data[1:]]
-                self.trajectory_goal.trajectory.points.append(JointTrajectoryPoint(
-                    positions=positions_, velocities=self.velocities, time_from_start=time_from_start_))
+
+                ra_positions_ = [float(i) for i in data[1:7]]
+                self.ra_trajectory_goal.trajectory.points.append(JointTrajectoryPoint(
+                    positions=ra_positions_, velocities=self.ra_velocities, time_from_start=time_from_start_))
+                la_positions_ = [float(i) for i in data[7:13]]
+                self.la_trajectory_goal.trajectory.points.append(JointTrajectoryPoint(
+                    positions=la_positions_, velocities=self.la_velocities, time_from_start=time_from_start_))
 
     def play_trajectory(self):
-        self.client.send_goal(self.trajectory_goal)
+        self.ra_client.send_goal(self.ra_trajectory_goal)
+        self.la_client.send_goal(self.la_trajectory_goal)
         try:
-            self.client.wait_for_result()
+            self.ra_client.wait_for_result()
+            self.la_client.wait_for_result()
         except KeyboardInterrupt:
-            self.client.cancel_goal()
+            self.ra_client.cancel_goal()
+            self.la_client.cancel_goal()
             raise
 
     def run(self):
         try:
             init_node("TrajectoryPlayer", anonymous=True, disable_signals=True)
             loginfo("Waiting for server...")
-            self.client.wait_for_server()
+            self.ra_client.wait_for_server()
+            self.la_client.wait_for_server()
             loginfo("Connected to server. Reading trajectory")
             self.parse_trajectory()
             loginfo("Trajectory parsed. Start playing")

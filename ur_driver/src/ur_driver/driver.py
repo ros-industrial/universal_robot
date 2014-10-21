@@ -1004,7 +1004,8 @@ def main():
     rospy.loginfo("Bounds for Payload: [%s, %s]" % (min_payload, max_payload))
 
     # Sets up the server for the robot to connect to
-    server = TCPServer(("", reverse_port), CommanderTCPHandler)
+    addresses = {'ra_': '192.168.1.100', 'la_': '192.168.0.100'}
+    server = TCPServer((addresses[prefix], reverse_port), CommanderTCPHandler)
     thread_commander = threading.Thread(
         name="CommanderHandler", target=server.serve_forever)
     thread_commander.daemon = True
@@ -1014,10 +1015,12 @@ def main():
         program = fin.read() % {"driver_hostname": get_my_ip(
             robot_hostname, PORT), "driver_reverseport": reverse_port}
     connection = URConnection(robot_hostname, PORT, program)
+    print('connection', robot_hostname, PORT)
     connection.connect()
     connection.send_reset_program()
 
     connectionRT = URConnectionRT(robot_hostname, RT_PORT)
+    print('connectionRT', robot_hostname, RT_PORT)
     connectionRT.connect()
 
     set_io_server()
