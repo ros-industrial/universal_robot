@@ -87,9 +87,9 @@ def main():
     rospy.init_node('test_comm', disable_signals=True)
     
     global pub_masterboard_state
-    pub_masterboard_state = rospy.Publisher('masterboard_state', MasterboardDataMsg)
+    pub_masterboard_state = rospy.Publisher('masterboard_state', MasterboardDataMsg, queue_size=1)
     global pub_io_states
-    pub_io_states = rospy.Publisher('io_states', IOStates)
+    pub_io_states = rospy.Publisher('io_states', IOStates, queue_size=1)
     
     
     robot_hostname = '192.168.0.42'

@@ -64,9 +64,9 @@ def main():
     rospy.init_node('testRT_comm', disable_signals=True)
     
     global pub_joint_statesRT
-    pub_joint_statesRT = rospy.Publisher('joint_statesRT', JointState)
+    pub_joint_statesRT = rospy.Publisher('joint_statesRT', JointState, queue_size=1)
     global pub_robot_stateRT
-    pub_robot_stateRT = rospy.Publisher('robot_stateRT', RobotStateRTMsg)
+    pub_robot_stateRT = rospy.Publisher('robot_stateRT', RobotStateRTMsg, queue_size=1)
     
     
     
