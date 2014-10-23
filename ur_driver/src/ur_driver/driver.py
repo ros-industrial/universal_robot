@@ -25,7 +25,7 @@ from geometry_msgs.msg import WrenchStamped
 from ur_driver.deserialize import RobotState, RobotMode
 from ur_driver.deserializeRT import RobotStateRT
 
-from ur_msgs.srv import SetPayload, SetIO
+from ur_msgs.srv import SetPayload, SetIO, SetTeachMode
 from ur_msgs.msg import *
 
 # renaming classes
@@ -60,6 +60,7 @@ MSG_GET_IO = 11
 MSG_SET_FLAG = 12
 MSG_SET_TOOL_VOLTAGE = 13
 MSG_SET_ANALOG_OUT = 14
+MSG_SET_TEACH_MODE = 15
 MULT_payload = 1000.0
 MULT_wrench = 10000.0
 MULT_jointstate = 10000.0
@@ -547,7 +548,16 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
             self.request.send(buf)
         # set_flag will fail if called too closely together--added delay
         time.sleep(IO_SLEEP_TIME)
-
+        
+    def set_teach_mode(self, teach_mode):
+        params = [MSG_SET_TEACH_MODE] + \
+                 [teach_mode]
+        buf = struct.pack("!%ii" % len(params), *params)
+        #print params
+        with self.socket_lock:
+            self.request.send(buf) 
+        time.sleep(IO_SLEEP_TIME)
+        
     def send_stopj(self):
         with self.socket_lock:
             self.request.send(struct.pack("!i", MSG_STOPJ))
@@ -950,10 +960,19 @@ def handle_set_io(req):
     else:
         raise ROSServiceException("Robot not connected")
 
+def handle_set_teach_mode(req):
+    r = getConnectedRobot(wait=False)
+    if r:
+        r.set_teach_mode(req.teach_mode)
+        return True
+    else:
+        raise ROSServiceException("Robot not connected")
 
 def set_io_server():
     s = rospy.Service('set_io', SetIO, handle_set_io)
 
+def set_teach_mode_server():
+    s= rospy.Service('set_teach_mode', SetTeachMode, handle_set_teach_mode)
 
 def main():
     rospy.init_node('ur_driver', disable_signals=True)
@@ -1024,6 +1043,7 @@ def main():
     connectionRT.connect()
 
     set_io_server()
+    set_teach_mode_server()
 
     service_provider = None
     action_server = None
