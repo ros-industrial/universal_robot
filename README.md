@@ -17,7 +17,7 @@ __Usage with real Hardware__
 There are launch files available to bringup a real robot - either UR5 or UR10.  
 In the following the commands for the UR5 are given. For the UR10, simply replace the prefix accordingly.
 
-Don't forget to source the correcct setup shell files and use a new terminal for each command!   
+Don't forget to source the correct setup shell files and use a new terminal for each command!   
 
 To bring up the real robot, run:
 
@@ -29,7 +29,7 @@ A simple test script that moves the robot to predefined positions can be execute
 
 
 CAUTION:  
-Remember that you should always have your hands on the big red button in case there is something in the way or anything unexcpected happens.
+Remember that you should always have your hands on the big red button in case there is something in the way or anything unexpected happens.
 
 
 __MoveIt! with real Hardware__  
@@ -61,7 +61,7 @@ __Usage with Gazebo Simulation__
 There are launch files available to bringup a simulated robot - either UR5 or UR10.  
 In the following the commands for the UR5 are given. For the UR10, simply replace the prefix accordingly.
 
-Don't forget to source the correcct setup shell files and use a new terminal for each command!   
+Don't forget to source the correct setup shell files and use a new terminal for each command!   
 
 To bring up the simulated robot in Gazebo, run:
 
