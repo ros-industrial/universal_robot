@@ -50,7 +50,7 @@ class ToolMode(object):
     BOOTLOADER = 249
     RUNNING = 253
     IDLE = 255
-    
+
 class MasterSafetyState(object):
     UNDEFINED = 0
     BOOTLOADER = 1
@@ -76,7 +76,7 @@ class RobotModeData(object):
         (plen, ptype) = struct.unpack_from("!IB", buf)
         if plen == 29:
             return RobotModeData_V18.unpack(buf)
-        elif plen == 37:
+        elif plen == 38:
             return RobotModeData_V30.unpack(buf)
         else:
             print "RobotModeData has wrong length: " + str(plen)
@@ -103,15 +103,16 @@ class RobotModeData_V30(object):
     __slots__ = ['timestamp', 'robot_connected', 'real_robot_enabled',
                  'power_on_robot', 'emergency_stopped',
                  'security_stopped', 'program_running', 'program_paused',
-                 'robot_mode', 'target_speed_fraction', 'speed_scaling']
+                 'robot_mode', 'control_mode', 'target_speed_fraction',
+                 'speed_scaling']
     @staticmethod
     def unpack(buf):
         rmd = RobotModeData_V30()
         (_, _,
          rmd.timestamp, rmd.robot_connected, rmd.real_robot_enabled,
          rmd.power_on_robot, rmd.emergency_stopped, rmd.security_stopped,
-         rmd.program_running, rmd.program_paused, rmd.robot_mode,
-         rmd.target_speed_fraction, rmd.speed_scaling) = struct.unpack_from("!IBQ???????Bdd", buf)
+         rmd.program_running, rmd.program_paused, rmd.robot_mode, rmd.control_mode,
+         rmd.target_speed_fraction, rmd.speed_scaling) = struct.unpack_from("!IBQ???????BBdd", buf)
         return rmd
 
 #this parses JointData for all versions (i.e. 1.6, 1.7, 1.8, 3.0)
@@ -125,7 +126,7 @@ class JointData(object):
         for i in range(6):
             jd = JointData()
             (jd.q_actual, jd.q_target, jd.qd_actual, jd.I_actual, jd.V_actual,
-             jd.T_motor, jd.T_micro, 
+             jd.T_motor, jd.T_micro,
              jd.joint_mode) = struct.unpack_from("!dddffffB", buf, offset)
             offset += 41
             all_joints.append(jd)
@@ -153,9 +154,9 @@ class MasterboardData(object):
     def unpack(buf):
         md = MasterboardData()
         (plen, ptype) = struct.unpack_from("!IB", buf)
-        if plen == 64:
+        if (plen == 64) or (plen == 76): # Euromap67 interface = 12 bytes
             return MasterboardData_V18.unpack(buf)
-        elif plen == 68:
+        elif (plen == 72) or (plen == 92): # Euromap67 interface = 20 bytes
             return MasterboardData_V30.unpack(buf)
         else:
             print "MasterboardData has wrong length: " + str(plen)
@@ -202,7 +203,7 @@ class MasterboardData_V30(object):
     @staticmethod
     def unpack(buf):
         md = MasterboardData_V30()
-        (_, _,
+        (_, _, _UNDOCUMENTED_,
          md.digital_input_bits, md.digital_output_bits,
          md.analog_input_range0, md.analog_input_range1,
          md.analog_input0, md.analog_input1,
@@ -211,7 +212,7 @@ class MasterboardData_V30(object):
          md.masterboard_temperature,
          md.robot_voltage_48V, md.robot_current,
          md.master_io_current, md.safety_mode,
-         md.in_reduced_mode) = struct.unpack_from("!IBiibbddbbddffffBB", buf)
+         md.in_reduced_mode) = struct.unpack_from("!IBIiibbddbbddffffBB", buf)
         return md
 
 #this parses JointData for all versions (i.e. 1.6, 1.7, 1.8, 3.0)
@@ -239,7 +240,7 @@ class JointLimitData(object):
 #ConfigurationData is not available in 1.6 and 1.7
 class ConfigurationData(object):
     __slots__ = ['joint_limit_data',
-                 'v_joint_default', 'a_joint_default', 
+                 'v_joint_default', 'a_joint_default',
                  'v_tool_default', 'a_tool_default', 'eq_radius',
                  'dh_a', 'dh_d', 'dh_alpha', 'dh_theta',
                  'masterboard_version', 'controller_box_type',
@@ -291,7 +292,7 @@ class AdditionalInfoOld(object):
         ai = AdditionalInfoOld()
         (_,_,ai.ctrl_bits, ai.teach_button) = struct.unpack_from("!IBIB", buf)
         return ai
-        
+
 class AdditionalInfoNew(object):
     __slots__ = ['teach_button_enabled','teach_button_pressed']
     @staticmethod
