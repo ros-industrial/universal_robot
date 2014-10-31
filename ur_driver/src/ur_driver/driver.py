@@ -62,6 +62,10 @@ MULT_blend = 1000.0
 MULT_analog = 1000000.0
 MULT_analog_robotstate = 0.1
 
+#Max Velocity accepted by ur_driver
+MAX_VELOCITY = 10.0
+#Using a very high value in order to not limit execution of trajectories being sent from MoveIt!
+
 #Bounds for SetPayload service
 MIN_PAYLOAD = 0.0
 MAX_PAYLOAD = 1.0
@@ -926,8 +930,10 @@ def main():
         rospy.loginfo("No calibration offsets loaded from urdf")
 
     # Reads the maximum velocity
+    # The max_velocity parameter is only used for debugging in the ur_driver. It's not related to actual velocity limits
     global max_velocity
-    max_velocity = rospy.get_param("~max_velocity", 2.0)
+    max_velocity = rospy.get_param("~max_velocity", MAX_VELOCITY) # [rad/s] 
+    rospy.loginfo("Max velocity accepted by ur_driver: %s [rad/s]" % max_velocity)
     
     # Reads the minimum payload
     global min_payload
