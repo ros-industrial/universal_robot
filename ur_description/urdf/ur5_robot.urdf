@@ -32,10 +32,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/Base.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/Base.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/base.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -57,10 +60,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/Shoulder.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/Shoulder.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/shoulder.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -82,10 +88,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/UpperArm.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/UpperArm.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/upper_arm.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -107,10 +116,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/Forearm.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/Forearm.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/forearm.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -132,10 +144,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/Wrist1.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/Wrist1.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/wrist_1.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -157,10 +172,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/Wrist2.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/Wrist2.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/wrist_2.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -182,10 +200,13 @@
       <geometry>
         <mesh filename="package://ur_description/meshes/ur5/visual/Wrist3.dae"/>
       </geometry>
+      <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur5/collision/Wrist3.dae"/>
+        <mesh filename="package://ur_description/meshes/ur5/collision/wrist_3.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -199,7 +220,14 @@
     <child link="ee_link"/>
     <origin rpy="0.0 0.0 1.570796325" xyz="0.0 0.0823 0.0"/>
   </joint>
-  <link name="ee_link"/>
+  <link name="ee_link">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+    </collision>
+  </link>
   <transmission name="shoulder_pan_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="shoulder_pan_joint"/>
