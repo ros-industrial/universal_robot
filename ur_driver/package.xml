@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_driver</name>
-  <version>1.0.2</version>
+  <version>1.0.5</version>
   <description>
       Driver for the UR5/10 arm based on the Polyscope control scheme.
   </description>
 
-  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
-  <license>BSD</license>
-  <url type="website">http://ros.org/wiki/ur_driver</url>
   <author>Stuart Glaser</author>
   <author email="sedwards@swri.org">Shaun Edwards</author>
+  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
+  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/ur_driver</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-
   <run_depend>rospy</run_depend>
   <run_depend>actionlib</run_depend>
   <run_depend>control_msgs</run_depend>
