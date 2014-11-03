@@ -1,13 +1,13 @@
 <package>
 
   <name>ur5_moveit_config</name>
-  <version>1.0.4</version>
+  <version>1.1.5</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur5 with the MoveIt Motion Planning Framework
   </description>
-  <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
-  <maintainer email="assistant@moveit.ros.org">MoveIt Setup Assistant</maintainer>
-
+  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
+  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+  
   <license>BSD</license>
 
   <url type="website">http://moveit.ros.org/</url>
