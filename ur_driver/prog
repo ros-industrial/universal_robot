@@ -8,6 +8,7 @@ def driverProg():
   MSG_WAYPOINT_FINISHED = 5
   MSG_STOPJ = 6
   MSG_SERVOJ = 7
+  MSG_SET_PAYLOAD = 8
   MSG_WRENCH = 9
   MSG_SET_DIGITAL_OUT = 10
   MSG_GET_IO = 11
@@ -15,9 +16,11 @@ def driverProg():
   MSG_SET_TOOL_VOLTAGE = 13
   MSG_SET_ANALOG_OUT = 14
   MULT_wrench = 10000.0
+  MULT_payload = 1000.0
   MULT_jointstate = 10000.0
   MULT_time = 1000000.0
   MULT_blend = 1000.0
+  MULT_analog = 1000000.0
   pi = 3.14159265359
   
   def send_out(msg):
@@ -34,61 +37,7 @@ def driverProg():
     socket_send_int(waypoint_id)
     exit_critical
   end
-  
-  thread statePublisherThread():
-    def send_joint_state():
-      q = get_joint_positions()
-      qdot = get_joint_speeds()
-      tau = get_joint_torques()
-      wrench = get_tcp_force()
-      enter_critical
-      socket_send_int(MSG_JOINT_STATES)
-      socket_send_int(floor(MULT_jointstate * q[0]))
-      socket_send_int(floor(MULT_jointstate * q[1]))
-      socket_send_int(floor(MULT_jointstate * q[2]))
-      socket_send_int(floor(MULT_jointstate * q[3]))
-      socket_send_int(floor(MULT_jointstate * q[4]))
-      socket_send_int(floor(MULT_jointstate * q[5]))
-      socket_send_int(floor(MULT_jointstate * qdot[0]))
-      socket_send_int(floor(MULT_jointstate * qdot[1]))
-      socket_send_int(floor(MULT_jointstate * qdot[2]))
-      socket_send_int(floor(MULT_jointstate * qdot[3]))
-      socket_send_int(floor(MULT_jointstate * qdot[4]))
-      socket_send_int(floor(MULT_jointstate * qdot[5]))
-      socket_send_int(floor(MULT_jointstate * tau[0]))
-      socket_send_int(floor(MULT_jointstate * tau[1]))
-      socket_send_int(floor(MULT_jointstate * tau[2]))
-      socket_send_int(floor(MULT_jointstate * tau[3]))
-      socket_send_int(floor(MULT_jointstate * tau[4]))
-      socket_send_int(floor(MULT_jointstate * tau[5]))
-      socket_send_int(MSG_WRENCH)
-      socket_send_int(floor(MULT_wrench * wrench[0]))
-      socket_send_int(floor(MULT_wrench * wrench[1]))
-      socket_send_int(floor(MULT_wrench * wrench[2]))
-      socket_send_int(floor(MULT_wrench * wrench[3]))
-      socket_send_int(floor(MULT_wrench * wrench[4]))
-      socket_send_int(floor(MULT_wrench * wrench[5]))
-      socket_send_int(MSG_GET_IO)
-      socket_send_int(1*get_digital_in(0) + 2*get_digital_in(1) + 4 * get_digital_in(2) + 8 * get_digital_in(3) + 16 * get_digital_in(4) + 32 * get_digital_in(5) + 64 * get_digital_in(6) + 128 * get_digital_in(7) + 256 * get_digital_in(8) + 512 * get_digital_in(9))
-      socket_send_int(1*get_digital_out(0) + 2*get_digital_out(1) + 4 * get_digital_out(2) + 8 * get_digital_out(3) + 16 * get_digital_out(4) + 32 * get_digital_out(5) + 64 * get_digital_out(6) + 128 * get_digital_out(7) + 256 * get_digital_out(8) + 512 * get_digital_out(9))
-      socket_send_int(pow(2,0)*get_flag(0) + pow(2,1)*get_flag(1) + pow(2,2)*get_flag(2) + pow(2,3)*get_flag(3) + pow(2,4)*get_flag(4) + pow(2,5)*get_flag(5) + pow(2,6)*get_flag(6) + pow(2,7)*get_flag(7) + pow(2,8)*get_flag(8) + pow(2,9)*get_flag(9) + pow(2,10)*get_flag(10) + pow(2,11)*get_flag(11) + pow(2,12)*get_flag(12) + pow(2,13)*get_flag(13) + pow(2,14)*get_flag(14) + pow(2,15)*get_flag(15) + pow(2,16)*get_flag(16) + pow(2,17)*get_flag(17) + pow(2,18)*get_flag(18) + pow(2,19)*get_flag(19) + pow(2,20)*get_flag(20) + pow(2,21)*get_flag(21) + pow(2,22)*get_flag(22) + pow(2,23)*get_flag(23) + pow(2,24)*get_flag(24) + pow(2,25)*get_flag(25) + pow(2,26)*get_flag(26) + pow(2,27)*get_flag(27) + pow(2,28)*get_flag(28) + pow(2,29)*get_flag(29) + pow(2,30)*get_flag(30) + pow(2,31)*get_flag(31) + pow(2,32)*get_flag(32))
-      socket_send_int(get_analog_out(0)*1000000)
-      socket_send_int(get_analog_out(1)*1000000)
-      socket_send_int(get_analog_in(0)*1000000)
-      socket_send_int(get_analog_in(1)*1000000)
-      socket_send_int(get_analog_in(2)*1000000)
-      socket_send_int(get_analog_in(3)*1000000)
-      #socket_send_int(7895160)  # Recognizable  ".xxx" or 00787878
-      exit_critical
-    end
-    #socket_open(HOSTNAME, 50002)
-    send_joint_state()
-    while True:
-      send_joint_state()
-      sync()
-    end
-    sync()
-  end
+
   
   SERVO_IDLE = 0
   SERVO_RUNNING = 1
@@ -141,7 +90,6 @@ def driverProg():
   socket_open(HOSTNAME, PORT)
   send_out("hello")
   
-  thread_state = run statePublisherThread()
   thread_servo = run servoThread()
   
   # Servoes in a circle
@@ -217,47 +165,57 @@ def driverProg():
         #servoj(q, 3, 0.1, t)
         #send_waypoint_finished(waypoint_id)
         set_servo_setpoint(waypoint_id, q, t)
+      elif mtype == MSG_SET_PAYLOAD:
+        params = socket_read_binary_integer(1)
+        if params[0] == 0:
+          send_out("Received no parameters for setPayload message")
+        end
+        
+        payload = params[1] / MULT_payload
+        #send_out(payload)
+        send_out("Received new payload")
+        set_payload(payload)
       elif mtype == MSG_STOPJ:
         send_out("Received stopj")
         stopj(1.0)
       elif mtype == MSG_SET_DIGITAL_OUT:
         #send_out("Received Digital Out Signal")
         # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_digital_out message")
         end
         if params_mult[2] > 0:
-	  set_digital_out(params_mult[1], True)
+           set_digital_out(params_mult[1], True)
         elif params_mult[2] == 0:
           set_digital_out(params_mult[1], False)
         end
       elif mtype == MSG_SET_FLAG:
         #send_out("Received Set Flag Signal")
         # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_flag message")
         end
         if params_mult[2] != 0:
-	  set_flag(params_mult[1], True)
+          set_flag(params_mult[1], True)
         elif params_mult[2] == 0:
           set_flag(params_mult[1], False)
         end
       elif mtype == MSG_SET_ANALOG_OUT:
         #send_out("Received Analog Out Signal")
         # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_analog_out message")
         end
-        set_analog_out(params_mult[1], (params_mult[2] / 1000000))
+        set_analog_out(params_mult[1], (params_mult[2] / MULT_analog))
       elif mtype == MSG_SET_TOOL_VOLTAGE:
         #send_out("Received Tool Voltage Signal")
-        # Reads the parameters
-        params_mult = socket_read_binary_integer(1+6+1)
+        # Reads the parameters (also reads second dummy '0' integer)
+        params_mult = socket_read_binary_integer(2)
         if params_mult[0] == 0:
-          send_out("Received no parameters for set_out message")
+          send_out("Received no parameters for set_tool_voltage message")
         end
         set_tool_voltage(params_mult[1])
       else:
@@ -266,8 +224,6 @@ def driverProg():
     end
   end
   
-  #sleep(1)
-  kill thread_state
   socket_send_int(MSG_QUIT)
 end
 driverProg()

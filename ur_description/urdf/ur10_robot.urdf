@@ -35,7 +35,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/Base.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/base.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -60,7 +60,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/Shoulder.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/shoulder.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -85,7 +85,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/UpperArm.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/upper_arm.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -110,7 +110,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/Forearm.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/forearm.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -135,7 +135,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/Wrist1.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/wrist_1.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -160,7 +160,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/Wrist2.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/wrist_2.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -185,7 +185,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ur_description/meshes/ur10/collision/Wrist3.dae"/>
+        <mesh filename="package://ur_description/meshes/ur10/collision/wrist_3.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -199,7 +199,14 @@
     <child link="ee_link"/>
     <origin rpy="0.0 0.0 1.570796325" xyz="0.0 0.0922 0.0"/>
   </joint>
-  <link name="ee_link"/>
+  <link name="ee_link">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+    </collision>
+  </link>
   <transmission name="shoulder_pan_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="shoulder_pan_joint"/>
