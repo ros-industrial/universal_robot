@@ -1,6 +1,6 @@
 <package>
   <name>universal_robot</name>
-  <version>1.0.2</version>
+  <version>1.0.5</version>
   <description>
       Drivers, description, and utilities for Universal Robot Arms.
   </description>
@@ -15,6 +15,7 @@
   <author>Stuart Glaser</author>
   <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
   <author>Wim Meeussen</author>
+  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>ur5_moveit_config</run_depend>
