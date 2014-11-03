@@ -70,6 +70,9 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/Base.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
@@ -100,6 +103,9 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/Shoulder.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
@@ -130,6 +136,9 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/UpperArm.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
@@ -160,6 +169,9 @@
          <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/Forearm.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
@@ -190,6 +202,9 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/Wrist1.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
@@ -220,6 +235,9 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/Wrist2.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
@@ -250,6 +268,9 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/Wrist3.dae"/>
         </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
       </visual>
       <collision>
         <geometry>
