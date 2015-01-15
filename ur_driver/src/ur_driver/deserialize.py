@@ -203,7 +203,7 @@ class MasterboardData_V30(object):
     @staticmethod
     def unpack(buf):
         md = MasterboardData_V30()
-        (_, _, _UNDOCUMENTED_,
+        (_, _,
          md.digital_input_bits, md.digital_output_bits,
          md.analog_input_range0, md.analog_input_range1,
          md.analog_input0, md.analog_input1,
@@ -212,7 +212,7 @@ class MasterboardData_V30(object):
          md.masterboard_temperature,
          md.robot_voltage_48V, md.robot_current,
          md.master_io_current, md.safety_mode,
-         md.in_reduced_mode) = struct.unpack_from("!IBIiibbddbbddffffBB", buf)
+         md.in_reduced_mode) = struct.unpack_from("!IBiibbddbbddffffBB", buf)
         return md
 
 #this parses JointData for all versions (i.e. 1.6, 1.7, 1.8, 3.0)
