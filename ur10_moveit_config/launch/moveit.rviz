@@ -39,7 +39,7 @@ Visualization Manager:
       Enabled: true
       Move Group Namespace: ""
       MoveIt_Goal_Tolerance: 0
-      MoveIt_Planning_Time: 5
+      MoveIt_Planning_Time: 0
       MoveIt_Planning_Attempts: 1
       MoveIt_Use_Constraint_Aware_IK: true
       MoveIt_Warehouse_Host: 127.0.0.1
