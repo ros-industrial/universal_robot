@@ -423,7 +423,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     raise EOF()
 
     def handle(self):
-        self.socket_lock = threading.Lock()
+        self.__socket_lock = threading.Lock()
         setConnectedRobot(self)
         print "Handling a request"
         try:
@@ -467,9 +467,23 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
             print "Connection closed (command):", ex
             setConnectedRobot(None)
 
+    def __send_message(self, data):
+        """
+        Send a message to the robot.
+
+        The message is given as a list of integers that will be packed
+        as 4 bytes each in network byte order (big endian).
+
+        A lock is acquired before sending the message to prevent race conditions.
+
+        :param data: list of int, the data to send
+        """
+        buf = struct.pack("!%ii" % len(data), *data)
+        with self.__socket_lock:
+            self.request.send(buf)
+
     def send_quit(self):
-        with self.socket_lock:
-            self.request.send(struct.pack("!i", MSG_QUIT))
+        self.__send_message([MSG_QUIT])
 
     def send_servoj(self, waypoint_id, q_actual, t):
         assert(len(q_actual) == 6)
@@ -479,61 +493,32 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
         params = [MSG_SERVOJ, waypoint_id] + \
                  [MULT_jointstate * qq for qq in q_robot] + \
                  [MULT_time * t]
-        buf = struct.pack("!%ii" % len(params), *params)
-        with self.socket_lock:
-            self.request.send(buf)
-        
+        self.__send_message(params)
+
     #Experimental set_payload implementation
     def send_payload(self,payload):
-        buf = struct.pack('!ii', MSG_SET_PAYLOAD, payload * MULT_payload)
-        with self.socket_lock:
-            self.request.send(buf)
+        self.__send_message([MSG_SET_PAYLOAD, payload * MULT_payload])
 
     #Experimental set_digital_output implementation
     def set_digital_out(self, pinnum, value):
-        params = [MSG_SET_DIGITAL_OUT] + \
-                 [pinnum] + \
-                 [value]
-        buf = struct.pack("!%ii" % len(params), *params)
-        #print params
-        with self.socket_lock:
-            self.request.send(buf) 
+        self.__send_message([MSG_SET_DIGITAL_OUT, pinnum, value])
         time.sleep(IO_SLEEP_TIME)
 
     def set_analog_out(self, pinnum, value):
-        params = [MSG_SET_ANALOG_OUT] + \
-                 [pinnum] + \
-                 [value * MULT_analog]
-        buf = struct.pack("!%ii" % len(params), *params)
-        #print params
-        with self.socket_lock:
-            self.request.send(buf) 
+        self.__send_message([MSG_SET_ANALOG_OUT, pinnum, value * MULT_analog])
         time.sleep(IO_SLEEP_TIME)
 
     def set_tool_voltage(self, value):
-        params = [MSG_SET_TOOL_VOLTAGE] + \
-                 [value] + \
-                 [0]
-        buf = struct.pack("!%ii" % len(params), *params)
-        #print params
-        with self.socket_lock:
-            self.request.send(buf) 
+        self.__send_message([MSG_SET_TOOL_VOLTAGE, value, 0])
         time.sleep(IO_SLEEP_TIME)
 
     def set_flag(self, pin, val):
-        params = [MSG_SET_FLAG] + \
-                 [pin] + \
-                 [val]
-        buf = struct.pack("!%ii" % len(params), *params)
-        #print params
-        with self.socket_lock:
-            self.request.send(buf) 
+        self.__send_message([MSG_SET_FLAG, pin, val])
         #set_flag will fail if called too closely together--added delay
         time.sleep(IO_SLEEP_TIME)
 
     def send_stopj(self):
-        with self.socket_lock:
-            self.request.send(struct.pack("!i", MSG_STOPJ))
+        self.__send_message([MSG_STOPJ])
 
     def set_waypoint_finished_cb(self, cb):
         self.waypoint_finished_cb = cb
