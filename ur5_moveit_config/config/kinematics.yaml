@@ -1,4 +1,5 @@
 ## the UR5KinematicsPlugin only works with the unlimited UR5, i.e. limited:=false
+
 ## If you wish to use the arm_prefix parameter, inside the ur5_moveit_config/launch/moveit_rviz.launch file, set a parameter tag to be the value of your prefix under the RViz node instantiation.
 ## For example:
 ## 
