@@ -226,4 +226,3 @@ def driverProg():
   
   socket_send_int(MSG_QUIT)
 end
-driverProg()
