@@ -4,16 +4,19 @@ project(ur_driver)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED dynamic_reconfigure)
 
 catkin_python_setup()
 
+
+generate_dynamic_reconfigure_options(
+  cfg/URDriver.cfg
+)
 
 ###################################
 ## catkin specific configuration ##
 ###################################
 catkin_package()
-
 
 #############
 ## Install ##
