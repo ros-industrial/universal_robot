@@ -12,12 +12,14 @@ Q1 = [2.2,0,-1.57,0,0,0]
 Q2 = [1.5,0,-1.57,0,0,0]
 Q3 = [1.5,-0.2,-1.57,0,0,0]
 
+joint_names = []
+
 client = None
 
 def move1():
     g = FollowJointTrajectoryGoal()
     g.trajectory = JointTrajectory()
-    g.trajectory.joint_names = JOINT_NAMES
+    g.trajectory.joint_names = joint_names
     g.trajectory.points = [
         JointTrajectoryPoint(positions=Q1, velocities=[0]*6, time_from_start=rospy.Duration(2.0)),
         JointTrajectoryPoint(positions=Q2, velocities=[0]*6, time_from_start=rospy.Duration(3.0)),
@@ -33,7 +35,7 @@ def move_disordered():
     order = [4, 2, 3, 1, 5, 0]
     g = FollowJointTrajectoryGoal()
     g.trajectory = JointTrajectory()
-    g.trajectory.joint_names = [JOINT_NAMES[i] for i in order]
+    g.trajectory.joint_names = [joint_names[i] for i in order]
     q1 = [Q1[i] for i in order]
     q2 = [Q2[i] for i in order]
     q3 = [Q3[i] for i in order]
@@ -47,7 +49,7 @@ def move_disordered():
 def move_repeated():
     g = FollowJointTrajectoryGoal()
     g.trajectory = JointTrajectory()
-    g.trajectory.joint_names = JOINT_NAMES
+    g.trajectory.joint_names = joint_names
     
     d = 2.0
     g.trajectory.points = []
@@ -71,7 +73,7 @@ def move_repeated():
 def move_interrupt():
     g = FollowJointTrajectoryGoal()
     g.trajectory = JointTrajectory()
-    g.trajectory.joint_names = JOINT_NAMES
+    g.trajectory.joint_names = joint_names
     g.trajectory.points = [
         JointTrajectoryPoint(positions=Q1, velocities=[0]*6, time_from_start=rospy.Duration(2.0)),
         JointTrajectoryPoint(positions=Q2, velocities=[0]*6, time_from_start=rospy.Duration(3.0)),
@@ -91,6 +93,10 @@ def main():
     global client
     try:
         rospy.init_node("test_move", anonymous=True, disable_signals=True)
+        prefix = rospy.get_param("/ur_driver/prefix", "")
+        print "Setting prefix to %s" % prefix
+        global joint_names
+        joint_names = [prefix + name for name in JOINT_NAMES]
         client = actionlib.SimpleActionClient('follow_joint_trajectory', FollowJointTrajectoryAction)
         print "Waiting for server..."
         client.wait_for_server()
