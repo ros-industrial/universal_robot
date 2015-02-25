@@ -2,8 +2,6 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="ur5_arm_gazebo" params="prefix">
-    <!-- nothing to do here at the moment -->
- <xacro:ur5_arm_gazebo />
  	<gazebo reference="${prefix}shoulder_link">
 		 <selfCollide>true</selfCollide>
 		 </gazebo>
