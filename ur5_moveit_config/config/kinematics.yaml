@@ -1,15 +1,5 @@
 ## the UR5KinematicsPlugin only works with the unlimited UR5, i.e. limited:=false
 
-## If you wish to use the arm_prefix parameter, inside the ##ur5_moveit_config/launch/moveit_rviz.launch file, set a parameter ##tag to be the value of your prefix under the RViz node ##instantiation.
-## For example:
-## 
-##  <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" ## pkg="rviz" type="rviz" respawn="false"
-##	args="$(arg command_args)" output="screen">
-##    <rosparam command="load" file="$(find ur5_moveit_config)/##config/kinematics.yaml"/>
-##    <param name="arm_prefix" value=""/>
-##  </node>
-##
-
 #manipulator:
 #  kinematics_solver: ur_kinematics/UR5KinematicsPlugin
 #  kinematics_solver_search_resolution: 0.005

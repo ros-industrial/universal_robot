@@ -44,6 +44,13 @@ For starting up RViz with a configuration including the MoveIt! Motion Planning 
 
 ```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
 
+To use in conjunction or as an addition with another robot, you'll need to modify the arm_prefix parameter that will be used in RViz. 
+
+For example:
+
+roslaunch ur5_moveit_config moveit_rviz.launch config:=true arm_prefix:=ur5_arm_
+
+where the arm_prefix is the same arm_prefix that is used when spawning the ur5_arm xacro macro.
 
 NOTE:  
 As MoveIt! seems to have difficulties with finding plans for the UR with full joint limits [-2pi, 2pi], there is a joint_limited version using joint limits restricted to [-pi,pi]. In order to use this joint limited version, simply use the launch file arguments 'limited', i.e.:  
