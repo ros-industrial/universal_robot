@@ -8,7 +8,7 @@ class RobotStateRT(object):
         rs = RobotStateRT()
         (plen, ptype) = struct.unpack_from("!IB", buf)
         if plen == 756:
-            return RobotStateRT_V15.unpack(buf)
+            return RobotStateRT_V15.unpack(buf)        
         elif plen == 812:
             return RobotStateRT_V18.unpack(buf)
         elif plen == 1044:
@@ -126,7 +126,6 @@ class RobotStateRT_V15(object):
         offset+=8
 
         return rs  
-
 
 
 #this parses RobotStateRT for versions <= v1.8 (i.e. 1.6, 1.7, 1.8)

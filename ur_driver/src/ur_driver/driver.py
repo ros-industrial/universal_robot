@@ -92,9 +92,9 @@ connected_robot_lock = threading.Lock()
 connected_robot_cond = threading.Condition(connected_robot_lock)
 last_joint_states = None
 last_joint_states_lock = threading.Lock()
-pub_joint_states = rospy.Publisher('joint_states', JointState)
-pub_wrench = rospy.Publisher('wrench', WrenchStamped)
-pub_io_states = rospy.Publisher('io_states', IOStates)
+pub_joint_states = rospy.Publisher('joint_states', JointState, queue_size=1)
+pub_wrench = rospy.Publisher('wrench', WrenchStamped, queue_size=1)
+pub_io_states = rospy.Publisher('io_states', IOStates, queue_size=1)
 #dump_state = open('dump_state', 'wb')
 
 class EOF(Exception): pass
