@@ -7,7 +7,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_pan_joint"/>
       <actuator name="${prefix}shoulder_pan_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
@@ -16,7 +16,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_lift_joint"/>
       <actuator name="${prefix}shoulder_lift_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
@@ -25,7 +25,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}elbow_joint"/>
       <actuator name="${prefix}elbow_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
@@ -34,7 +34,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_1_joint"/>
       <actuator name="${prefix}wrist_1_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
@@ -43,7 +43,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_2_joint"/>
       <actuator name="${prefix}wrist_2_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
@@ -52,7 +52,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_3_joint"/>
       <actuator name="${prefix}wrist_3_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
