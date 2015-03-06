@@ -1,4 +1,3 @@
-## the UR10KinematicsPlugin only works with the unlimited UR10, i.e. limited:=false
 #manipulator:
 #  kinematics_solver: ur_kinematics/UR10KinematicsPlugin
 #  kinematics_solver_search_resolution: 0.005

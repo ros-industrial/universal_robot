@@ -645,14 +645,57 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     // Do the analytic IK
     num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, 
                        jnt_pos_test(ur_joint_inds_start_+5));
+    
+    
+    uint16_t num_valid_sols;
+    std::vector< std::vector<double> > q_ik_valid_sols;
+    for(uint16_t i=0; i<num_sols; i++)
+    {
+      bool valid = true;
+      std::vector< double > valid_solution;
+      valid_solution.assign(6,0.0);
+      
+      for(uint16_t j=0; j<6; j++)
+      {
+        if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
+        { 
+          valid_solution[j] = q_ik_sols[i][j];
+          valid = true;
+          continue;
+        }
+        else if ((q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
+        {
+          valid_solution[j] = q_ik_sols[i][j]-2*M_PI;
+          valid = true;
+          continue;
+        }
+        else if ((q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
+        {
+          valid_solution[j] = q_ik_sols[i][j]+2*M_PI;
+          valid = true;
+          continue;
+        }
+        else
+        {
+          valid = false;
+          break;
+        }
+      }
+      
+      if(valid)
+      {
+        q_ik_valid_sols.push_back(valid_solution);
+      }
+    }
+     
      
     // use weighted absolute deviations to determine the solution closest the seed state
     std::vector<idx_double> weighted_diffs;
-    for(uint16_t i=0; i<num_sols; i++) {
+    for(uint16_t i=0; i<q_ik_valid_sols.size(); i++) {
       double cur_weighted_diff = 0;
       for(uint16_t j=0; j<6; j++) {
         // solution violates the consistency_limits, throw it out
-        double abs_diff = std::fabs(ik_seed_state[ur_joint_inds_start_+j] - q_ik_sols[i][j]);
+        double abs_diff = std::fabs(ik_seed_state[ur_joint_inds_start_+j] - q_ik_valid_sols[i][j]);
         if(!consistency_limits.empty() && abs_diff > consistency_limits[ur_joint_inds_start_+j]) {
           cur_weighted_diff = std::numeric_limits<double>::infinity();
           break;
@@ -669,7 +712,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     printf("                     q %1.2f, %1.2f, %1.2f, %1.2f, %1.2f, %1.2f\n", ik_seed_state[1], ik_seed_state[2], ik_seed_state[3], ik_seed_state[4], ik_seed_state[5], ik_seed_state[6]);
     for(uint16_t i=0; i<weighted_diffs.size(); i++) {
       int cur_idx = weighted_diffs[i].first;
-      printf("diff %f, i %d, q %1.2f, %1.2f, %1.2f, %1.2f, %1.2f, %1.2f\n", weighted_diffs[i].second, cur_idx, q_ik_sols[cur_idx][0], q_ik_sols[cur_idx][1], q_ik_sols[cur_idx][2], q_ik_sols[cur_idx][3], q_ik_sols[cur_idx][4], q_ik_sols[cur_idx][5]);
+      printf("diff %f, i %d, q %1.2f, %1.2f, %1.2f, %1.2f, %1.2f, %1.2f\n", weighted_diffs[i].second, cur_idx, q_ik_valid_sols[cur_idx][0], q_ik_valid_sols[cur_idx][1], q_ik_valid_sols[cur_idx][2], q_ik_valid_sols[cur_idx][3], q_ik_valid_sols[cur_idx][4], q_ik_valid_sols[cur_idx][5]);
     }
     printf("end\n");
 #endif
@@ -682,7 +725,7 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
 
       // copy the best solution to the output
       int cur_idx = weighted_diffs[i].first;
-      std::copy(q_ik_sols[cur_idx], q_ik_sols[cur_idx+1], solution.begin() + ur_joint_inds_start_);
+      solution = q_ik_valid_sols[cur_idx];
 
       // see if this solution passes the callback function test
       if(!solution_callback.empty())
