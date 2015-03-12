@@ -759,7 +759,7 @@ class URTrajectoryFollower(object):
 
             # Inserts the current setpoint at the head of the trajectory
             now = time.time()
-            point0 = sample_traj(self.traj, now)
+            point0 = sample_traj(self.traj, now - self.traj_t0)
             point0.time_from_start = rospy.Duration(0.0)
             goal_handle.get_goal().trajectory.points.insert(0, point0)
             self.traj_t0 = now
