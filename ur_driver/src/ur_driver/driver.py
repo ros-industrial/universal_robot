@@ -894,11 +894,7 @@ def main():
         rospy.logwarn("use_sim_time is set!!!")
     
     global prevent_programming
-    prevent_programming = rospy.get_param("prevent_programming", False)
     reconfigure_srv = Server(URDriverConfig, reconfigure_callback)
-    ## Still use parameter server?
-    #update = URDriverConfig(prevent_programming)
-    #reconfigure_srv.update_configuration(update)
     
     prefix = rospy.get_param("~prefix", "")
     print "Setting prefix to %s" % prefix
@@ -968,7 +964,13 @@ def main():
             # Checks for disconnect
             if getConnectedRobot(wait=False):
                 time.sleep(0.2)
-                #prevent_programming = rospy.get_param("prevent_programming", False)
+                try:
+                    prevent_programming = rospy.get_param("~prevent_programming")
+                    update = {'prevent_programming': prevent_programming}
+                    reconfigure_srv.update_configuration(update)
+                except KeyError, ex:
+                    print "Parameter 'prevent_programming' not set. Value: " + str(prevent_programming)
+                    pass
                 if prevent_programming:
                     print "Programming now prevented"
                     connection.send_reset_program()
@@ -983,7 +985,13 @@ def main():
                     while not connection.ready_to_program():
                         print "Waiting to program"
                         time.sleep(1.0)
-                    #prevent_programming = rospy.get_param("prevent_programming", False)
+                    try:
+                        prevent_programming = rospy.get_param("~prevent_programming")
+                        update = {'prevent_programming': prevent_programming}
+                        reconfigure_srv.update_configuration(update)
+                    except KeyError, ex:
+                        print "Parameter 'prevent_programming' not set. Value: " + str(prevent_programming)
+                        pass
                     connection.send_program()
 
                     r = getConnectedRobot(wait=True, timeout=1.0)
