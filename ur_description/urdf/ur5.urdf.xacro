@@ -317,7 +317,7 @@
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
-    <joint name="${prefix}base_link-base" type="fixed">
+    <joint name="${prefix}base_link-base_fixed_joint" type="fixed">
       <!-- NOTE: this rotation is only needed as long as base_link itself is
                  not corrected wrt the real robot (ie: rotated over 180
                  degrees)
@@ -329,7 +329,7 @@
 
     <!-- Frame coincident with all-zeros TCP on UR controller -->
     <link name="${prefix}tool0"/>
-    <joint name="${prefix}wrist_3_link-tool0" type="fixed">
+    <joint name="${prefix}wrist_3_link-tool0_fixed_joint" type="fixed">
       <origin xyz="0 ${wrist_3_length} 0" rpy="${pi/-2.0} 0 0"/>
       <parent link="${prefix}wrist_3_link"/>
       <child link="${prefix}tool0"/>
