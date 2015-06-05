@@ -8,7 +8,7 @@
     <created>2014-08-08T14:55:57</created>
     <modified>2014-08-08T14:55:57</modified>
     <unit name="meter" meter="1"/>
-    <up_axis>Z_UP</up_axis>
+    <up_axis>Y_UP</up_axis>
   </asset>
   <library_images/>
   <library_geometries>
