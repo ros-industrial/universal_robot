@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
   <property name="pi" value="3.14159265" />
 
@@ -312,8 +312,8 @@
       </collision>
     </link>
 
-    <xacro:ur5_arm_transmission prefix="${prefix}" />
-    <xacro:ur5_arm_gazebo prefix="${prefix}" />
+    <xacro:ur_arm_transmission prefix="${prefix}" />
+    <xacro:ur_arm_gazebo prefix="${prefix}" />
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>

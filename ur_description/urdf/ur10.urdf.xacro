@@ -6,8 +6,8 @@
   Contributers: Jimmy Da Silva, Ajit Krisshna N L, Muhammad Asif Rana 
 -->
 
-  <xacro:include filename="$(find ur_description)/urdf/ur10.transmission.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/ur10.gazebo.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
   <property name="pi" value="3.14159265" />
 
@@ -297,8 +297,8 @@
       </collision>
     </link>
 
-    <xacro:ur10_arm_transmission prefix="${prefix}" />
-    <xacro:ur10_arm_gazebo prefix="${prefix}" />
+    <xacro:ur_arm_transmission prefix="${prefix}" />
+    <xacro:ur_arm_gazebo prefix="${prefix}" />
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
