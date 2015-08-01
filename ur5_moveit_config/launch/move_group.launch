@@ -11,12 +11,12 @@
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <!-- Verbose Mode Option -->
-  <arg name="info" default="$(arg debug)" />  
+  <arg name="info" default="$(arg debug)" />
   <arg unless="$(arg info)" name="command_args" value="" />
   <arg     if="$(arg info)" name="command_args" value="--debug" />
 
   <!-- move_group settings -->
-  <arg name="allow_trajectory_execution" default="true"/> 
+  <arg name="allow_trajectory_execution" default="true"/>
   <arg name="fake_execution" default="false"/>
   <arg name="max_safe_path_cost" default="1"/>
   <arg name="jiggle_fraction" default="0.05" />
@@ -58,6 +58,7 @@
 				      move_group/MoveGroupQueryPlannersService
 				      move_group/MoveGroupStateValidationService
 				      move_group/MoveGroupGetPlanningSceneService
+				      move_group/ClearOctomapService
 				      " />
 
     <!-- Publish the planning scene of the physical robot so that rviz plugin can know actual robot -->
@@ -66,5 +67,5 @@
     <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)" />
     <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
   </node>
-  
+
 </launch>
