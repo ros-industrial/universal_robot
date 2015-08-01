@@ -64,6 +64,17 @@
 #define d6  0.0823
 #endif
 
+//#define UR3_PARAMS
+#ifdef UR3_PARAMS
+#define d1  0.1519
+#define a2 -0.24365
+#define a3 -0.21325
+#define d4  0.11235
+#define d5  0.08535
+#define d6  0.0819
+#endif
+
+
 // These kinematics find the tranfrom from the base link to the end effector.
 // Though the raw D-H parameters specify a transform from the 0th link to the 6th link,
 // offset transforms are specified in this formulation.
