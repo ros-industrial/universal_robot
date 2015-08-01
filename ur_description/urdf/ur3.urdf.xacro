@@ -11,41 +11,37 @@
   <property name="pi" value="3.14159265" />
 
   <!-- Inertia parameters -->
-  <!-- ToDo: get values for UR3 -->
-  <property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
+  <property name="base_mass" value="2.0" />  <!-- This mass might be incorrect -->
   <property name="shoulder_mass" value="2.0" />
-  <property name="upper_arm_mass" value="5.0" />
-  <property name="forearm_mass" value="1.5" />
-  <property name="wrist_1_mass" value="1.0" />
-  <property name="wrist_2_mass" value="1.0" />
-  <property name="wrist_3_mass" value="0.1" />
+  <property name="upper_arm_mass" value="3.42" />
+  <property name="forearm_mass" value="1.26" />
+  <property name="wrist_1_mass" value="0.8" />
+  <property name="wrist_2_mass" value="0.8" />
+  <property name="wrist_3_mass" value="0.35" />
 
   <!-- These parameters are borrowed from the urcontrol.conf file
        but are not verified for the correct permutation.
        The permutation was guessed by looking at the UR5 parameters.
        Serious use of these parameters needs further inspection. -->
-  <!-- ToDo: get values for UR3 -->
-  <property name="shoulder_cog" value="0.00008 0.00244 -0.037" />
-  <property name="upper_arm_cog" value="0.00001 0.15061 0.38757" />
-  <property name="forearm_cog" value="-0.00012 0.06112 0.1984" />
-  <property name="wrist_1_cog" value="-0.00021 -0.00112 0.02269" />
-  <property name="wrist_2_cog" value="-0.00021 0.00112 0.002269" />
-  <property name="wrist_3_cog" value="0 -0.001156 -0.00149" />
+  <property name="shoulder_cog" value="0.0 -0.02 0.0" />
+  <property name="upper_arm_cog" value="0.13 0.0 0.1157" />
+  <property name="forearm_cog" value="0.05 0.0 0.0238" />
+  <property name="wrist_1_cog" value="0.0 0.0 0.01" />
+  <property name="wrist_2_cog" value="0.0 0.0 0.01" />
+  <property name="wrist_3_cog" value="0.0 0.0 -0.02" />
 
   <!-- Kinematic model -->
   <!-- Properties from urcontrol.conf -->
-  <!-- ToDo: get values for UR3 -->
-  <property name="ur3_d1" value="0.15" />
-  <property name="ur3_a2" value="-0.244" />
-  <property name="ur3_a3" value="-0.2124" />
-  <property name="ur3_d4" value="0.1146" />
-  <property name="ur3_d5" value="0.0878" />
-  <property name="ur3_d6" value="0.0835" />
+  <property name="ur3_d1" value="0.1519" />
+  <property name="ur3_a2" value="-0.24365" />
+  <property name="ur3_a3" value="-0.21325" />
+  <property name="ur3_d4" value="0.11235" />
+  <property name="ur3_d5" value="0.08535" />
+  <property name="ur3_d6" value="0.0819" />
 
   <!-- Arbitrary offsets for shoulder/elbow joints -->
-  <!-- ToDo: get values for UR3 -->
-  <property name="shoulder_offset" value="0.121" />  <!-- measured from model -->
-  <property name="elbow_offset" value="-0.0937" /> <!-- measured from model -->
+  <property name="shoulder_offset" value="0.1198" />  <!-- measured from model -->
+  <property name="elbow_offset" value="-0.0925" /> <!-- measured from model -->
 
   <!-- link lengths used in model -->
   <property name="shoulder_height" value="${ur3_d1}" />
@@ -73,9 +69,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/Base.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
@@ -106,9 +99,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/Shoulder.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
@@ -139,9 +129,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/UpperArm.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
@@ -172,9 +159,6 @@
          <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/Forearm.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
@@ -205,9 +189,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/Wrist1.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
@@ -238,9 +219,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/Wrist2.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
@@ -271,9 +249,6 @@
         <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/Wrist3.dae"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
       </visual>
       <collision>
         <geometry>
