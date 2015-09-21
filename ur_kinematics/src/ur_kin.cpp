@@ -1,6 +1,38 @@
 #include <ur_kinematics/ur_kin.h>
 
+#include <math.h>
+#include <stdio.h>
+
+
 namespace ur_kinematics {
+
+  namespace {
+    const double ZERO_THRESH = 0.00000001;
+    int SIGN(double x) {
+      return (x > 0) - (x < 0);
+    }
+    const double PI = M_PI;
+
+    //#define UR10_PARAMS
+    #ifdef UR10_PARAMS
+    const double d1 =  0.1273;
+    const double a2 = -0.612;
+    const double a3 = -0.5723;
+    const double d4 =  0.163941;
+    const double d5 =  0.1157;
+    const double d6 =  0.0922;
+    #endif
+
+    //#define UR5_PARAMS
+    #ifdef UR5_PARAMS
+    const double d1 =  0.089159;
+    const double a2 = -0.42500;
+    const double a3 = -0.39225;
+    const double d4 =  0.10915;
+    const double d5 =  0.09465;
+    const double d6 =  0.0823;
+    #endif
+  }
 
   void forward(const double* q, double* T) {
     double s1 = sin(*q), c1 = cos(*q); q++;
