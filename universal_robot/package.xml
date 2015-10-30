@@ -18,6 +18,7 @@
   <author email="fxm@ipa.fhg.de">Felix Messmer</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>ur3_moveit_config</run_depend>
   <run_depend>ur5_moveit_config</run_depend>
   <run_depend>ur10_moveit_config</run_depend>
   <run_depend>ur_bringup</run_depend>
