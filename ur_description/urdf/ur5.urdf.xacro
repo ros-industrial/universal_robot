@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find ur_description)/urdf/ur5.transmission.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/ur5.gazebo.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
   <property name="pi" value="3.14159265" />
 
@@ -83,7 +83,7 @@
     <link name="${prefix}base_link" >
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/Base.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/base.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -116,7 +116,7 @@
     <link name="${prefix}shoulder_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/Shoulder.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/shoulder.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -149,7 +149,7 @@
     <link name="${prefix}upper_arm_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/UpperArm.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/upperarm.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -157,7 +157,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/collision/upper_arm.stl" />
+          <mesh filename="package://ur_description/meshes/ur5/collision/upperarm.stl" />
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.06" length="0.56" mass="${upper_arm_mass}">
@@ -182,7 +182,7 @@
     <link name="${prefix}forearm_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/Forearm.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/forearm.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -215,7 +215,7 @@
     <link name="${prefix}wrist_1_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/Wrist1.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/wrist1.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -223,7 +223,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/collision/wrist_1.stl" />
+          <mesh filename="package://ur_description/meshes/ur5/collision/wrist1.stl" />
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_1_mass}">
@@ -248,7 +248,7 @@
     <link name="${prefix}wrist_2_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/Wrist2.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/wrist2.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -256,7 +256,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/collision/wrist_2.stl" />
+          <mesh filename="package://ur_description/meshes/ur5/collision/wrist2.stl" />
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_2_mass}">
@@ -281,7 +281,7 @@
     <link name="${prefix}wrist_3_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/Wrist3.dae" />
+          <mesh filename="package://ur_description/meshes/ur5/visual/wrist3.dae" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -289,7 +289,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/collision/wrist_3.stl" />
+          <mesh filename="package://ur_description/meshes/ur5/collision/wrist3.stl" />
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_3_mass}">
@@ -312,8 +312,8 @@
       </collision>
     </link>
 
-    <xacro:ur5_arm_transmission prefix="${prefix}" />
-    <xacro:ur5_arm_gazebo prefix="${prefix}" />
+    <xacro:ur_arm_transmission prefix="${prefix}" />
+    <xacro:ur_arm_gazebo prefix="${prefix}" />
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>

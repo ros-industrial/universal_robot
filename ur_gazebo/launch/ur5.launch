@@ -22,6 +22,6 @@
   <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
 
   <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur5.yaml" command="load"/>
-  <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" args="arm_controller" />
+  <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller" respawn="false" output="screen"/>
 
 </launch>
