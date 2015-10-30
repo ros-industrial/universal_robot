@@ -75,11 +75,6 @@ MAX_PAYLOAD = 1.0
 #Using a very conservative value as it should be set throught the parameter server
 
 
-FUN_SET_DIGITAL_OUT = 1
-FUN_SET_FLAG = 2
-FUN_SET_ANALOG_OUT = 3
-FUN_SET_TOOL_VOLTAGE = 4
-
 IO_SLEEP_TIME = 0.05
 
 JOINT_NAMES = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
@@ -864,16 +859,16 @@ def get_my_ip(robot_ip, port):
 def handle_set_io(req):
     r = getConnectedRobot(wait=False)
     if r:
-        if req.fun == FUN_SET_DIGITAL_OUT:
+        if req.fun == req.FUN_SET_DIGITAL_OUT:
             r.set_digital_out(req.pin, req.state)
             return True
-        elif req.fun == FUN_SET_FLAG:
+        elif req.fun == req.FUN_SET_FLAG:
             r.set_flag(req.pin, req.state)
             return True
-        elif req.fun == FUN_SET_ANALOG_OUT:
+        elif req.fun == req.FUN_SET_ANALOG_OUT:
             r.set_analog_out(req.pin, req.state)
             return True
-        elif req.fun == FUN_SET_TOOL_VOLTAGE:
+        elif req.fun == req.FUN_SET_TOOL_VOLTAGE:
             r.set_tool_voltage(req.pin)
             return True
     else:
