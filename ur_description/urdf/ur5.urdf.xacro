@@ -226,7 +226,7 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist1.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_1_mass}">
+      <xacro:cylinder_inertial radius="0.035" length="0.10" mass="${wrist_1_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -259,7 +259,7 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist2.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_2_mass}">
+      <xacro:cylinder_inertial radius="0.035" length="0.10" mass="${wrist_2_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -292,7 +292,7 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist3.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_3_mass}">
+      <xacro:cylinder_inertial radius="0.035" length="0.10" mass="${wrist_3_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
