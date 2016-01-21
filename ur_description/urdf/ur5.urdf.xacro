@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <xacro:arg name="use_position_interface" default="true" />
+  <xacro:arg name="use_effort_interface" default="false" />
+
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 

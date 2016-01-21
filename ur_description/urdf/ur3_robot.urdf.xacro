@@ -2,6 +2,9 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"
        name="ur3" >
 
+  <xacro:arg name="use_position_interface" default="true" />
+  <xacro:arg name="use_effort_interface" default="false" />
+
   <!-- common stuff -->
   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
 
