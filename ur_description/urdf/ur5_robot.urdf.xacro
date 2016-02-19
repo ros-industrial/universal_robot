@@ -9,7 +9,7 @@
   <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur5_robot prefix="" joint_limited="false"/>
+  <xacro:ur5_robot prefix="$(arg prefix)" joint_limited="$(arg limited)"/>
 
   <link name="world" />
 
