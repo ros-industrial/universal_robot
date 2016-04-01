@@ -2,6 +2,31 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.6 (2016-04-01)
+------------------
+* unify mesh names
+* add color to avoid default color 'red' for collision meshes
+* use correct DH parameter + colored meshes
+* introducing urdf for ur3 - first draft
+* unify common xacro files
+* remove obsolete urdf files
+* description: add '_joint' suffix to newly introduced joint tags.
+  This is more in-line with naming of existing joint tags.
+* description: add ROS-I base and tool0 frames. Fix `#49 <https://github.com/ros-industrial/universal_robot/issues/49>`_ and `#95 <https://github.com/ros-industrial/universal_robot/issues/95>`_.
+  Note that 'base' is essentially 'base_link' but rotated by 180
+  degrees over the Z-axis. This is necessary as the visual and
+  collision geometries appear to also have their origins rotated
+  180 degrees wrt the real robot.
+  'tool0' is similar to 'ee_link', but with its orientation such
+  that it coincides with an all-zeros TCP setting on the UR
+  controller. Users are expected to attach their own TCP frames
+  to this frame, instead of updating it (see also [1]).
+  [1] http://wiki.ros.org/Industrial/Tutorials/WorkingWithRosIndustrialRobotSupportPackages#Standardised_links\_.2BAC8_frames
+* description: minor whitespace cleanup of UR5 & 10 xacros.
+* regenerate urdf files
+* use PositionJointInterface as hardwareInterface in transmissions - affects simulation only
+* Contributors: gavanderhoorn, ipa-fxm
+
 1.0.2 (2014-03-31)
 ------------------
 

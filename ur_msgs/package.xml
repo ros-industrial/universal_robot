@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_msgs</name>
-  <version>1.1.5</version>
+  <version>1.1.6</version>
   <description>The ur_msgs package</description>
   
   <author email="glusia@rpi.edu">Andrew Glusiec</author>

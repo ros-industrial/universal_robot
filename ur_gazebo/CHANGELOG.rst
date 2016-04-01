@@ -2,6 +2,14 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.6 (2016-04-01)
+------------------
+* provide launch files for ur3
+* use controller_manager spawn
+* allow to start gazebo without gui
+* adjust controllers to new hardwareInterface - affects simulation only
+* Contributors: ipa-fxm
+
 1.0.2 (2014-03-31)
 ------------------
 

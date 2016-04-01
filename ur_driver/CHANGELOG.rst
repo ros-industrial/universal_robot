@@ -2,6 +2,24 @@
 Changelog for package ur_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.6 (2016-04-01)
+------------------
+* Moved SetIO FUN constants from driver.py to relevant srv file for easier interaction from other files
+* Merge pull request `#170 <https://github.com/ros-industrial/universal_robot/issues/170>`_ from ipa-fxm/prevent_programming
+  [Indigo] enable reconfigure and set_param side by side
+* Merge pull request `#189 <https://github.com/ros-industrial/universal_robot/issues/189>`_ from abubeck/157_for_indigo
+  port of PR `#157 <https://github.com/ros-industrial/universal_robot/issues/157>`_ to indigo
+* catkin_lint
+* enable reconfigure and set_param side by side
+* port of PR `#157 <https://github.com/ros-industrial/universal_robot/issues/157>`_ to indigo
+* driver: Factor out __send_message method.
+* porting PR `#165 <https://github.com/ros-industrial/universal_robot/issues/165>`_ to indigo
+* dynamic reconfigure server for prevent_programming
+* RobotStateRT V15 added to indigo_devw
+* Changed variable params_mult to unique name in each socket_read instance.
+* Fixed unpacking of MasterboardData_V30.
+* Contributors: Alexander Bubeck, Dan Solomon, Maarten de Vries, Thomas Timm Andersen, Wouter van Oijen, abubeck, ipa-fxm, jeppewalther
+
 1.0.2 (2014-03-31)
 ------------------
 

@@ -2,6 +2,21 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.6 (2016-04-01)
+------------------
+* add missing dependency for moveit_simple_controller_manager
+* Merge branch 'indigo-devel' of github.com:ros-industrial/universal_robot into ur3_moveit_config
+* apply latest setup assistant changes to ur5 and ur10
+* Adding comment explaining the choice of default planning algorithm
+* Use RRTConnect by default for UR5
+  Fixes bug `#193 <https://github.com/ros-industrial/universal_robot/issues/193>`_ about slow planning on Indigo
+  LBKPIECE1 (the previous default) looks to be the wrong planning algorithm for the robot
+  See https://groups.google.com/forum/#!topic/moveit-users/M71T-GaUNgg
+* crop ik solutions wrt joint_limits
+* set planning time to 0
+* reduce planning attempts in moveit rviz plugin
+* Contributors: Marco Esposito, ipa-fxm
+
 1.0.2 (2014-03-31)
 ------------------
 
