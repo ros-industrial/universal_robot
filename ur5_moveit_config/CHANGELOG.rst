@@ -2,8 +2,8 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2016-04-01)
+------------------
 * add missing dependency for moveit_simple_controller_manager
 * Merge branch 'indigo-devel' of github.com:ros-industrial/universal_robot into ur3_moveit_config
 * apply latest setup assistant changes to ur5 and ur10

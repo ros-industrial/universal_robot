@@ -2,8 +2,8 @@
 Changelog for package ur_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2016-04-01)
+------------------
 * provide launch files for ur3
 * Contributors: ipa-fxm
 

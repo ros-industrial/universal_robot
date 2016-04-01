@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_description</name>
-  <version>1.1.5</version>
+  <version>1.1.6</version>
   <description>
       URDF description for Universal UR5/10 robot arms
   </description>

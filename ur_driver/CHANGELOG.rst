@@ -2,8 +2,8 @@
 Changelog for package ur_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2016-04-01)
+------------------
 * Moved SetIO FUN constants from driver.py to relevant srv file for easier interaction from other files
 * Merge pull request `#170 <https://github.com/ros-industrial/universal_robot/issues/170>`_ from ipa-fxm/prevent_programming
   [Indigo] enable reconfigure and set_param side by side

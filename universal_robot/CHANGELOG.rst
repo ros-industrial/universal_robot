@@ -2,8 +2,8 @@
 Changelog for package universal_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2016-04-01)
+------------------
 * add moveit_config for ur3
 * Contributors: ipa-fxm
 

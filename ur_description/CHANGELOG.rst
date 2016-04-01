@@ -2,8 +2,8 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2016-04-01)
+------------------
 * unify mesh names
 * add color to avoid default color 'red' for collision meshes
 * use correct DH parameter + colored meshes
