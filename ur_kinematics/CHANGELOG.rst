@@ -2,6 +2,15 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* apply ur-kin-constants fix for ur3
+* Merge remote-tracking branch 'origin-rosi/indigo-devel' into ur-kin-constants
+* ur_kinematics: Move #defines to constants in source file.
+* ur_kinematics for ur3
+* crop ik solutions wrt joint_limits
+* Contributors: Maarten de Vries, ipa-fxm
+
 1.0.2 (2014-03-31)
 ------------------
 

@@ -2,6 +2,11 @@
 Changelog for package universal_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add moveit_config for ur3
+* Contributors: ipa-fxm
+
 1.0.2 (2014-03-31)
 ------------------
 * Merge branch 'hydro-devel' of github.com:ros-industrial/universal_robot into hydro
