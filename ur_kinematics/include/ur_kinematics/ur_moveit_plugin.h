@@ -121,6 +121,12 @@ namespace ur_kinematics
                                moveit_msgs::MoveItErrorCodes &error_code,
                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
+    virtual bool getPositionIK(const std::vector< geometry_msgs::Pose > &ik_poses, 
+                               const std::vector< double > &ik_seed_state,
+                               std::vector< std::vector< double > > &solutions,
+                               kinematics::KinematicsResult &result,
+                               const kinematics::KinematicsQueryOptions &options) const;
+
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
@@ -201,6 +207,10 @@ namespace ur_kinematics
 
     virtual bool setRedundantJoints(const std::vector<unsigned int> &redundant_joint_indices);
 
+    bool getAllPositionIK(const geometry_msgs::Pose &ik_pose,
+                          const std::vector<double> &ik_seed_state,
+                          std::vector<std::vector<double> > &solutions) const;
+
   private:
 
     bool timedOut(const ros::WallTime &start_time, double duration) const;
@@ -235,6 +245,11 @@ namespace ur_kinematics
                                 bool lock_redundancy) const;
 
     bool isRedundantJoint(unsigned int index) const;
+
+    void filterSolutionsByLimits(const double (&solutions)[8][6], 
+                                 uint16_t num_sols, 
+                                 std::vector<std::vector<double> >& valid_solutions) const;
+
 
     bool active_; /** Internal variable that indicates whether solvers are configured and ready */
 
