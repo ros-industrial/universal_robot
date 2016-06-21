@@ -323,8 +323,13 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   max_solver_iterations_ = max_solver_iterations;
   epsilon_ = epsilon;
 
-  /* private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
+  private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
 
+  // Load the joint names from the group model
+  ur_joint_names_ = joint_model_group->getJointModelNames();
+  ur_link_names_ = joint_model_group->getLinkModelNames();
+
+  /*
   ur_joint_names_.push_back(arm_prefix_ + "shoulder_pan_joint");
   ur_joint_names_.push_back(arm_prefix_ + "shoulder_lift_joint");
   ur_joint_names_.push_back(arm_prefix_ + "elbow_joint");
@@ -340,7 +345,7 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   ur_link_names_.push_back(arm_prefix_ + "wrist_1_link");    // 5
   ur_link_names_.push_back(arm_prefix_ + "wrist_2_link");    // 6
   ur_link_names_.push_back(arm_prefix_ + "wrist_3_link");    // 7
-  ur_link_names_.push_back(arm_prefix_ + "ee_link");         // 8
+  ur_link_names_.push_back(arm_prefix_ + "ee_link");         // 8 */
 
   ur_joint_inds_start_ = getJointIndex(ur_joint_names_[0]);
 
