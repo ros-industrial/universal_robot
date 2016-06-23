@@ -329,24 +329,6 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   ur_joint_names_ = joint_model_group->getJointModelNames();
   ur_link_names_ = joint_model_group->getLinkModelNames();
 
-  /*
-  ur_joint_names_.push_back(arm_prefix_ + "shoulder_pan_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "shoulder_lift_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "elbow_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "wrist_1_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "wrist_2_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "wrist_3_joint");
-
-  ur_link_names_.push_back(arm_prefix_ + "base_link");       // 0
-  ur_link_names_.push_back(arm_prefix_ + "ur_base_link");    // 1
-  ur_link_names_.push_back(arm_prefix_ + "shoulder_link");   // 2
-  ur_link_names_.push_back(arm_prefix_ + "upper_arm_link");  // 3
-  ur_link_names_.push_back(arm_prefix_ + "forearm_link");    // 4
-  ur_link_names_.push_back(arm_prefix_ + "wrist_1_link");    // 5
-  ur_link_names_.push_back(arm_prefix_ + "wrist_2_link");    // 6
-  ur_link_names_.push_back(arm_prefix_ + "wrist_3_link");    // 7
-  ur_link_names_.push_back(arm_prefix_ + "ee_link");         // 8 */
-
   ur_joint_inds_start_ = getJointIndex(ur_joint_names_[0]);
 
   // check to make sure the serial chain is properly defined in the model
