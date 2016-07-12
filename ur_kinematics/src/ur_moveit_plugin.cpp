@@ -349,7 +349,7 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
     }
     last_ur_joint_ind = cur_ur_joint_ind;
   }
-  // if successful, the kinematic chain includes a serial chain of the UR joints */
+  // if successful, the kinematic chain includes a serial chain of the UR joints 
 
   // Change this to use the link names provided by model, not by hard coded naming. (base_frame provided as arg)
   ROS_INFO("Using base frame %s from model", base_frame.c_str());
