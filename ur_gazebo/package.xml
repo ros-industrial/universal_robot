@@ -18,7 +18,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>ur_description</run_depend>
-  <run_depend>gazebo_ros_pkgs</run_depend>
   <run_depend>gazebo_ros</run_depend>
   <run_depend>gazebo_ros_control</run_depend>
   <run_depend>ros_controllers</run_depend>
