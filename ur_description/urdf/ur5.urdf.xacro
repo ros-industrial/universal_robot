@@ -78,7 +78,15 @@
   </xacro:macro>
 
 
-  <xacro:macro name="ur5_robot" params="prefix joint_limited">
+  <!-- 
+    The parameter xamla_cap enables optional support for Xamla's rounded cap (wrist 2), 
+    increasing the collision free space. 
+    If set, visual and collision meshes are loaded from the files provided in the following
+    repository: https://github.com/Xamla/xamla_egomo.
+    More information on the cap and the 3D-printable models can be found at:
+    https://github.com/Xamla/xamla_egomo/tree/master/egomo_3d_printed_parts/egomo-1  
+  -->
+  <xacro:macro name="ur5_robot" params="prefix joint_limited xamla_cap:=false">
 
     <link name="${prefix}base_link" >
       <visual>
@@ -248,7 +256,12 @@
     <link name="${prefix}wrist_2_link">
       <visual>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/visual/wrist2.dae" />
+          <xacro:if value="${xamla_cap}">
+            <mesh filename="package://ur_description/meshes/ur5/visual/wrist2_rounded.dae" />
+          </xacro:if>
+          <xacro:unless value="${xamla_cap}">
+            <mesh filename="package://ur_description/meshes/ur5/visual/wrist2.dae" />
+          </xacro:unless>
         </geometry>
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
@@ -256,7 +269,12 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://ur_description/meshes/ur5/collision/wrist2.stl" />
+          <xacro:if value="${xamla_cap}">
+            <mesh filename="package://ur_description/meshes/ur5/collision/wrist2_rounded.stl" />
+          </xacro:if>
+          <xacro:unless value="${xamla_cap}">
+	    <mesh filename="package://ur_description/meshes/ur5/collision/wrist2.stl" />
+          </xacro:unless>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_2_mass}">
