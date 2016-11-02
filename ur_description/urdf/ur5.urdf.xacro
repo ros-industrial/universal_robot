@@ -171,7 +171,7 @@
       <origin xyz="0.0 ${elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
+        <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
         <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
