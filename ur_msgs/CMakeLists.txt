@@ -15,6 +15,7 @@ add_message_files(
    IOStates.msg
    RobotStateRTMsg.msg
    MasterboardDataMsg.msg
+   ToolDataMsg.msg
 )
 
 ## Generate services in the 'srv' folder
