@@ -8,7 +8,7 @@ int8 analog_input_range2 # one of ANALOG_INPUT_RANGE_*
 int8 analog_input_range3 # one of ANALOG_INPUT_RANGE_*
 float64 analog_input2
 float64 analog_input3
-float32 tool_voltage_48V
+float32 tool_voltage_48v
 uint8 tool_output_voltage
 float32 tool_current
 float32 tool_temperature
