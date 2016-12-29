@@ -17,4 +17,4 @@ uint8 TOOL_BOOTLOADER_MODE = 249
 uint8 TOOL_RUNNING_MODE = 253
 uint8 TOOL_IDLE_MODE = 255
 
-uint8 tool_mode # one of TOOL_BOOTLOADER_*
+uint8 tool_mode # one of TOOL_*
