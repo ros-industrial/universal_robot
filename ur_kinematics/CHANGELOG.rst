@@ -2,6 +2,11 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Depend on new moveit_kinematics package (`#274 <https://github.com/ros-industrial/universal_robot/issues/274>`_).
+* Contributors: Isaac I.Y. Saito
+
 1.1.6 (2016-04-01)
 ------------------
 * apply ur-kin-constants fix for ur3

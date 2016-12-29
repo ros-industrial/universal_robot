@@ -2,6 +2,10 @@
 Changelog for package universal_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* No changes.
+
 1.1.6 (2016-04-01)
 ------------------
 * add moveit_config for ur3
