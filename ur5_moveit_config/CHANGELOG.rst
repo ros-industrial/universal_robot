@@ -2,8 +2,8 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2016-12-29)
+------------------
 * Don't depend on moveit_plugins metapackage
 * Fix xacro warnings in Jade
 * Contributors: Dave Coleman, Jon Binney

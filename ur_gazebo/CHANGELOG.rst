@@ -2,8 +2,8 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2016-12-29)
+------------------
 * ur_gazebo: add controller_manager as run dependency.
 * Contributors: Hans-Joachim Krauch
 

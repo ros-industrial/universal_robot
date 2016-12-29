@@ -2,8 +2,8 @@
 Changelog for package ur_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2016-12-29)
+------------------
 * Add message definition for ToolData.
 * Contributors: Nikolas Engelhard
 

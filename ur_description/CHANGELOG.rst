@@ -2,8 +2,8 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2016-12-29)
+------------------
 * Fix xacro warnings in Jade (`#251 <https://github.com/ros-industrial/universal_robot/issues/251>`_)
 * added default values to xacro macro
 * tested joint limits modification
