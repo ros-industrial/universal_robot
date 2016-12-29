@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
 
 <!--
   Author: Felix Messmer
@@ -8,53 +8,51 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
-  <property name="pi" value="3.14159265" />
-
   <!-- Inertia parameters -->
-  <property name="base_mass" value="2.0" />  <!-- This mass might be incorrect -->
-  <property name="shoulder_mass" value="2.0" />
-  <property name="upper_arm_mass" value="3.42" />
-  <property name="forearm_mass" value="1.26" />
-  <property name="wrist_1_mass" value="0.8" />
-  <property name="wrist_2_mass" value="0.8" />
-  <property name="wrist_3_mass" value="0.35" />
+  <xacro:property name="base_mass" value="2.0" />  <!-- This mass might be incorrect -->
+  <xacro:property name="shoulder_mass" value="2.0" />
+  <xacro:property name="upper_arm_mass" value="3.42" />
+  <xacro:property name="forearm_mass" value="1.26" />
+  <xacro:property name="wrist_1_mass" value="0.8" />
+  <xacro:property name="wrist_2_mass" value="0.8" />
+  <xacro:property name="wrist_3_mass" value="0.35" />
 
   <!-- These parameters are borrowed from the urcontrol.conf file
        but are not verified for the correct permutation.
        The permutation was guessed by looking at the UR5 parameters.
        Serious use of these parameters needs further inspection. -->
-  <property name="shoulder_cog" value="0.0 -0.02 0.0" />
-  <property name="upper_arm_cog" value="0.13 0.0 0.1157" />
-  <property name="forearm_cog" value="0.05 0.0 0.0238" />
-  <property name="wrist_1_cog" value="0.0 0.0 0.01" />
-  <property name="wrist_2_cog" value="0.0 0.0 0.01" />
-  <property name="wrist_3_cog" value="0.0 0.0 -0.02" />
+  <xacro:property name="shoulder_cog" value="0.0 -0.02 0.0" />
+  <xacro:property name="upper_arm_cog" value="0.13 0.0 0.1157" />
+  <xacro:property name="forearm_cog" value="0.05 0.0 0.0238" />
+  <xacro:property name="wrist_1_cog" value="0.0 0.0 0.01" />
+  <xacro:property name="wrist_2_cog" value="0.0 0.0 0.01" />
+  <xacro:property name="wrist_3_cog" value="0.0 0.0 -0.02" />
 
   <!-- Kinematic model -->
   <!-- Properties from urcontrol.conf -->
-  <property name="ur3_d1" value="0.1519" />
-  <property name="ur3_a2" value="-0.24365" />
-  <property name="ur3_a3" value="-0.21325" />
-  <property name="ur3_d4" value="0.11235" />
-  <property name="ur3_d5" value="0.08535" />
-  <property name="ur3_d6" value="0.0819" />
+  <xacro:property name="ur3_d1" value="0.1519" />
+  <xacro:property name="ur3_a2" value="-0.24365" />
+  <xacro:property name="ur3_a3" value="-0.21325" />
+  <xacro:property name="ur3_d4" value="0.11235" />
+  <xacro:property name="ur3_d5" value="0.08535" />
+  <xacro:property name="ur3_d6" value="0.0819" />
 
   <!-- Arbitrary offsets for shoulder/elbow joints -->
-  <property name="shoulder_offset" value="0.1198" />  <!-- measured from model -->
-  <property name="elbow_offset" value="-0.0925" /> <!-- measured from model -->
+  <xacro:property name="shoulder_offset" value="0.1198" />  <!-- measured from model -->
+  <xacro:property name="elbow_offset" value="-0.0925" /> <!-- measured from model -->
 
   <!-- link lengths used in model -->
-  <property name="shoulder_height" value="${ur3_d1}" />
-  <property name="upper_arm_length" value="${-ur3_a2}" />
-  <property name="forearm_length" value="${-ur3_a3}" />
-  <property name="wrist_1_length" value="${ur3_d4 - elbow_offset - shoulder_offset}" />
-  <property name="wrist_2_length" value="${ur3_d5}" />
-  <property name="wrist_3_length" value="${ur3_d6}" />
+  <xacro:property name="shoulder_height" value="${ur3_d1}" />
+  <xacro:property name="upper_arm_length" value="${-ur3_a2}" />
+  <xacro:property name="forearm_length" value="${-ur3_a3}" />
+  <xacro:property name="wrist_1_length" value="${ur3_d4 - elbow_offset - shoulder_offset}" />
+  <xacro:property name="wrist_2_length" value="${ur3_d5}" />
+  <xacro:property name="wrist_3_length" value="${ur3_d6}" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
-      <insert_block name="origin" />
+      <xacro:insert_block name="origin" />
       <inertia ixx="${0.0833333 * mass * (3 * radius * radius + length * length)}" ixy="0.0" ixz="0.0"
         iyy="${0.0833333 * mass * (3 * radius * radius + length * length)}" iyz="0.0"
         izz="${0.5 * mass * radius * radius}" />
