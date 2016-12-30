@@ -9,7 +9,8 @@
   <author>Stuart Glaser</author>
   <author email="sedwards@swri.org">Shaun Edwards</author>
   <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
 
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/ur_driver</url>
