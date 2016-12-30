@@ -2,6 +2,10 @@
 Changelog for package ur_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2016-12-29)
+------------------
+* No changes.
+
 1.1.6 (2016-04-01)
 ------------------
 * Moved SetIO FUN constants from driver.py to relevant srv file for easier interaction from other files

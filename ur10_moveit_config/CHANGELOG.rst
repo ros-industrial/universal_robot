@@ -2,6 +2,12 @@
 Changelog for package ur10_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2016-12-29)
+------------------
+* Don't depend on moveit_plugins metapackage
+* Fix xacro warnings in Jade
+* Contributors: Dave Coleman, Jon Binney
+
 1.1.6 (2016-04-01)
 ------------------
 * add missing dependency for moveit_simple_controller_manager

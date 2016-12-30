@@ -2,6 +2,11 @@
 Changelog for package ur_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2016-12-29)
+------------------
+* Add prefix parameter in common launch
+* Contributors: Yannick Jonetzko
+
 1.1.6 (2016-04-01)
 ------------------
 * provide launch files for ur3

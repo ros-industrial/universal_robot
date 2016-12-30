@@ -15,6 +15,7 @@
   <arg name="reverse_port" default="50001"/>
   <arg name="min_payload"/>
   <arg name="max_payload"/>
+  <arg name="prefix" default=""/>
   
   <!-- The max_velocity parameter is only used for debugging in the ur_driver. It's not related to actual velocity limits -->
   <arg name="max_velocity" default="10.0"/> <!-- [rad/s] -->
@@ -31,6 +32,7 @@
     <param name="min_payload" type="double" value="$(arg min_payload)"/>
     <param name="max_payload" type="double" value="$(arg max_payload)"/>
     <param name="max_velocity" type="double" value="$(arg max_velocity)"/>
+    <param name="prefix" type="string" value="$(arg prefix)"/>
   </node>
    
   <!-- TF Buffer Server -->
