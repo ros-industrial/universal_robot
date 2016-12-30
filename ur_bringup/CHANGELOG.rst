@@ -2,6 +2,11 @@
 Changelog for package ur_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.8 (2016-12-30)
+------------------
+* all: update maintainers.
+* Contributors: gavanderhoorn
+
 1.1.7 (2016-12-29)
 ------------------
 * Add prefix parameter in common launch

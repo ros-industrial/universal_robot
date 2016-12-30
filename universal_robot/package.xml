@@ -1,11 +1,12 @@
 <package>
   <name>universal_robot</name>
-  <version>1.1.7</version>
+  <version>1.1.8</version>
   <description>
       Drivers, description, and utilities for Universal Robot Arms.
   </description>
 
-  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
 
   <license>BSD</license>
 

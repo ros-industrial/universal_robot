@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_description</name>
-  <version>1.1.7</version>
+  <version>1.1.8</version>
   <description>
       URDF description for Universal UR5/10 robot arms
   </description>
@@ -10,7 +10,8 @@
   <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
   <author>Mathias Ludtke</author>
   <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
 
   <license>BSD</license>
 

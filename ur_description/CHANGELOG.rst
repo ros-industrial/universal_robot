@@ -2,6 +2,11 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.8 (2016-12-30)
+------------------
+* all: update maintainers.
+* Contributors: gavanderhoorn
+
 1.1.7 (2016-12-29)
 ------------------
 * Fix xacro warnings in Jade (`#251 <https://github.com/ros-industrial/universal_robot/issues/251>`_)

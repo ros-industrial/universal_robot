@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_bringup</name>
-  <version>1.1.7</version>
+  <version>1.1.8</version>
   <description>The ur_bringup package</description>
 
   <author>Wim Meeussen</author>
   <author email="sedwards@swri.org">Shaun Edwards</author>
   <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="aub@ipa.fhg.de">Alexander Bubeck</maintainer>
+  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
 
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/ur_bringup</url>
