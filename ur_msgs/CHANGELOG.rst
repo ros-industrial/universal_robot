@@ -2,8 +2,8 @@
 Changelog for package ur_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.8 (2016-12-30)
+------------------
 * all: update maintainers.
 * Contributors: gavanderhoorn
 

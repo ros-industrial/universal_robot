@@ -2,8 +2,8 @@
 Changelog for package ur10_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.8 (2016-12-30)
+------------------
 * all: update maintainers.
 * Contributors: gavanderhoorn
 
