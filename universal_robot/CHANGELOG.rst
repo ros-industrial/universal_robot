@@ -2,6 +2,11 @@
 Changelog for package universal_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* all: update maintainers.
+* Contributors: gavanderhoorn
+
 1.1.7 (2016-12-29)
 ------------------
 * No changes.

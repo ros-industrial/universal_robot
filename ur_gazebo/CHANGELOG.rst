@@ -2,6 +2,12 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* ur_gazebo: escape underscore in changelog (`#279 <https://github.com/ros-industrial/universal_robot/issues/279>`_).
+* all: update maintainers.
+* Contributors: gavanderhoorn
+
 1.1.7 (2016-12-29)
 ------------------
 * ur_gazebo: add controller_manager as run dependency.
