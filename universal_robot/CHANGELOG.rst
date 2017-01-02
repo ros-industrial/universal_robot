@@ -2,8 +2,8 @@
 Changelog for package universal_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.9 (2017-01-02)
+------------------
 * No changes.
 
 1.1.8 (2016-12-30)

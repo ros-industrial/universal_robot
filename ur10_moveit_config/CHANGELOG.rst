@@ -2,8 +2,8 @@
 Changelog for package ur10_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.9 (2017-01-02)
+------------------
 * use '--inorder' for jade+ xacro as well.
 * make RViz load MoveIt display by default.
 * Contributors: gavanderhoorn

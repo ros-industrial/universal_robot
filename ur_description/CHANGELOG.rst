@@ -2,8 +2,8 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.9 (2017-01-02)
+------------------
 * reintroduce 'pi', unbrake dependent xacros.
 * use '--inorder' to trigger use of jade+ xacro on Indigo.
 * Contributors: gavanderhoorn
