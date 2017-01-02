@@ -2,6 +2,10 @@
 Changelog for package ur_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.9 (2017-01-02)
+------------------
+* No changes.
+
 1.1.8 (2016-12-30)
 ------------------
 * all: update maintainers.
