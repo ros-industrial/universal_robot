@@ -6,7 +6,7 @@
       Gazebo wrapper for the Universal UR5/10 robot arms.
   </description>
 
-  
+
   <author>Alexander Bubeck</author>
   <author email="sedwards@swri.org">Shaun Edwards</author>
   <author email="fxm@ipa.fhg.de">Felix Messmer</author>
@@ -21,13 +21,12 @@
   <run_depend>ur_description</run_depend>
   <run_depend>gazebo_ros</run_depend>
   <run_depend>gazebo_ros_control</run_depend>
-  <run_depend>ros_controllers</run_depend>
   <run_depend>joint_state_controller</run_depend>
   <run_depend>joint_trajectory_controller</run_depend>
   <run_depend>effort_controllers</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>controller_manager</run_depend>
-  
+
 
   <export>
   </export>
