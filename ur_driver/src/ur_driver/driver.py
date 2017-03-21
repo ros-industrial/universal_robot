@@ -183,7 +183,12 @@ class URConnection(object):
         log("Halted")
 
     def __on_packet(self, buf):
-        state = RobotState.unpack(buf)
+        try:
+            state = RobotState.unpack(buf)
+        except Exception as e:
+            rospy.logerr("Exception while unpacking RobotState")
+            return
+        
         self.last_state = state
         #import deserialize; deserialize.pstate(self.last_state)
 
