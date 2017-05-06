@@ -16,6 +16,18 @@ catkin_package(
   DEPENDS Boost
 )
 
+# If the compiler supports C++11, enable the flag for it. This is needed
+# on kinetic and newer because some headers that moveit headers include
+# use C++11 features.
+#
+# If the compiler doesn't support C++11, then we hope that we're on an older
+# rosdistro and we don't need it.
+#
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_CXX11)
+    add_compile_options(-std=c++11)
+endif()
 
 ###########
 ## Build ##
