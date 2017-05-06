@@ -90,3 +90,5 @@ As MoveIt! seems to have difficulties with finding plans for the UR with full jo
 ```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch sim:=true limited:=true```
 
 ```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
+
+
