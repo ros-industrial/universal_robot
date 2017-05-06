@@ -1,20 +1,41 @@
 universal_robot
 ======
 
+[ROS-Industrial](http://wiki.ros.org/Industrial) universal_robot meta-package. See the [ROS wiki](http://wiki.ros.org/universal_robot) page for more
+information.
+
 This repository provides ROS support for the universal robots.  This repo holds source code for all versions > groovy.  For those versions <= groovy see: hg https://kforge.ros.org/ros_industrial/universal_robot
 
 
 __Installation from Source__  
 There are releases available for ROS Hydro and ROS Indigo. However, for the latest features and developments you might want to install from source.
 
-First set up a catkin workspace (see [this tutorials](http://wiki.ros.org/catkin/Tutorials)).  
-Then clone the repository into the src/ folder. It should look like /path/to/your/catkin_workspace/src/universal_robot.  
-Make sure to source the correct setup file according to your workspace hierarchy, then use ```catkin_make``` to compile.  
+- First set up a `catkin` workspace (see [this tutorials](http://wiki.ros.org/catkin/Tutorials)).  
+```
+$ mkdir -p catkin_ws/src
+```
+- Then clone the repository into the `src/` folder.
+```
+$ cd catkin_ws/src
+$ git clone https://github.com/ros-industrial/universal_robot.git
+```
+ It should look like `/path/to/your/catkin_ws/src/universal_robot`.
 
+Make sure to source the correct setup file according to your workspace hierarchy.
+- Then use ```catkin_make``` to compile.
+```
+# cd to your catkin_ws directory
+$ cd ../
+
+$ catkin_make
+```
 ---
 
 __Usage with real Hardware__  
-There are launch files available to bringup a real robot - either UR5 or UR10.  
+There are launch files available to bringup a real robot - either UR5 or UR10.
+
+**NOTE:** The `ur_driver` package has been successfully used with system versions ranging from `v1.5.7849` to `v1.8.23117`. See [wiki/universal_robot - Compatibility](http://wiki.ros.org/universal_robot#Compatibility) page for more compatibility information and known limitations of `ur_driver`.
+
 In the following the commands for the UR5 are given. For the UR10, simply replace the prefix accordingly.
 
 Don't forget to source the correct setup shell files and use a new terminal for each command!   
@@ -88,5 +109,3 @@ As MoveIt! seems to have difficulties with finding plans for the UR with full jo
 ```roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch sim:=true limited:=true```
 
 ```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
-
-
