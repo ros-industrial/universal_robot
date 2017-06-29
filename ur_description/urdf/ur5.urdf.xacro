@@ -78,13 +78,13 @@
   </xacro:macro>
 
 
-  <!-- 
-    The parameter xamla_cap enables optional support for Xamla's rounded cap (wrist 2), 
-    increasing the collision free space. 
+  <!--
+    The parameter xamla_cap enables optional support for Xamla's rounded cap (wrist 2)
+    increasing the collision free space.
     If set, visual and collision meshes are loaded from the files provided in the following
     repository: https://github.com/Xamla/xamla_egomo.
     More information on the cap and the 3D-printable models can be found at:
-    https://github.com/Xamla/xamla_egomo/tree/master/egomo_3d_printed_parts/egomo-1  
+    https://github.com/Xamla/xamla_egomo/tree/master/egomo_3d_printed_parts/egomo-1
   -->
   <xacro:macro name="ur5_robot" params="prefix joint_limited xamla_cap:=false">
 
