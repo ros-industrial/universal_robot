@@ -1,7 +1,7 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
 *
-* Copyright (c) 2014, Georgia Tech
+* Copyright (c) 2014, 2017 Georgia Tech
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 * POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Kelsey Hawkins */
+/* Author: Kelsey Hawkins, Andrew Price */
 
 /* Based on orignal source from Willow Garage. License copied below */
 
@@ -91,8 +91,58 @@
 //register KDLKinematics as a KinematicsBase implementation
 CLASS_LOADER_REGISTER_CLASS(ur_kinematics::URKinematicsPlugin, kinematics::KinematicsBase)
 
+
 namespace ur_kinematics
 {
+
+typedef std::vector<double> Solution;
+typedef std::vector<std::vector<double> > SolutionContainer;
+typedef moveit_msgs::KinematicSolverInfo::_limits_type Limits;
+
+void enumerateSolutionsHelper(const Solution& initial_sln, const Limits& limits, Solution& partial_sln, SolutionContainer& container, const int num_joints, const int j)
+{
+  if (j == num_joints)
+  {
+    // A new solution is constructed and ready to be inserted
+    container.push_back(partial_sln);
+  }
+  else
+  {
+    double q = initial_sln[j];
+
+    // Add the current joint to the partial solution
+    if (limits[j].min_position <= q && q <= limits[j].max_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+    }
+
+    // Search up the configuration space
+    q = initial_sln[j] + 2.0*M_PI;
+    while (q <= limits[j].max_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+      q += 2.0*M_PI;
+    }
+
+    // Search down the configuration space
+    q = initial_sln[j] - 2.0*M_PI;
+    while (q >= limits[j].min_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+      q -= 2.0*M_PI;
+    }
+  }
+}
+
+void enumeratePeriodicSolutions(const Solution& initial_sln, const Limits& limits, SolutionContainer& container, const int num_joints)
+{
+  assert(limits.size() == num_joints);
+  Solution partial(num_joints, 0.0);
+  enumerateSolutionsHelper(initial_sln, limits, partial, container, num_joints, 0);
+}
 
   URKinematicsPlugin::URKinematicsPlugin():active_(false) {}
 
@@ -649,43 +699,9 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     
     uint16_t num_valid_sols;
     std::vector< std::vector<double> > q_ik_valid_sols;
-    for(uint16_t i=0; i<num_sols; i++)
-    {
-      bool valid = true;
-      std::vector< double > valid_solution;
-      valid_solution.assign(6,0.0);
-      
-      for(uint16_t j=0; j<6; j++)
-      {
-        if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
-        { 
-          valid_solution[j] = q_ik_sols[i][j];
-          valid = true;
-          continue;
-        }
-        else if ((q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
-        {
-          valid_solution[j] = q_ik_sols[i][j]-2*M_PI;
-          valid = true;
-          continue;
-        }
-        else if ((q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
-        {
-          valid_solution[j] = q_ik_sols[i][j]+2*M_PI;
-          valid = true;
-          continue;
-        }
-        else
-        {
-          valid = false;
-          break;
-        }
-      }
-      
-      if(valid)
-      {
-        q_ik_valid_sols.push_back(valid_solution);
-      }
+    for(uint16_t i=0; i<num_sols; i++) {
+      std::vector<double> kinematic_solution(q_ik_sols[i], q_ik_sols[i] + 6);
+      enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, q_ik_valid_sols, 6);
     }
      
      
