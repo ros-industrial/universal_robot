@@ -2,8 +2,8 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.10 (2017-08-04)
+-------------------
 * Fix Deprecated warning in MoveIt: parameter moved into namespace 'trajectory_execution'
 * Contributors: Dave Coleman
 
