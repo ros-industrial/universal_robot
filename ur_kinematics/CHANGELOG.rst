@@ -2,6 +2,11 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixup for MoveIt! Kinetic
+* Contributors: Dave Coleman
+
 1.1.9 (2017-01-02)
 ------------------
 * No changes.
