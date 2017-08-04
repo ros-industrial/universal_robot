@@ -2,6 +2,9 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.9 (2017-01-02)
 ------------------
 * No changes.
