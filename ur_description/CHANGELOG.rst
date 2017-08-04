@@ -2,6 +2,9 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.10 (2017-08-04)
+-------------------
+
 1.1.9 (2017-01-02)
 ------------------
 * reintroduce 'pi', unbrake dependent xacros.
