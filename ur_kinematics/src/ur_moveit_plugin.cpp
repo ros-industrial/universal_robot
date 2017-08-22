@@ -657,28 +657,22 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
       
       for(uint16_t j=0; j<6; j++)
       {
-        if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
-        { 
-          valid_solution[j] = q_ik_sols[i][j];
-          valid = true;
-          continue;
-        }
-        else if ((q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
+        double distance = q_ik_sols[i][j] - ik_seed_state[ur_joint_inds_start_+j];
+        if ((distance > M_PI || (q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position)) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
         {
           valid_solution[j] = q_ik_sols[i][j]-2*M_PI;
-          valid = true;
-          continue;
         }
-        else if ((q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
+        else if ((distance < -M_PI || (q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position)) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
         {
           valid_solution[j] = q_ik_sols[i][j]+2*M_PI;
-          valid = true;
-          continue;
+        }
+        else if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
+        {
+          valid_solution[j] = q_ik_sols[i][j];
         }
         else
         {
           valid = false;
-          break;
         }
       }
       
