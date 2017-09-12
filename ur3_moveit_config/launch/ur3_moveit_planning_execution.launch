@@ -2,7 +2,9 @@
   <arg name="sim" default="false" />
   <arg name="limited" default="false"/>
   <arg name="debug" default="false" />
-    
+
+  <rosparam command="load" file="$(find ur3_moveit_config)/config/joint_names_ur3.yaml"/>
+
   <!-- Remap follow_joint_trajectory -->
   <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
   
