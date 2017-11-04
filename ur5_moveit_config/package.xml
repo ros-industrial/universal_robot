@@ -1,13 +1,14 @@
 <package>
 
   <name>ur5_moveit_config</name>
-  <version>0.2.0</version>
+  <version>1.1.10</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur5 with the MoveIt Motion Planning Framework
   </description>
-  <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
-  <maintainer email="assistant@moveit.ros.org">MoveIt Setup Assistant</maintainer>
-
+  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
+  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  
   <license>BSD</license>
 
   <url type="website">http://moveit.ros.org/</url>
@@ -15,7 +16,16 @@
   <url type="repository">https://github.com/ros-planning/moveit_setup_assistant</url>
 
   <run_depend>moveit_ros_move_group</run_depend>
+  <run_depend>moveit_planners_ompl</run_depend>
+  <run_depend>moveit_ros_visualization</run_depend>
+  <run_depend>moveit_fake_controller_manager</run_depend>
   <run_depend>moveit_simple_controller_manager</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>xacro</run_depend>
+  <build_depend>ur_description</build_depend>
+  <run_depend>ur_description</run_depend>
+
 
   <buildtool_depend>catkin</buildtool_depend>
   

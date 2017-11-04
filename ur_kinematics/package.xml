@@ -1,56 +1,41 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_kinematics</name>
-  <version>0.1.0</version>
+  <version>1.1.10</version>
   <description>
-     Provides forward and inverse kinematics for Universal robot designs.
+     Provides forward and inverse kinematics for Universal Robots designs.
+     See http://hdl.handle.net/1853/50782 for details.
   </description>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="kphawkins@gatech.edu">Kelsey Hawkins</maintainer>
-
-
-  <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>BSD</license>
-
-
-  <!-- Url tags are optional, but mutiple are allowed, one per tag -->
-  <!-- Optional attribute type can be: website, bugtracker, or repository -->
-  <!-- Example: -->
-  <!-- <url type="website">http://ros.org/wiki/ur_kinematics</url> -->
-
-
-  <!-- Author tags are optional, mutiple are allowed, one per tag -->
-  <!-- Authors do not have to be maintianers, but could be -->
-  <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
   <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
-
-
-  <!-- The *_depend tags are used to specify dependencies -->
-  <!-- Dependencies can be catkin packages or system dependencies -->
-  <!-- Examples: -->
-  <!-- Use build_depend for packages you need at compile time: -->
-  <!--   <build_depend>message_generation</build_depend> -->
-  <!-- Use buildtool_depend for build tool packages: -->
-  <!--   <buildtool_depend>catkin</buildtool_depend> -->
-  <!-- Use run_depend for packages you need at runtime: -->
-  <!--   <run_depend>message_runtime</run_depend> -->
-  <!-- Use test_depend for packages you need only for testing: -->
-  <!--   <test_depend>gtest</test_depend> -->
+  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <license>BSD</license>
+  <url type="website">http://wiki.ros.org/ur_kinematics</url>
+  <url type="bugtracker">https://github.com/ros-industrial/universal_robot/issues</url>
+  <url type="repository">https://github.com/ros-industrial/universal_robot</url>
+  
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_kinematics</build_depend>
+  <build_depend>moveit_ros_planning</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>tf_conversions</build_depend>
+  <build_depend>boost</build_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
+  <run_depend>moveit_core</run_depend>
+  <run_depend>moveit_kinematics</run_depend>
+  <run_depend>moveit_ros_planning</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>tf_conversions</run_depend>
+  <run_depend>boost</run_depend>
+
   <export>
-    <!-- You can specify that this package is a metapackage here: -->
-    <!-- <metapackage/> -->
-
-    <!-- Other tools can request additional information be placed here -->
-
+    <moveit_core plugin="${prefix}/ur_moveit_plugins.xml"/>
   </export>
 </package>

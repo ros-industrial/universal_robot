@@ -37,32 +37,6 @@
  *********************************************************************/
 #ifndef UR_KIN_H
 #define UR_KIN_H
-#include <math.h>
-#include <stdio.h>
-
-#define ZERO_THRESH 0.00000001
-#define SIGN(x) ( ( (x) > 0 ) - ( (x) < 0 ) )
-#define PI M_PI
-
-//#define UR10_PARAMS
-#ifdef UR10_PARAMS
-#define d1  0.1273
-#define a2 -0.612
-#define a3 -0.5723
-#define d4  0.163941
-#define d5  0.1157
-#define d6  0.0922
-#endif
-
-//#define UR5_PARAMS
-#ifdef UR5_PARAMS
-#define d1  0.089159
-#define a2 -0.42500
-#define a3 -0.39225
-#define d4  0.10915
-#define d5  0.09465
-#define d6  0.0823
-#endif
 
 // These kinematics find the tranfrom from the base link to the end effector.
 // Though the raw D-H parameters specify a transform from the 0th link to the 6th link,
@@ -85,6 +59,11 @@ namespace ur_kinematics {
   // @param q       The 6 joint values 
   // @param T       The 4x4 end effector pose in row-major ordering
   void forward(const double* q, double* T);
+
+  // @param q       The 6 joint values 
+  // @param Ti      The 4x4 link i pose in row-major ordering. If NULL, nothing is stored.
+  void forward_all(const double* q, double* T1, double* T2, double* T3, 
+                                    double* T4, double* T5, double* T6);
 
   // @param T       The 4x4 end effector pose in row-major ordering
   // @param q_sols  An 8x6 array of doubles returned, all angles should be in [0,2*PI)

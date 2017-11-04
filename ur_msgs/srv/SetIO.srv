@@ -1,0 +1,9 @@
+int8 FUN_SET_DIGITAL_OUT = 1
+int8 FUN_SET_FLAG = 2
+int8 FUN_SET_ANALOG_OUT = 3
+int8 FUN_SET_TOOL_VOLTAGE = 4
+int8 fun
+int8 pin
+float32 state
+---
+bool success

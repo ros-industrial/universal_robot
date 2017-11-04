@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  Universal robot ur5 launch. Wraps ur5_bringup.launch. Uses the 'limited'
+  joint range [-PI, PI] on all joints.
+  
+  Usage:
+    ur5_bringup_joint_limited.launch robot_ip:=<value>
+-->
+<launch>
+  
+  <!-- robot_ip: IP-address of the robot's socket-messaging server -->
+  <arg name="robot_ip"/>
+  <arg name="reverse_port" default="50001"/>
+  <arg name="min_payload"  default="0.0"/>
+  <arg name="max_payload"  default="10.0"/>
+
+  <include file="$(find ur_bringup)/launch/ur5_bringup.launch">
+    <arg name="robot_ip" value="$(arg robot_ip)"/>
+    <arg name="reverse_port" value="$(arg reverse_port)"/>
+    <arg name="limited"  value="true"/>
+    <arg name="min_payload"  value="$(arg min_payload)"/>
+    <arg name="max_payload"  value="$(arg max_payload)"/>
+  </include>
+</launch>

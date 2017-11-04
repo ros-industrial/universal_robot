@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="ur_arm_gazebo" params="prefix">
+    <!-- nothing to do here at the moment -->
+  </xacro:macro>
+
+</robot>

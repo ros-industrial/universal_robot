@@ -1,18 +1,22 @@
 <?xml version="1.0"?>
-<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
-       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
        name="ur5" >
 
   <!-- common stuff -->
-  <include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
 
   <!-- ur5 -->
-  <include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur5_robot prefix="">
-  </xacro:ur5_robot>
+  <xacro:ur5_robot prefix="" joint_limited="false"/>
+
+  <link name="world" />
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
 
 </robot>

@@ -1,6 +1,0 @@
-<launch>
-  <include file="$(find ur5_base)/launch/load.launch" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find urdf_tutorial)/urdf.vcg" />
-
-</launch>
