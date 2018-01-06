@@ -2,6 +2,13 @@
 Changelog for package ur3_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.11 (2018-01-06)
+-------------------
+* Merge pull request `#321 <https://github.com//ros-industrial/universal_robot/issues/321>`_ from gavanderhoorn/bp_266_indigo-devel
+  Backport `#266 <https://github.com//ros-industrial/universal_robot/issues/266>`_ to Indigo.
+* Reduce longest valid segment fraction to accomodate non-limited version of the UR5 (`#266 <https://github.com//ros-industrial/universal_robot/issues/266>`_)
+* Contributors: G.A. vd. Hoorn, Scott Paulin
+
 1.1.10 (2017-08-04)
 -------------------
 * Fix Deprecated warning in MoveIt: parameter moved into namespace 'trajectory_execution'

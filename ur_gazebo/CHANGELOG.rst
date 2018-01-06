@@ -2,6 +2,9 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.11 (2018-01-06)
+-------------------
+
 1.1.10 (2017-08-04)
 -------------------
 * Remove dependency on ros_controllers metapackage.
