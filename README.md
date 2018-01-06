@@ -3,6 +3,8 @@ universal_robot
 
 This repository provides ROS support for the universal robots.  This repo holds source code for all versions > groovy.  For those versions <= groovy see: hg https://kforge.ros.org/ros_industrial/universal_robot
 
+__Installation
+For a thorough wiki on installing a Universal Robot, [this wiki](http://wiki.ros.org/universal_robot) will likely be a good place to start. If you are also working with most newer versions of UR software (v3.x and up) there is a strong likelihood that you will require the newer ```ur_modern_driver``` ([found here](https://github.com/ThomasTimm/ur_modern_driver)) which has an in detail explanation of how to install/run your UR arm.
 
 __Installation from Source__  
 There are releases available for ROS Hydro and ROS Indigo. However, for the latest features and developments you might want to install from source.
