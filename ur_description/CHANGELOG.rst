@@ -2,6 +2,13 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.11 (2018-01-06)
+-------------------
+* Merge pull request `#320 <https://github.com//ros-industrial/universal_robot/issues/320>`_ from gavanderhoorn/bp_268_indigo-devel
+  Backport `#268 <https://github.com//ros-industrial/universal_robot/issues/268>`_ to Indigo
+* Fix elbow joint limits (`#268 <https://github.com//ros-industrial/universal_robot/issues/268>`_)
+* Contributors: Beatriz Leon, G.A. vd. Hoorn
+
 1.1.10 (2017-08-04)
 -------------------
 
