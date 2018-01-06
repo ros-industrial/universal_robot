@@ -2,6 +2,13 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.1 (2018-01-06)
+------------------
+* Merge pull request `#303 <https://github.com//ros-industrial/universal_robot/issues/303>`_ from marcoesposito1988/pr-urdf-pointer-type
+  Updated urdf::ModelInterface pointer type for ROS Lunar
+* Updated urdf::ModelInterface pointer type for ROS Lunar
+* Contributors: G.A. vd. Hoorn, Marco Esposito
+
 1.2.0 (2017-08-04)
 ------------------
 * Fixup for MoveIt! Kinetic
