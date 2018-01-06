@@ -1,6 +1,6 @@
 <package>
   <name>universal_robot</name>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <description>
       Drivers, description, and utilities for Universal Robot Arms.
   </description>
