@@ -25,7 +25,7 @@
   <param name="/robot_ip_address" type="str" value="$(arg robot_ip)"/>
   <param name="/robot_reverse_port" type="int" value="$(arg reverse_port)"/>
   
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!-- driver -->
   <node name="ur_driver" pkg="ur_driver" type="driver.py" args="$(arg robot_ip) $(arg reverse_port)" output="screen">
