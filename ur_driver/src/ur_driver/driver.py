@@ -22,6 +22,7 @@ from ur_driver.cfg import URDriverConfig
 from ur_driver.deserialize import RobotState, RobotMode
 from ur_driver.deserializeRT import RobotStateRT
 
+from control_msgs.srv import *
 from ur_msgs.srv import SetPayload, SetIO
 from ur_msgs.msg import *
 
@@ -649,6 +650,16 @@ class URTrajectoryFollower(object):
         self.server = actionlib.ActionServer("follow_joint_trajectory",
                                              FollowJointTrajectoryAction,
                                              self.on_goal, self.on_cancel, auto_start=False)
+        def queryCallback(req):
+            state = sample_traj(self.traj,(req.time.to_sec() - self.traj_t0)) 
+            name = self.traj.joint_names
+            position = state.positions 
+            velocity = state.velocities 
+            acceleration = state.accelerations
+            return [name,position,velocity,acceleration]
+
+        self.query_service = rospy.Service('query_state', QueryTrajectoryState, queryCallback)
+
 
         self.goal_handle = None
         self.traj = None
