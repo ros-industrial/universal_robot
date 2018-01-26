@@ -325,22 +325,9 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
 
   private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
 
-  ur_joint_names_.push_back(arm_prefix_ + "shoulder_pan_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "shoulder_lift_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "elbow_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "wrist_1_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "wrist_2_joint");
-  ur_joint_names_.push_back(arm_prefix_ + "wrist_3_joint");
-
-  ur_link_names_.push_back(arm_prefix_ + "base_link");       // 0
-  ur_link_names_.push_back(arm_prefix_ + "ur_base_link");    // 1
-  ur_link_names_.push_back(arm_prefix_ + "shoulder_link");   // 2
-  ur_link_names_.push_back(arm_prefix_ + "upper_arm_link");  // 3
-  ur_link_names_.push_back(arm_prefix_ + "forearm_link");    // 4
-  ur_link_names_.push_back(arm_prefix_ + "wrist_1_link");    // 5
-  ur_link_names_.push_back(arm_prefix_ + "wrist_2_link");    // 6
-  ur_link_names_.push_back(arm_prefix_ + "wrist_3_link");    // 7
-  ur_link_names_.push_back(arm_prefix_ + "ee_link");         // 8
+  // Load the joint names from the group model
+  ur_joint_names_ = joint_model_group->getJointModelNames();
+  ur_link_names_ = joint_model_group->getLinkModelNames();
 
   ur_joint_inds_start_ = getJointIndex(ur_joint_names_[0]);
 
@@ -362,10 +349,13 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
     }
     last_ur_joint_ind = cur_ur_joint_ind;
   }
-  // if successful, the kinematic chain includes a serial chain of the UR joints
+  // if successful, the kinematic chain includes a serial chain of the UR joints 
 
-  kdl_tree.getChain(getBaseFrame(), ur_link_names_.front(), kdl_base_chain_);
-  kdl_tree.getChain(ur_link_names_.back(), getTipFrame(), kdl_tip_chain_);
+  // Change this to use the link names provided by model, not by hard coded naming. (base_frame provided as arg)
+  ROS_INFO("Using base frame %s from model", base_frame.c_str());
+  ROS_INFO("Using tip frame %s from model", tip_frame.c_str());
+  kdl_tree.getChain(getBaseFrame(), base_frame, kdl_base_chain_);
+  kdl_tree.getChain(tip_frame, getTipFrame(), kdl_tip_chain_);
 
   // weights for redundant solution selection
   ik_weights_.resize(6);
