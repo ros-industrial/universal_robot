@@ -378,10 +378,10 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   } else {
     ik_weights_[0] = 1.0;
     ik_weights_[1] = 1.0;
-    ik_weights_[2] = 0.1;
-    ik_weights_[3] = 0.1;
-    ik_weights_[4] = 0.3;
-    ik_weights_[5] = 0.3;
+    ik_weights_[2] = 1.0;
+    ik_weights_[3] = 1.0;
+    ik_weights_[4] = 1.0;
+    ik_weights_[5] = 1.0;
   }
 
   active_ = true;
