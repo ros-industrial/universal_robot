@@ -153,6 +153,12 @@ namespace ur_kinematics
                                   moveit_msgs::MoveItErrorCodes &error_code,
                                   const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
+     virtual bool getPositionIK(const std::vector<geometry_msgs::Pose>& ik_poses,
+                                const std::vector<double>& ik_seed_state,
+                                std::vector<std::vector<double> >& solutions,
+                                kinematics::KinematicsResult& result,
+                                const kinematics::KinematicsQueryOptions& options) const;
+
     virtual bool getPositionFK(const std::vector<std::string> &link_names,
                                const std::vector<double> &joint_angles,
                                std::vector<geometry_msgs::Pose> &poses) const;
