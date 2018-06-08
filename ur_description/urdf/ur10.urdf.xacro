@@ -9,8 +9,6 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
-  <xacro:property name="pi" value="3.14159265" />
-
   <!-- Inertia parameters -->
   <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
   <xacro:property name="shoulder_mass" value="7.778" />
@@ -162,7 +160,7 @@
       <origin xyz="0.0 ${elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
+        <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
       </xacro:unless>
       <xacro:if value="${joint_limited}">
         <limit lower="${elbow_joint_lower_limit}" upper="${elbow_joint_upper_limit}" effort="150.0" velocity="3.15"/>

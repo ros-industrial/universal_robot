@@ -1,37 +1,29 @@
-sudo: required
-dist: trusty
-# Force travis to use its minimal image with default Python settings
-language: generic
+sudo: required 
+dist: trusty 
+language: generic 
 compiler:
   - gcc
+notifications:
+  email:
+    on_success: always
+    on_failure: always
+#    recipients:
+#      - jane@doe
 env:
-  global:
-    - CATKIN_WS=~/catkin_ws
-    - CATKIN_WS_SRC=${CATKIN_WS}/src
-    - CI_ROS_DISTRO="indigo"
-#  matrix:
-#    - CI_ROS_DISTRO="indigo"
-#    - CI_ROS_DISTRO="jade"
+  matrix:
+    - USE_DEB=true  ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+    - USE_DEB=true  ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
+    - USE_DEB=true  ROS_DISTRO="indigo" PRERELEASE=true
+    - USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+    - USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
+    - USE_DEB=true  ROS_DISTRO="kinetic"   PRERELEASE=true
+matrix:
+  allow_failures:
+    - env: USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+    - env: USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
+    - env: USE_DEB=true  ROS_DISTRO="kinetic"   PRERELEASE=true
 install:
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq -y python-rosdep python-catkin-tools
-  - sudo rosdep init
-  - rosdep update
-  # Use rosdep to install all dependencies (including ROS itself)
-  - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO
-script:
-  - source /opt/ros/$CI_ROS_DISTRO/setup.bash
-  - mkdir -p $CATKIN_WS_SRC
-  - ln -s $TRAVIS_BUILD_DIR $CATKIN_WS_SRC
-  - cd $CATKIN_WS
-  - catkin init
-  # Enable install space
-  #- catkin config --install
-  # Build [and Install] packages
-  - catkin build --limit-status-rate 0.1 --no-notify -DCMAKE_BUILD_TYPE=Release
-  # Build tests
-  - catkin build --limit-status-rate 0.1 --no-notify --make-args tests
-  # Run tests
-  #- catkin run_tests
+  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+script: 
+  - source .ci_config/travis.sh
+#  - source ./travis.sh  # Enable this when you have a package-local script 
