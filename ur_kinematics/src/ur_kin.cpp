@@ -44,6 +44,8 @@ namespace ur_kinematics {
     #endif
   }
 
+  namespace UR_NAMESPACE {
+
   void forward(const double* q, double* T) {
     double s1 = sin(*q), c1 = cos(*q); q++;
     double q234 = *q, s2 = sin(*q), c2 = cos(*q); q++;
@@ -348,6 +350,7 @@ namespace ur_kinematics {
     }
     return num_sols;
   }
+  }
 };
 
 
@@ -397,7 +400,7 @@ IKFAST_API bool ComputeIk(const IkReal* eetrans, const IkReal* eerot, const IkRe
 
   to_mat44(T, eetrans, eerot);
 
-  int num_sols = ur_kinematics::inverse(T, q_sols,pfree[0]);
+  int num_sols = ur_kinematics::UR_NAMESPACE::inverse(T, q_sols,pfree[0]);
 
   std::vector<int> vfree(0);
 
@@ -412,7 +415,7 @@ IKFAST_API bool ComputeIk(const IkReal* eetrans, const IkReal* eerot, const IkRe
 IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot)
 {
     double T[16];
-    ur_kinematics::forward(j,T);
+    ur_kinematics::UR_NAMESPACE::forward(j,T);
     from_mat44(T,eetrans,eerot);
 }
 
@@ -435,7 +438,7 @@ int main(int argc, char* argv[])
 {
   double q[6] = {0.0, 0.0, 1.0, 0.0, 1.0, 0.0};
   double* T = new double[16];
-  forward(q, T);
+  UR_NAMESPACE::forward(q, T);
   for(int i=0;i<4;i++) {
     for(int j=i*4;j<(i+1)*4;j++)
       printf("%1.3f ", T[j]);
@@ -443,7 +446,7 @@ int main(int argc, char* argv[])
   }
   double q_sols[8*6];
   int num_sols;
-  num_sols = inverse(T, q_sols);
+  num_sols = UR_NAMESPACE::inverse(T, q_sols);
   for(int i=0;i<num_sols;i++) 
     printf("%1.6f %1.6f %1.6f %1.6f %1.6f %1.6f\n", 
        q_sols[i*6+0], q_sols[i*6+1], q_sols[i*6+2], q_sols[i*6+3], q_sols[i*6+4], q_sols[i*6+5]);

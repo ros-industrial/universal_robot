@@ -38,6 +38,18 @@
 #ifndef UR_KIN_H
 #define UR_KIN_H
 
+#ifdef UR10_PARAMS
+#define UR_NAMESPACE ur10
+#endif
+
+#ifdef UR5_PARAMS
+#define UR_NAMESPACE ur5
+#endif
+
+#ifdef UR3_PARAMS
+#define UR_NAMESPACE ur3
+#endif
+
 // These kinematics find the tranfrom from the base link to the end effector.
 // Though the raw D-H parameters specify a transform from the 0th link to the 6th link,
 // offset transforms are specified in this formulation.
@@ -56,13 +68,14 @@
 //  0,  0,  0,  1
 
 namespace ur_kinematics {
-  // @param q       The 6 joint values 
+namespace UR_NAMESPACE {
+  // @param q       The 6 joint values
   // @param T       The 4x4 end effector pose in row-major ordering
   void forward(const double* q, double* T);
 
-  // @param q       The 6 joint values 
+  // @param q       The 6 joint values
   // @param Ti      The 4x4 link i pose in row-major ordering. If NULL, nothing is stored.
-  void forward_all(const double* q, double* T1, double* T2, double* T3, 
+  void forward_all(const double* q, double* T1, double* T2, double* T3,
                                     double* T4, double* T5, double* T6);
 
   // @param T       The 4x4 end effector pose in row-major ordering
@@ -71,6 +84,7 @@ namespace ur_kinematics {
   //                in case of an infinite solution on that joint.
   // @return        Number of solutions found (maximum of 8)
   int inverse(const double* T, double* q_sols, double q6_des=0.0);
-};
+}
+}
 
 #endif //UR_KIN_H
