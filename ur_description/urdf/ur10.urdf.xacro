@@ -10,24 +10,24 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
   <!-- Inertia parameters -->
-  <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
-  <xacro:property name="shoulder_mass" value="7.778" />
-  <xacro:property name="upper_arm_mass" value="12.93" />
-  <xacro:property name="forearm_mass" value="3.87" />
-  <xacro:property name="wrist_1_mass" value="1.96" />
-  <xacro:property name="wrist_2_mass" value="1.96" />
-  <xacro:property name="wrist_3_mass" value="0.202" />
+  <xacro:property name="ur10_base_mass" value="4.0" />  <!-- This mass might be incorrect -->
+  <xacro:property name="ur10_shoulder_mass" value="7.778" />
+  <xacro:property name="ur10_upper_arm_mass" value="12.93" />
+  <xacro:property name="ur10_forearm_mass" value="3.87" />
+  <xacro:property name="ur10_wrist_1_mass" value="1.96" />
+  <xacro:property name="ur10_wrist_2_mass" value="1.96" />
+  <xacro:property name="ur10_wrist_3_mass" value="0.202" />
 
   <!-- These parameters are borrowed from the urcontrol.conf file
        but are not verified for the correct permutation.
        The permutation was guessed by looking at the UR5 parameters.
        Serious use of these parameters needs further inspection. -->
-  <xacro:property name="shoulder_cog" value="0.00008 0.00244 -0.037" />
-  <xacro:property name="upper_arm_cog" value="0.00001 0.15061 0.38757" />
-  <xacro:property name="forearm_cog" value="-0.00012 0.06112 0.1984" />
-  <xacro:property name="wrist_1_cog" value="-0.00021 -0.00112 0.02269" />
-  <xacro:property name="wrist_2_cog" value="-0.00021 0.00112 0.002269" />
-  <xacro:property name="wrist_3_cog" value="0 -0.001156 -0.00149" />
+  <xacro:property name="ur10_shoulder_cog" value="0.00008 0.00244 -0.037" />
+  <xacro:property name="ur10_upper_arm_cog" value="0.00001 0.15061 0.38757" />
+  <xacro:property name="ur10_forearm_cog" value="-0.00012 0.06112 0.1984" />
+  <xacro:property name="ur10_wrist_1_cog" value="-0.00021 -0.00112 0.02269" />
+  <xacro:property name="ur10_wrist_2_cog" value="-0.00021 0.00112 0.002269" />
+  <xacro:property name="ur10_wrist_3_cog" value="0 -0.001156 -0.00149" />
 
   <!-- Kinematic model -->
   <!-- Properties from urcontrol.conf -->
@@ -39,16 +39,16 @@
   <xacro:property name="ur10_d6" value="0.0922" />
 
   <!-- Arbitrary offsets for shoulder/elbow joints -->
-  <xacro:property name="shoulder_offset" value="0.220941" />  <!-- measured from model -->
-  <xacro:property name="elbow_offset" value="-0.1719" /> <!-- measured from model -->
+  <xacro:property name="ur10_shoulder_offset" value="0.220941" />  <!-- measured from model -->
+  <xacro:property name="ur10_elbow_offset" value="-0.1719" /> <!-- measured from model -->
 
   <!-- link lengths used in model -->
-  <xacro:property name="shoulder_height" value="${ur10_d1}" />
-  <xacro:property name="upper_arm_length" value="${-ur10_a2}" />
-  <xacro:property name="forearm_length" value="${-ur10_a3}" />
-  <xacro:property name="wrist_1_length" value="${ur10_d4 - elbow_offset - shoulder_offset}" />
-  <xacro:property name="wrist_2_length" value="${ur10_d5}" />
-  <xacro:property name="wrist_3_length" value="${ur10_d6}" />
+  <xacro:property name="ur10_shoulder_height" value="${ur10_d1}" />
+  <xacro:property name="ur10_upper_arm_length" value="${-ur10_a2}" />
+  <xacro:property name="ur10_forearm_length" value="${-ur10_a3}" />
+  <xacro:property name="ur10_wrist_1_length" value="${ur10_d4 - ur10_elbow_offset - ur10_shoulder_offset}" />
+  <xacro:property name="ur10_wrist_2_length" value="${ur10_d5}" />
+  <xacro:property name="ur10_wrist_3_length" value="${ur10_d6}" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
@@ -83,7 +83,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/base.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${base_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${ur10_base_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -91,7 +91,7 @@
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
       <parent link="${prefix}base_link" />
       <child link = "${prefix}shoulder_link" />
-      <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${ur10_shoulder_height}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
@@ -116,7 +116,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/shoulder.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${shoulder_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${ur10_shoulder_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -124,7 +124,7 @@
     <joint name="${prefix}shoulder_lift_joint" type="revolute">
       <parent link="${prefix}shoulder_link" />
       <child link = "${prefix}upper_arm_link" />
-      <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
+      <origin xyz="0.0 ${ur10_shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
@@ -149,7 +149,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/upperarm.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="${-ur10_a2}" mass="${upper_arm_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="${-ur10_a2}" mass="${ur10_upper_arm_mass}">
         <origin xyz="0.0 0.0 ${-ur10_a2/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -157,7 +157,7 @@
     <joint name="${prefix}elbow_joint" type="revolute">
       <parent link="${prefix}upper_arm_link" />
       <child link = "${prefix}forearm_link" />
-      <origin xyz="0.0 ${elbow_offset} ${upper_arm_length}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 ${ur10_elbow_offset} ${ur10_upper_arm_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-pi}" upper="${pi}" effort="150.0" velocity="3.15"/>
@@ -182,7 +182,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/forearm.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="${-ur10_a3}" mass="${forearm_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="${-ur10_a3}" mass="${ur10_forearm_mass}">
         <origin xyz="0.0 0.0 ${-ur10_a3/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -190,7 +190,7 @@
     <joint name="${prefix}wrist_1_joint" type="revolute">
       <parent link="${prefix}forearm_link" />
       <child link = "${prefix}wrist_1_link" />
-      <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
+      <origin xyz="0.0 0.0 ${ur10_forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
@@ -215,7 +215,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/wrist1.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_1_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${ur10_wrist_1_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -223,7 +223,7 @@
     <joint name="${prefix}wrist_2_joint" type="revolute">
       <parent link="${prefix}wrist_1_link" />
       <child link = "${prefix}wrist_2_link" />
-      <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 ${ur10_wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
@@ -248,7 +248,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/wrist2.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_2_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${ur10_wrist_2_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -256,7 +256,7 @@
     <joint name="${prefix}wrist_3_joint" type="revolute">
       <parent link="${prefix}wrist_2_link" />
       <child link = "${prefix}wrist_3_link" />
-      <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${ur10_wrist_2_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
@@ -281,7 +281,7 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/wrist3.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${ur10_wrist_3_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -289,7 +289,7 @@
     <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}wrist_3_link" />
       <child link = "${prefix}ee_link" />
-      <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+      <origin xyz="0.0 ${ur10_wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
     </joint>
 
     <link name="${prefix}ee_link">
@@ -319,7 +319,7 @@
     <!-- Frame coincident with all-zeros TCP on UR controller -->
     <link name="${prefix}tool0"/>
     <joint name="${prefix}wrist_3_link-tool0_fixed_joint" type="fixed">
-      <origin xyz="0 ${wrist_3_length} 0" rpy="${pi/-2.0} 0 0"/>
+      <origin xyz="0 ${ur10_wrist_3_length} 0" rpy="${pi/-2.0} 0 0"/>
       <parent link="${prefix}wrist_3_link"/>
       <child link="${prefix}tool0"/>
     </joint>
