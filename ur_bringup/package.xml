@@ -14,6 +14,7 @@
   <url type="website">http://ros.org/wiki/ur_bringup</url>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>roslaunch</test_depend>
   <run_depend>tf2_ros</run_depend>
   <run_depend>ur_description</run_depend>
   <run_depend>ur_driver</run_depend>

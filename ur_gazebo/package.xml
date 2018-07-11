@@ -18,6 +18,7 @@
   <url type="website">http://ros.org/wiki/ur_gazebo</url>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>roslaunch</test_depend>
   <run_depend>ur_description</run_depend>
   <run_depend>gazebo_ros</run_depend>
   <run_depend>gazebo_ros_control</run_depend>
