@@ -18,6 +18,7 @@
   <run_depend>tf2_ros</run_depend>
   <run_depend>ur_description</run_depend>
   <run_depend>ur_driver</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
 
   <export>
   </export>
