@@ -246,11 +246,6 @@ namespace ur_kinematics
 
     bool isRedundantJoint(unsigned int index) const;
 
-    void filterSolutionsByLimits(const double (&solutions)[8][6], 
-                                 uint16_t num_sols, 
-                                 std::vector<std::vector<double> >& valid_solutions) const;
-
-
     bool active_; /** Internal variable that indicates whether solvers are configured and ready */
 
     moveit_msgs::KinematicSolverInfo ik_chain_info_; /** Stores information for the inverse kinematics solver */
