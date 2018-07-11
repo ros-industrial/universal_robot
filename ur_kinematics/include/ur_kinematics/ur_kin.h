@@ -38,16 +38,14 @@
 #ifndef UR_KIN_H
 #define UR_KIN_H
 
-#ifdef UR10_PARAMS
+#if defined UR10_PARAMS
 #define UR_NAMESPACE ur10
-#endif
-
-#ifdef UR5_PARAMS
+#elif defined UR5_PARAMS
 #define UR_NAMESPACE ur5
-#endif
-
-#ifdef UR3_PARAMS
+#elif defined UR3_PARAMS
 #define UR_NAMESPACE ur3
+#else
+#error "You must #define which UR model you wish to use. Options are { UR10_PARAMS, UR5_PARAMS, UR3_PARAMS }."
 #endif
 
 // These kinematics find the tranfrom from the base link to the end effector.
