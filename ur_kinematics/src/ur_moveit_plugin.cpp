@@ -1,7 +1,7 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
 *
-* Copyright (c) 2014, Georgia Tech
+* Copyright (c) 2014, 2017 Georgia Tech
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 * POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Kelsey Hawkins */
+/* Author: Kelsey Hawkins, Andrew Price */
 
 /* Based on orignal source from Willow Garage. License copied below */
 
@@ -93,6 +93,55 @@ CLASS_LOADER_REGISTER_CLASS(ur_kinematics::URKinematicsPlugin, kinematics::Kinem
 
 namespace ur_kinematics
 {
+
+typedef std::vector<double> Solution;
+typedef std::vector<std::vector<double> > SolutionContainer;
+typedef moveit_msgs::KinematicSolverInfo::_limits_type Limits;
+
+void enumerateSolutionsHelper(const Solution& initial_sln, const Limits& limits, Solution& partial_sln, SolutionContainer& container, const int num_joints, const int j)
+{
+  if (j == num_joints)
+  {
+    // A new solution is constructed and ready to be inserted
+    container.push_back(partial_sln);
+  }
+  else
+  {
+    double q = initial_sln[j];
+
+    // Add the current joint to the partial solution
+    if (limits[j].min_position <= q && q <= limits[j].max_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+    }
+
+    // Search up the configuration space
+    q = initial_sln[j] + 2.0*M_PI;
+    while (q <= limits[j].max_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+      q += 2.0*M_PI;
+    }
+
+    // Search down the configuration space
+    q = initial_sln[j] - 2.0*M_PI;
+    while (q >= limits[j].min_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+      q -= 2.0*M_PI;
+    }
+  }
+}
+
+void enumeratePeriodicSolutions(const Solution& initial_sln, const Limits& limits, SolutionContainer& container, const int num_joints)
+{
+  assert(limits.size() == num_joints);
+  Solution partial(num_joints, 0.0);
+  enumerateSolutionsHelper(initial_sln, limits, partial, container, num_joints, 0);
+}
 
 URKinematicsPlugin::URKinematicsPlugin():active_(false) {}
 
@@ -571,50 +620,6 @@ typedef std::pair<int, double> idx_double;
 bool comparator(const idx_double& l, const idx_double& r)
 { return l.second < r.second; }
 
-void URKinematicsPlugin::filterSolutionsByLimits(const double (&solutions)[8][6], 
-                                                 uint16_t num_sols, 
-                                                 std::vector<std::vector<double> >& valid_solutions) const
-{
-  for(uint16_t i=0; i<num_sols; i++)
-  {
-    bool valid = true;
-    std::vector< double > valid_solution;
-    valid_solution.assign(6,0.0);
-    
-    for(uint16_t j=0; j<6; j++)
-    {
-      if((solutions[i][j] <= ik_chain_info_.limits[j].max_position) && (solutions[i][j] >= ik_chain_info_.limits[j].min_position))
-      { 
-        valid_solution[j] = solutions[i][j];
-        valid = true;
-        continue;
-      }
-      else if ((solutions[i][j] > ik_chain_info_.limits[j].max_position) && (solutions[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
-      {
-        valid_solution[j] = solutions[i][j]-2*M_PI;
-        valid = true;
-        continue;
-      }
-      else if ((solutions[i][j] < ik_chain_info_.limits[j].min_position) && (solutions[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
-      {
-        valid_solution[j] = solutions[i][j]+2*M_PI;
-        valid = true;
-        continue;
-      }
-      else
-      {
-        valid = false;
-        break;
-      }
-    }
-    
-    if(valid)
-    {
-      valid_solutions.push_back(valid_solution);
-    }
-  }
-}
-
 bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
@@ -708,7 +713,10 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     
     
     std::vector< std::vector<double> > q_ik_valid_sols;
-    filterSolutionsByLimits(q_ik_sols, num_sols, q_ik_valid_sols);
+    for(uint16_t i=0; i<num_sols; i++) {
+      std::vector<double> kinematic_solution(q_ik_sols[i], q_ik_sols[i] + 6);
+      enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, q_ik_valid_sols, 6);
+    }
      
      
     // use weighted absolute deviations to determine the solution closest the seed state
@@ -861,9 +869,12 @@ bool URKinematicsPlugin::getAllPositionIK(const geometry_msgs::Pose &ik_pose,
   // Do the analytic IK
   num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, 
                      jnt_pos_test(ur_joint_inds_start_+5));
-  
-  uint16_t num_valid_sols;
-  filterSolutionsByLimits(q_ik_sols, num_sols, solutions);   
+
+  std::vector< std::vector<double> > q_ik_valid_sols;
+  for(uint16_t i=0; i<num_sols; i++) {
+    std::vector<double> kinematic_solution(q_ik_sols[i], q_ik_sols[i] + 6);
+    enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, q_ik_valid_sols, 6);
+  }
   return solutions.size() > 0;
 }
 
