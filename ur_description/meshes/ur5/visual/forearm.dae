@@ -17,10 +17,10 @@
         <technique sid="common">
           <phong>
             <emission>
-              <color sid="emission">0 0 0 1</color>
+              <color sid="emission">0.25 0.25 0.25 1</color>
             </emission>
             <ambient>
-              <color sid="ambient">0 0 0 1</color>
+              <color sid="ambient">0.25 0.25 0.25 1</color>
             </ambient>
             <diffuse>
               <color sid="diffuse">0.25088 0.34752 0.4096 1</color>
@@ -29,7 +29,7 @@
               <color sid="specular">0.125 0.125 0.125 1</color>
             </specular>
             <shininess>
-              <float sid="shininess">1</float>
+              <float sid="shininess">20</float>
             </shininess>
             <index_of_refraction>
               <float sid="index_of_refraction">1</float>
@@ -43,10 +43,10 @@
         <technique sid="common">
           <phong>
             <emission>
-              <color sid="emission">0 0 0 1</color>
+              <color sid="emission">0.25 0.25 0.25 1</color>
             </emission>
             <ambient>
-              <color sid="ambient">0 0 0 1</color>
+              <color sid="ambient">0.25 0.25 0.25 1</color>
             </ambient>
             <diffuse>
               <color sid="diffuse">0.41984 0.41984 0.41984 1</color>
@@ -55,7 +55,7 @@
               <color sid="specular">0.125 0.125 0.125 1</color>
             </specular>
             <shininess>
-              <float sid="shininess">1</float>
+              <float sid="shininess">20</float>
             </shininess>
             <index_of_refraction>
               <float sid="index_of_refraction">1</float>
@@ -69,10 +69,10 @@
         <technique sid="common">
           <phong>
             <emission>
-              <color sid="emission">0 0 0 1</color>
+              <color sid="emission">0.25 0.25 0.25 1</color>
             </emission>
             <ambient>
-              <color sid="ambient">0 0 0 1</color>
+              <color sid="ambient">0.25 0.25 0.25 1</color>
             </ambient>
             <diffuse>
               <color sid="diffuse">0.14272 0.14272 0.14272 1</color>
@@ -81,7 +81,7 @@
               <color sid="specular">0.125 0.125 0.125 1</color>
             </specular>
             <shininess>
-              <float sid="shininess">1</float>
+              <float sid="shininess">20</float>
             </shininess>
             <index_of_refraction>
               <float sid="index_of_refraction">1</float>
