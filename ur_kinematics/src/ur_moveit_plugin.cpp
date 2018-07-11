@@ -713,9 +713,37 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     
     
     std::vector< std::vector<double> > q_ik_valid_sols;
-    for(uint16_t i=0; i<num_sols; i++) {
-      std::vector<double> kinematic_solution(q_ik_sols[i], q_ik_sols[i] + 6);
-      enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, q_ik_valid_sols, 6);
+    for(uint16_t i=0; i<num_sols; i++)
+    {
+      bool valid = true;
+      std::vector< double > valid_solution;
+      valid_solution.assign(6,0.0);
+      
+      for(uint16_t j=0; j<6; j++)
+      {
+        double distance = q_ik_sols[i][j] - ik_seed_state[ur_joint_inds_start_+j];
+        if ((distance > M_PI || (q_ik_sols[i][j] > ik_chain_info_.limits[j].max_position)) && (q_ik_sols[i][j]-2*M_PI > ik_chain_info_.limits[j].min_position))
+        {
+          valid_solution[j] = q_ik_sols[i][j]-2*M_PI;
+        }
+        else if ((distance < -M_PI || (q_ik_sols[i][j] < ik_chain_info_.limits[j].min_position)) && (q_ik_sols[i][j]+2*M_PI < ik_chain_info_.limits[j].max_position))
+        {
+          valid_solution[j] = q_ik_sols[i][j]+2*M_PI;
+        }
+        else if((q_ik_sols[i][j] <= ik_chain_info_.limits[j].max_position) && (q_ik_sols[i][j] >= ik_chain_info_.limits[j].min_position))
+        {
+          valid_solution[j] = q_ik_sols[i][j];
+        }
+        else
+        {
+          valid = false;
+        }
+      }
+      
+      if(valid)
+      {
+        q_ik_valid_sols.push_back(valid_solution);
+      }
     }
      
      
