@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="limited" default="false"/>
-  <arg name="paused" default="false"/>
-  <arg name="gui" default="true"/>
+  <arg name="limited" default="false"  doc="If true, limits joint range [-PI, PI] on all joints." />
+  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
   
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
