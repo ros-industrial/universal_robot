@@ -11,11 +11,11 @@
 -->
 <launch>
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip"/>
-  <arg name="reverse_port" default="50001"/>
-  <arg name="min_payload"/>
-  <arg name="max_payload"/>
-  <arg name="prefix" default=""/>
+  <arg name="robot_ip" doc="IP of the controller" />
+  <arg name="reverse_port" default="50001" doc="Port on which controller listens for position values passed to servoj thread from the driver" />
+  <arg name="min_payload" doc="lower payload bound for the robot" />
+  <arg name="max_payload" doc="upper payload bound for the robot" />
+  <arg name="prefix" default="" doc="Prefix to robot's joints' and links' names" />
   
   <!-- The max_velocity parameter is only used for debugging in the ur_driver. It's not related to actual velocity limits -->
   <arg name="max_velocity" default="10.0"/> <!-- [rad/s] -->
