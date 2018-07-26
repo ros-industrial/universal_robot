@@ -2,6 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 <!--
   Author: Ludovic Delval
+  Contributor: Felix Messmer
 -->
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
