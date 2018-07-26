@@ -5,6 +5,10 @@
   Author: Felix Messmer
 -->
 
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
+
   <xacro:macro name="ur3_robot" params="prefix joint_limited
      shoulder_pan_lower_limit:=${-pi}    shoulder_pan_upper_limit:=${pi}
      shoulder_lift_lower_limit:=${-pi}    shoulder_lift_upper_limit:=${pi}
@@ -13,9 +17,7 @@
      wrist_2_lower_limit:=${-pi}    wrist_2_upper_limit:=${pi}
      wrist_3_lower_limit:=${-pi}    wrist_3_upper_limit:=${pi}">
      
-    <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
-    <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
-    <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
+
 
     <!-- Inertia parameters -->
     <xacro:property name="base_mass" value="2.0" />  <!-- This mass might be incorrect -->

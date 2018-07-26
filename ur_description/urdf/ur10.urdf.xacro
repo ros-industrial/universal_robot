@@ -6,7 +6,9 @@
   Contributers: Jimmy Da Silva, Ajit Krisshna N L, Muhammad Asif Rana
 -->
 
-
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
 
   <xacro:macro name="ur10_robot" params="prefix joint_limited
 		 shoulder_pan_lower_limit:=${-pi}    shoulder_pan_upper_limit:=${pi}
@@ -15,10 +17,7 @@
 		 wrist_1_lower_limit:=${-pi}    wrist_1_upper_limit:=${pi}
 		 wrist_2_lower_limit:=${-pi}    wrist_2_upper_limit:=${pi}
 		 wrist_3_lower_limit:=${-pi}    wrist_3_upper_limit:=${pi}">
-   
-    <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
-    <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
-    <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
+
 
     <!-- Inertia parameters -->
     <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
