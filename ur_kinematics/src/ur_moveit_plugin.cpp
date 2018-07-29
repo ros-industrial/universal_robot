@@ -173,7 +173,6 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
 {
   setValues(robot_description, group_name, base_frame, tip_frame, search_discretization);
 
-  ros::NodeHandle private_handle("~");
   rdf_loader::RDFLoader rdf_loader(robot_description_);
   const srdf::ModelSharedPtr &srdf = rdf_loader.getSRDF();
   const urdf::ModelInterfaceSharedPtr &urdf_model = rdf_loader.getURDF();
@@ -250,12 +249,9 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   double epsilon;
   bool position_ik;
 
-  private_handle.param("max_solver_iterations", max_solver_iterations, 500);
-  private_handle.param("epsilon", epsilon, 1e-5);
-  private_handle.param(group_name+"/position_only_ik", position_ik, false);
-  ROS_DEBUG_NAMED("kdl","Looking in private handle: %s for param name: %s",
-            private_handle.getNamespace().c_str(),
-            (group_name+"/position_only_ik").c_str());
+  lookupParam("max_solver_iterations", max_solver_iterations, 500);
+  lookupParam("epsilon", epsilon, 1e-5);
+  lookupParam(group_name+"/position_only_ik", position_ik, false);
 
   if(position_ik)
     ROS_INFO_NAMED("kdl","Using position only ik");
@@ -323,7 +319,7 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   max_solver_iterations_ = max_solver_iterations;
   epsilon_ = epsilon;
 
-  private_handle.param<std::string>("arm_prefix", arm_prefix_, "");
+  lookupParam("arm_prefix", arm_prefix_, std::string(""));
 
   ur_joint_names_.push_back(arm_prefix_ + "shoulder_pan_joint");
   ur_joint_names_.push_back(arm_prefix_ + "shoulder_lift_joint");
@@ -369,15 +365,13 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
 
   // weights for redundant solution selection
   ik_weights_.resize(6);
-  if(private_handle.hasParam("ik_weights")) {
-    private_handle.getParam("ik_weights", ik_weights_);
-  } else {
+  if(!lookupParam("ik_weights", ik_weights_, ik_weights_)) {
     ik_weights_[0] = 1.0;
     ik_weights_[1] = 1.0;
-    ik_weights_[2] = 0.1;
-    ik_weights_[3] = 0.1;
-    ik_weights_[4] = 0.3;
-    ik_weights_[5] = 0.3;
+    ik_weights_[2] = 1.0;
+    ik_weights_[3] = 1.0;
+    ik_weights_[4] = 1.0;
+    ik_weights_[5] = 1.0;
   }
 
   active_ = true;
