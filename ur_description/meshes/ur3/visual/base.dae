@@ -108,10 +108,10 @@
         <technique sid="common">
           <phong>
             <emission>
-              <color sid="emission">0 0 0 1</color>
+              <color sid="emission">0.25 0.25 0.25 1</color>
             </emission>
             <ambient>
-              <color sid="ambient">0 0 0 1</color>
+              <color sid="ambient">0.25 0.25 0.25 1</color>
             </ambient>
             <diffuse>
               <color sid="diffuse">0.2688 0.2688 0.2688 1</color>
@@ -134,10 +134,10 @@
         <technique sid="common">
           <phong>
             <emission>
-              <color sid="emission">0 0 0 1</color>
+              <color sid="emission">0.25 0.25 0.25 1</color>
             </emission>
             <ambient>
-              <color sid="ambient">0 0 0 1</color>
+              <color sid="ambient">0.25 0.25 0.25 1</color>
             </ambient>
             <diffuse>
               <color sid="diffuse">0 0 0 1</color>
