@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import time
+import sys
 import rospy
 import actionlib
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
@@ -111,7 +112,7 @@ def user_menu():
   return choice
     
 def main():
-  _use_ros_control = False
+
   try:
     rospy.init_node("test_move", anonymous=True, disable_signals=True)
     print("""
@@ -120,9 +121,7 @@ def main():
            Else, an empty namespace is assumed.
     """)
     
-    if _use_ros_control == True:
-      controller_ns = get_controller().name 
-    elif(len(sys.argv) > 0):
+    if(len(sys.argv) > 1):
       controller_ns = sys.argv[1]
     else:
       controller_ns = DEFAULT_CONTROLLER_NS
@@ -147,6 +146,8 @@ def main():
         print("\n Exiting the program.") 
         exit()
       else:
+        print("\n Invalid choice, try again!") 
+
         print("\n Invalid choice, try again!") 
 
   except KeyboardInterrupt:
