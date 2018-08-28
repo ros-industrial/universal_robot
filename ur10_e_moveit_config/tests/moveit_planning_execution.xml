@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group>
+    <include file="$(find ur10_e_moveit_config)/launch/ur10_e_moveit_planning_execution.launch">
+      <arg name="sim" value="false" />
+    </include>
+  </group>
+
+  <group ns="sim">
+    <include file="$(find ur10_e_moveit_config)/launch/ur10_e_moveit_planning_execution.launch">
+      <arg name="sim" value="true" />
+    </include>
+  </group>
+
+</launch>
