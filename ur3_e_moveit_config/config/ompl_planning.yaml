@@ -53,6 +53,7 @@ planner_configs:
   PRMstarkConfigDefault:
     type: geometric::PRMstar
 manipulator:
+  default_planner_config: RRTConnectkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
