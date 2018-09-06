@@ -7,7 +7,7 @@
     ur10_bringup.launch robot_ip:=<value>
 -->
 <launch>
-  
+
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
   <arg name="robot_ip" doc="IP of the controller" />
   <arg name="reverse_port" default="50001" doc="Port on which controller listens for position values passed to servoj thread from the driver" />
@@ -17,9 +17,9 @@
 
   <!-- robot model -->
   <include file="$(find ur_description)/launch/ur10_upload.launch">
-    <arg name="limited" value="$(arg limited)"/>
+    <arg name="yaml_config" if="$(arg limited)" value="$(find ur_description)/config/ur10_joint_limited.yaml"/>
   </include>
-  
+
   <!-- ur common -->
   <include file="$(find ur_bringup)/launch/ur_common.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>

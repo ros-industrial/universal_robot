@@ -86,6 +86,7 @@ catkin_package(
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY urdf DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY meshes DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html

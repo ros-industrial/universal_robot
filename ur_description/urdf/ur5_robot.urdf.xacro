@@ -3,7 +3,7 @@
        name="ur5" >
 
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-
+  <xacro:arg name="yaml_config" default="$(find ur_description)/config/ur5_default.yaml"/>
   <!-- common stuff -->
   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
 
@@ -11,16 +11,8 @@
   <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur5_robot prefix="" joint_limited="false"
+  <xacro:ur5_robot prefix="" yaml_file="${load_yaml('$(arg yaml_config)')}"
     transmission_hw_interface="$(arg transmission_hw_interface)"
   />
-
-  <link name="world" />
-
-  <joint name="world_joint" type="fixed">
-    <parent link="world" />
-    <child link = "base_link" />
-    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-  </joint>
 
 </robot>

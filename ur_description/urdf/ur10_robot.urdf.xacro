@@ -2,8 +2,9 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro"
        name="ur10" >
 
+  <!-- common stuff -->
+  <xacro:arg name="yaml_config" default="$(find ur_description)/config/ur10_default.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-
   <!-- common stuff -->
   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
 
@@ -11,7 +12,7 @@
   <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur10_robot prefix="" joint_limited="false"
+  <xacro:ur10_robot prefix="" yaml_file="${load_yaml('$(arg yaml_config)')}"
     transmission_hw_interface="$(arg transmission_hw_interface)"
   />
 

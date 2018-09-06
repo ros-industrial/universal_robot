@@ -3,7 +3,7 @@
   <arg name="limited" default="false"  doc="If true, limits joint range [-PI, PI] on all joints." />
   <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts gazebo gui" />
-  
+
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" default="worlds/empty.world"/>
@@ -13,7 +13,7 @@
 
   <!-- send robot urdf to param server -->
   <include file="$(find ur_description)/launch/ur5_upload.launch">
-    <arg name="limited" value="$(arg limited)"/>
+    <arg name="yaml_config" if="$(arg limited)" value="$(find ur_description)/config/ur5_joint_limited.yaml"/>
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->

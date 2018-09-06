@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
+  <arg name="joint_limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints ." />
+  <arg name="yaml_config" default=" " doc="Use the joints limits from the yaml file instead of the default [-PI, PI]."/>
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
-
-  <param unless="$(arg limited)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
-  <param if="$(arg limited)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_joint_limited_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
+  <!--   <arg name="yaml_config" default="$(find ur_description)/config/joint_limit.yaml" doc="Use the joints limits from the yaml file instead of the default [-PI, PI]."/> -->
+  
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_robot_yaml.urdf.xacro' joint_limited:=$(arg joint_limited) yaml_config:=$(arg yaml_config) transmission_hw_interface:=$(arg transmission_hw_interface)" />
 </launch>
