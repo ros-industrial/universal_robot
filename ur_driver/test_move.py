@@ -27,6 +27,7 @@ def get_trajectory_goal(_jnt_names, q1, q2, q3, t=t_stamps):
   
 def handle_send_goal(_traj_ac, g):
   _traj_ac.send_goal(g)
+  rospy.logwarn("The robot is going to move now!")
   try:
     _traj_ac.wait_for_result()
   except KeyboardInterrupt:
@@ -99,7 +100,8 @@ def get_controller():
 
 def user_menu():
   choice=True
-  print("""
+  rospy.logwarn("Choosing any of the options below will move the robot's joint 5 and 6 by 0.3 radians in either direction. Make sure there is enough free space for this movement, especially if an end-effector is mounted on the robot.")
+  print("""   
   1.Perform a pre-defined sequence of joint movements once
   2.Perform a pre-defined sequence of joint movements in a loop
   3.Set joint values in JointTrajectory in a disordered way
