@@ -7,10 +7,10 @@
   </description>
 
   <author>Wim Meeussen</author>
-  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
+  <author>Kelsey Hawkins</author>
   <author>Mathias Ludtke</author>
-  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Felix Messmer</author>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
 
   <license>BSD</license>
