@@ -8,9 +8,9 @@
 
 
   <author>Alexander Bubeck</author>
-  <author email="sedwards@swri.org">Shaun Edwards</author>
-  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Shaun Edwards</author>
+  <author>Felix Messmer</author>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
 
   <license>BSD</license>

@@ -7,8 +7,8 @@
      See http://hdl.handle.net/1853/50782 for details.
   </description>
 
-  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Kelsey Hawkins</author>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
   <license>BSD</license>
   <url type="website">http://wiki.ros.org/ur_kinematics</url>
