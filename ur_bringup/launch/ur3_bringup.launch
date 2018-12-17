@@ -10,10 +10,21 @@
   
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
   <arg name="robot_ip"/>
-  <arg name="reverse_port" default="50001"/>
   <arg name="limited" default="false"/>
   <arg name="min_payload"  default="0.0"/>
   <arg name="max_payload"  default="3.0"/>
+  <arg name="prefix" default="" />
+  <arg name="use_lowbandwidth_trajectory_follower" default="false"/>
+  <arg name="time_interval" default="0.008"/>
+  <arg name="servoj_time" default="0.008" />
+  <arg name="servoj_time_waiting" default="0.001" />
+  <arg name="max_waiting_time" default="2.0" />
+  <arg name="servoj_gain" default="100." />
+  <arg name="servoj_lookahead_time" default="1." />
+  <arg name="max_joint_difference" default="0.01" />
+  <arg name="base_frame" default="$(arg prefix)base" />
+  <arg name="tool_frame" default="$(arg prefix)tool0_controller" />
+  <arg name="shutdown_on_disconnect" default="true" />
 
   <!-- robot model -->
   <include file="$(find ur_description)/launch/ur3_upload.launch">
@@ -23,9 +34,20 @@
   <!-- ur common -->
   <include file="$(find ur_bringup)/launch/ur_common.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>
-    <arg name="reverse_port" value="$(arg reverse_port)"/>
     <arg name="min_payload"  value="$(arg min_payload)"/>
     <arg name="max_payload"  value="$(arg max_payload)"/>
+    <arg name="prefix" value="$(arg prefix)" />
+    <arg name="use_lowbandwidth_trajectory_follower" value="$(arg use_lowbandwidth_trajectory_follower)"/>
+    <arg name="time_interval" value="$(arg time_interval)"/>
+    <arg name="servoj_time" value="$(arg servoj_time)" />
+    <arg name="servoj_time_waiting" default="$(arg servoj_time_waiting)" />
+    <arg name="max_waiting_time" value="$(arg max_waiting_time)" />
+    <arg name="servoj_gain" value="$(arg servoj_gain)" />
+    <arg name="servoj_lookahead_time" value="$(arg servoj_lookahead_time)" />
+    <arg name="max_joint_difference" value="$(arg max_joint_difference)" />
+    <arg name="base_frame" value="$(arg base_frame)" />
+    <arg name="tool_frame" value="$(arg tool_frame)" />
+    <arg name="shutdown_on_disconnect" value="$(arg shutdown_on_disconnect)"/>
   </include>
 
 </launch>

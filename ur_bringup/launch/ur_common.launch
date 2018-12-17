@@ -11,28 +11,52 @@
 -->
 <launch>
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip"/>
-  <arg name="reverse_port" default="50001"/>
-  <arg name="min_payload"/>
-  <arg name="max_payload"/>
-  <arg name="prefix" default=""/>
   
+  <arg name="robot_ip" />
+  <arg name="min_payload" />
+  <arg name="max_payload" />
+  <arg name="prefix" default="" />
+  <arg name="use_ros_control" default="false"/>
+  <arg name="use_lowbandwidth_trajectory_follower" default="false"/>
+  <arg name="time_interval" default="0.008"/>
+  <arg name="servoj_time" default="0.008" />
+  <arg name="servoj_time_waiting" default="0.001" />
+  <arg name="max_waiting_time" default="2.0" />
+  <arg name="servoj_gain" default="100." />
+  <arg name="servoj_lookahead_time" default="1." />
+  <arg name="max_joint_difference" default="0.01" />
+  <arg name="base_frame" default="$(arg prefix)base" />
+  <arg name="tool_frame" default="$(arg prefix)tool0_controller" />
+  <arg name="shutdown_on_disconnect" default="true" />
+  <!-- require_activation defines when the service /ur_driver/robot_enable needs to be called. -->
+  <arg name="require_activation" default="Never" /> <!-- Never, Always, OnStartup -->
   <!-- The max_velocity parameter is only used for debugging in the ur_driver. It's not related to actual velocity limits -->
   <arg name="max_velocity" default="10.0"/> <!-- [rad/s] -->
   
-  <!-- copy the specified IP address to be consistant with ROS-Industrial spec.
-  NOTE: The ip address is actually passed to the driver on the command line -->
-  <param name="/robot_ip_address" type="str" value="$(arg robot_ip)"/>
-  <param name="/robot_reverse_port" type="int" value="$(arg reverse_port)"/>
   
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!-- driver -->
-  <node name="ur_driver" pkg="ur_driver" type="driver.py" args="$(arg robot_ip) $(arg reverse_port)" output="screen">
-    <param name="min_payload" type="double" value="$(arg min_payload)"/>
-    <param name="max_payload" type="double" value="$(arg max_payload)"/>
-    <param name="max_velocity" type="double" value="$(arg max_velocity)"/>
-    <param name="prefix" type="string" value="$(arg prefix)"/>
+  <node name="ur_driver" pkg="ur_modern_driver" type="ur_driver" output="screen">
+  <!-- copy the specified IP address to be consistant with ROS-Industrial spec. -->
+    <param name="prefix" type="str" value="$(arg prefix)" />
+    <param name="robot_ip_address" type="str" value="$(arg robot_ip)" />
+    <param name="use_ros_control" type="bool" value="$(arg use_ros_control)"/>
+    <param name="use_lowbandwidth_trajectory_follower" type="bool" value="$(arg use_lowbandwidth_trajectory_follower)"/>
+    <param name="min_payload" type="double" value="$(arg min_payload)" />
+    <param name="max_payload" type="double" value="$(arg max_payload)" />
+    <param name="max_velocity" type="double" value="$(arg max_velocity)" />
+    <param name="time_interval" type="double" value="$(arg time_interval)" />
+    <param name="servoj_time" type="double" value="$(arg servoj_time)" />
+    <param name="servoj_time_waiting" type="double" value="$(arg servoj_time_waiting)" />
+    <param name="max_waiting_time" type="double" value="$(arg max_waiting_time)" />
+    <param name="servoj_gain" type="double" value="$(arg servoj_gain)" />
+    <param name="servoj_lookahead_time" type="double" value="$(arg servoj_lookahead_time)" />
+    <param name="max_joint_difference" type="double" value="$(arg max_joint_difference)" />
+    <param name="base_frame" type="str" value="$(arg base_frame)"/>
+    <param name="tool_frame" type="str" value="$(arg tool_frame)"/>
+    <param name="require_activation" type="str" value="$(arg require_activation)" />
+    <param name="shutdown_on_disconnect" type="bool" value="$(arg shutdown_on_disconnect)"/>
   </node>
    
   <!-- TF Buffer Server -->
