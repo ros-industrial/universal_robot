@@ -34,7 +34,7 @@ rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro $DISTRO
 
 # building
-catkin build
+catkin_make
 
 # source this workspace (careful when also sourcing others)
 source /path/to/catkin_ws/devel/setup.bash
