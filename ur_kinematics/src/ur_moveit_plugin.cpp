@@ -637,8 +637,8 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
     /////////////////////////////////////////////////////////////////////////////
 
     // Do the analytic IK
-    num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, 
-                       jnt_pos_test(ur_joint_inds_start_+5));
+    num_sols = UR_NAMESPACE::inverse((double*) homo_ik_pose, (double*) q_ik_sols,
+                                     jnt_pos_test(ur_joint_inds_start_+5));
     
     
     uint16_t num_valid_sols;
