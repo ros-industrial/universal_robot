@@ -2,6 +2,8 @@
 # used by the Universal Robots controller
 #
 # This data structure is send at 10 Hz on TCP port 30002
+#
+# Note: this message does not carry all fields from the RobotModeData structure as broadcast by the robot controller, but a subset.
 
 uint64 timestamp
 bool is_robot_connected
