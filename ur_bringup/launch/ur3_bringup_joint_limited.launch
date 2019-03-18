@@ -9,10 +9,10 @@
 <launch>
   
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip"/>
-  <arg name="reverse_port" default="50001"/>
-  <arg name="min_payload"  default="0.0"/>
-  <arg name="max_payload"  default="3.0"/>
+  <arg name="robot_ip" doc="IP of the controller" />
+  <arg name="reverse_port" default="50001" doc="Port on which controller listens for position values passed to servoj thread from the driver" />
+  <arg name="min_payload"  default="0.0" doc="lower payload bound for the robot" />
+  <arg name="max_payload"  default="3.0" doc="upper payload bound for the robot" />
 
   <include file="$(find ur_bringup)/launch/ur3_bringup.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>

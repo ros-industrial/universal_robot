@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robot_ip" value="127.0.0.1" />
+
+  <group>
+    <include file="$(find ur3_e_moveit_config)/launch/ur3_e_moveit_planning_execution.launch">
+      <arg name="sim" value="false" />
+    </include>
+  </group>
+
+  <group ns="sim">
+    <include file="$(find ur3_e_moveit_config)/launch/ur3_e_moveit_planning_execution.launch">
+      <arg name="sim" value="true" />
+    </include>
+  </group>
+
+</launch>
+

@@ -1,0 +1,33 @@
+<package>
+
+  <name>ur3_e_moveit_config</name>
+  <version>1.2.1</version>
+  <description>
+     An automatically generated package with all the configuration and launch files for using the ur3e with the MoveIt Motion Planning Framework
+  </description>
+  <author>Felix Messmer</author>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://moveit.ros.org/</url>
+  <url type="bugtracker">https://github.com/ros-planning/moveit_setup_assistant/issues</url>
+  <url type="repository">https://github.com/ros-planning/moveit_setup_assistant</url>
+
+  <run_depend>moveit_ros_move_group</run_depend>
+  <run_depend>moveit_planners_ompl</run_depend>
+  <run_depend>moveit_ros_visualization</run_depend>
+  <run_depend>moveit_fake_controller_manager</run_depend>
+  <run_depend>moveit_simple_controller_manager</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>xacro</run_depend>
+  <build_depend>ur_description</build_depend>
+  <run_depend>ur_description</run_depend>
+
+  <test_depend>roslaunch</test_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

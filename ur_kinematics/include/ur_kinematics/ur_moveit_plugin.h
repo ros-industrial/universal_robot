@@ -94,8 +94,6 @@
 #include <kdl/chainiksolvervel_pinv.hpp>
 #include <kdl/chainiksolverpos_nr_jl.hpp>
 #include <kdl/chainfksolverpos_recursive.hpp>
-#include <moveit/kdl_kinematics_plugin/chainiksolver_pos_nr_jl_mimic.hpp>
-#include <moveit/kdl_kinematics_plugin/chainiksolver_vel_pinv_mimic.hpp>
 #include <moveit/kdl_kinematics_plugin/joint_mimic.hpp>
 
 // MoveIt!
