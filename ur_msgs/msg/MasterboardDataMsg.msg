@@ -6,11 +6,11 @@
 # 
 # This data structure is send at 10 Hz on TCP port 30002
 # 
-# Dokumentation can be found on the Universal Robots Support Wiki
-# (http://wiki03.lynero.net/Technical/DataStreamFromURController?rev=8)
+# Documentation can be found on the Universal Robots Support site, article
+# number 16496.
 
-int16 digital_input_bits
-int16 digital_output_bits
+uint32 digital_input_bits
+uint32 digital_output_bits
 int8 analog_input_range0
 int8 analog_input_range1
 float64 analog_input0
