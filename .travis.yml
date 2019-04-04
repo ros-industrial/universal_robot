@@ -7,13 +7,8 @@ notifications:
   email:
     on_success: always
     on_failure: always
-#    recipients:
-#      - jane@doe
 env:
   matrix:
-    - USE_DEB=true  ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
-    - USE_DEB=true  ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
-    - USE_DEB=true  ROS_DISTRO="indigo" PRERELEASE=true
     - USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
     - USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
     - USE_DEB=true  ROS_DISTRO="kinetic"   PRERELEASE=true
@@ -29,4 +24,3 @@ install:
   - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
 script:
   - source .ci_config/travis.sh
-#  - source ./travis.sh  # Enable this when you have a package-local script
