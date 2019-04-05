@@ -6,19 +6,56 @@
 
 [ROS-Industrial](http://wiki.ros.org/Industrial) Universal Robot meta-package. See the [ROS wiki](http://wiki.ros.org/universal_robot) page for compatibility information and other more information.
 
-This repository provides ROS support for the universal robots.  This repo holds source code for all versions > groovy.  For those versions <= groovy see: hg https://kforge.ros.org/ros_industrial/universal_robot
+
+__Installation__
+
+There are two different ways to install the packages in this repository. The following sections detail installing the packages using the binary distribution and building them from source in a Catkin workspace.
 
 
-__Installation from Source__  
-There are releases available for ROS Hydro and ROS Indigo. However, for the latest features and developments you might want to install from source.
+___Using apt (Ubuntu, Debian)___
 
-First set up a catkin workspace (see [this tutorials](http://wiki.ros.org/catkin/Tutorials)).  
-Then clone the repository into the src/ folder. It should look like /path/to/your/catkin_workspace/src/universal_robot.  
-Make sure to source the correct setup file according to your workspace hierarchy, then use ```catkin_make``` to compile.  
+On supported Linux distributions (Ubuntu, up to 16.04 (Xenial), `i386` and `amd64`) and ROS versions:
 
----
+```
+sudo apt-get install ros-$ROS_DISTRO-universal-robot
+```
 
-__Usage with real Hardware__  
+replace `$ROS_DISTRO` with `hydro`, `indigo` or `kinetic`, depending on which ROS version you have installed.
+
+
+___Building from Source___
+
+There are releases available for ROS Hydro, Indigo and Kinetic. However, for the latest features and developments you might want to build the packages from source.
+
+**NOTE**: please prefer using the binary release (see previous section) over building from source where possible. Source installs will not be automatically updated by new package releases and require more work to setup.
+
+The following instructions assume that a [Catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace) has been created at `$HOME/catkin_ws` and that the source space is at `$HOME/catkin_ws/src`. Update paths appropriately if they are different on the build machine.
+
+In all other cases the packages will have to be build from sources in a Catkin workspace: 
+
+```
+cd $HOME/catkin_ws/src
+
+# retrieve the sources (replace '$ROS_DISTRO' with the ROS version you are using)
+git clone -b $ROS_DISTRO-devel https://github.com/ros-industrial/universal_robot.git
+
+cd $HOME/catkin_ws
+
+# checking dependencies (again: replace '$ROS_DISTRO' with the ROS version you are using)
+rosdep update
+rosdep install --rosdistro $ROS_DISTRO --ignore-src --from-paths src
+
+# building
+catkin_make
+
+# activate this workspace
+source $HOME/catkin_ws/devel/setup.bash
+```
+
+
+__Usage__
+
+___With real Hardware___
 There are launch files available to bringup a real robot - either UR5 or UR10.  
 In the following the commands for the UR5 are given. For the UR10, simply replace the prefix accordingly.
 
@@ -28,16 +65,12 @@ To bring up the real robot, run:
 
 ```roslaunch ur_bringup ur5_bringup.launch robot_ip:=IP_OF_THE_ROBOT [reverse_port:=REVERSE_PORT]```
 
-A simple test script that moves the robot to predefined positions can be executed like this:
-
-```rosrun ur_driver test_move.py```
-
 
 CAUTION:  
 Remember that you should always have your hands on the big red button in case there is something in the way or anything unexpected happens.
 
 
-__MoveIt! with real Hardware__  
+___MoveIt! with real Hardware___  
 Additionally, you can use MoveIt! to control the robot.  
 There exist MoveIt! configuration packages for both robots.  
 
@@ -60,9 +93,7 @@ As MoveIt! seems to have difficulties with finding plans for the UR with full jo
 ```roslaunch ur5_moveit_config moveit_rviz.launch config:=true```
 
 
----
-
-__Usage with Gazebo Simulation__  
+___Usage with Gazebo Simulation___  
 There are launch files available to bringup a simulated robot - either UR5 or UR10.  
 In the following the commands for the UR5 are given. For the UR10, simply replace the prefix accordingly.
 
@@ -73,7 +104,7 @@ To bring up the simulated robot in Gazebo, run:
 ```roslaunch ur_gazebo ur5.launch```
 
 
-__MoveIt! with a simulated robot__  
+___MoveIt! with a simulated robot___  
 Again, you can use MoveIt! to control the simulated robot.  
 
 For setting up the MoveIt! nodes to allow motion planning run:
