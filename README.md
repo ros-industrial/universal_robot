@@ -25,7 +25,7 @@ replace `$ROS_DISTRO` with `hydro`, `indigo` or `kinetic`, depending on which RO
 
 ___Building from Source___
 
-There are releases available for ROS Hydro, Indigo and kinetic. However, for the latest features and developments you might want to build the packages from source.
+There are releases available for ROS Hydro, Indigo and Kinetic. However, for the latest features and developments you might want to build the packages from source.
 
 **NOTE**: please prefer using the binary release (see previous section) over building from source where possible. Source installs will not be automatically updated by new package releases and require more work to setup.
 
