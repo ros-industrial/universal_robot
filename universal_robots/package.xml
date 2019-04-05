@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>universal_robots</name>
+  <version>1.2.5</version>
+  <description>ROS-Industrial support for Universal Robots manipulators (metapackage).</description>
+  <author>Felix Messmer</author>
+  <author>Kelsey Hawkins</author>
+  <author>Shaun Edwards</author>
+  <author>Stuart Glaser</author>
+  <author>Wim Meeussen</author>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
+  <license>BSD</license>
+
+  <url type="website">http://wiki.ros.org/universal_robots</url>
+  <url type="bugtracker">https://github.com/ros-industrial/universal_robot/issues</url>
+  <url type="repository">https://github.com/ros-industrial/universal_robot</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>ur10_e_moveit_config</exec_depend>
+  <exec_depend>ur10_moveit_config</exec_depend>
+  <exec_depend>ur3_e_moveit_config</exec_depend>
+  <exec_depend>ur3_moveit_config</exec_depend>
+  <exec_depend>ur5_e_moveit_config</exec_depend>
+  <exec_depend>ur5_moveit_config</exec_depend>
+  <exec_depend>ur_bringup</exec_depend>
+  <exec_depend>ur_description</exec_depend>
+  <exec_depend>ur_driver</exec_depend>
+  <exec_depend>ur_e_description</exec_depend>
+  <exec_depend>ur_e_gazebo</exec_depend>
+  <exec_depend>ur_gazebo</exec_depend>
+  <exec_depend>ur_kinematics</exec_depend>
+  <exec_depend>ur_msgs</exec_depend>
+
+  <export>
+    <metapackage/>
+    <architecture_independent/>
+    <ros_industrial>
+      <support_level value="community" />
+    </ros_industrial>
+  </export>
+</package>

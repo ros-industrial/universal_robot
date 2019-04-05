@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_description</name>
-  <version>1.2.1</version>
+  <version>1.2.5</version>
   <description>
       URDF description for Universal UR5/10 robot arms
   </description>
 
   <author>Wim Meeussen</author>
-  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
+  <author>Kelsey Hawkins</author>
   <author>Mathias Ludtke</author>
-  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Felix Messmer</author>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
 
   <license>BSD</license>
 
@@ -19,6 +20,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>urdf</run_depend>
+  <run_depend>xacro</run_depend>
 
   <export>
   </export>

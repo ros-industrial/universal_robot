@@ -9,11 +9,11 @@
 <launch>
   
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
-  <arg name="robot_ip"/>
-  <arg name="reverse_port" default="50001"/>
-  <arg name="limited" default="false"/>
-  <arg name="min_payload"  default="0.0"/>
-  <arg name="max_payload"  default="20.0"/>
+  <arg name="robot_ip" doc="IP of the controller" />
+  <arg name="reverse_port" default="50001" doc="Port on which controller listens for position values passed to servoj thread from the driver" />
+  <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
+  <arg name="min_payload"  default="0.0" doc="lower payload bound for the robot" />
+  <arg name="max_payload"  default="20.0" doc="upper payload bound for the robot" />
 
   <!-- robot model -->
   <include file="$(find ur_description)/launch/ur10_upload.launch">

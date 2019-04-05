@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_kinematics</name>
-  <version>1.2.1</version>
+  <version>1.2.5</version>
   <description>
      Provides forward and inverse kinematics for Universal Robots designs.
      See http://hdl.handle.net/1853/50782 for details.
   </description>
 
-  <author email="kphawkins@gatech.edu">Kelsey Hawkins</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Kelsey Hawkins</author>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
   <license>BSD</license>
   <url type="website">http://wiki.ros.org/ur_kinematics</url>
   <url type="bugtracker">https://github.com/ros-industrial/universal_robot/issues</url>
@@ -26,6 +27,7 @@
   <build_depend>tf_conversions</build_depend>
   <build_depend>boost</build_depend>
 
+  <run_depend>rospy</run_depend>
   <run_depend>moveit_core</run_depend>
   <run_depend>moveit_kinematics</run_depend>
   <run_depend>moveit_ros_planning</run_depend>

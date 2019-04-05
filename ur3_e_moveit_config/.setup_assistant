@@ -1,0 +1,8 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ur_e_description
+    relative_path: urdf/ur3_e_robot.urdf.xacro
+  SRDF:
+    relative_path: config/ur3e.srdf
+  CONFIG:
+    generated_timestamp: 1438427891

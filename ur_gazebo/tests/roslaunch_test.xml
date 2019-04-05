@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group ns="ur3__">
+    <include file="$(find ur_gazebo)/launch/ur3.launch"/>
+  </group>
+
+  <group ns="ur5__">
+    <include file="$(find ur_gazebo)/launch/ur5.launch"/>
+  </group>
+
+  <group ns="ur10__">
+    <include file="$(find ur_gazebo)/launch/ur10.launch"/>
+  </group>
+
+  <group ns="ur3_joint_limited__">
+    <include file="$(find ur_gazebo)/launch/ur3_joint_limited.launch"/>
+  </group>
+
+  <group ns="ur5_joint_limited__">
+    <include file="$(find ur_gazebo)/launch/ur5_joint_limited.launch"/>
+  </group>
+
+  <group ns="ur10_joint_limited__">
+    <include file="$(find ur_gazebo)/launch/ur10_joint_limited.launch"/>
+  </group>
+
+  <group ns="controller_utils__">
+    <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
+  </group>
+
+</launch>

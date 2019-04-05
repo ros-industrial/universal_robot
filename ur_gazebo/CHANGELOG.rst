@@ -2,6 +2,15 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.5 (2019-04-05)
+------------------
+* Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
+* UR-E Series (`#380 <https://github.com/ros-industrial/universal_robot/issues/380>`_)
+* Update maintainer and author information.
+* Add roslaunch tests (`#362 <https://github.com/ros-industrial/universal_robot/issues/362>`_)
+* Using the 'doc' attribute on 'arg' elements.
+* Contributors: Dave Niewinski, gavanderhoorn, Harsh Deshpande, Nadia Hammoudeh García
+
 1.2.1 (2018-01-06)
 ------------------
 

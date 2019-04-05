@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
 
 <!--
   Author: Kelsey Hawkins
@@ -8,47 +8,6 @@
 
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
-
-  <!-- Inertia parameters -->
-  <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
-  <xacro:property name="shoulder_mass" value="7.778" />
-  <xacro:property name="upper_arm_mass" value="12.93" />
-  <xacro:property name="forearm_mass" value="3.87" />
-  <xacro:property name="wrist_1_mass" value="1.96" />
-  <xacro:property name="wrist_2_mass" value="1.96" />
-  <xacro:property name="wrist_3_mass" value="0.202" />
-
-  <!-- These parameters are borrowed from the urcontrol.conf file
-       but are not verified for the correct permutation.
-       The permutation was guessed by looking at the UR5 parameters.
-       Serious use of these parameters needs further inspection. -->
-  <xacro:property name="shoulder_cog" value="0.00008 0.00244 -0.037" />
-  <xacro:property name="upper_arm_cog" value="0.00001 0.15061 0.38757" />
-  <xacro:property name="forearm_cog" value="-0.00012 0.06112 0.1984" />
-  <xacro:property name="wrist_1_cog" value="-0.00021 -0.00112 0.02269" />
-  <xacro:property name="wrist_2_cog" value="-0.00021 0.00112 0.002269" />
-  <xacro:property name="wrist_3_cog" value="0 -0.001156 -0.00149" />
-
-  <!-- Kinematic model -->
-  <!-- Properties from urcontrol.conf -->
-  <xacro:property name="ur10_d1" value="0.1273" />
-  <xacro:property name="ur10_a2" value="-0.612" />
-  <xacro:property name="ur10_a3" value="-0.5723" />
-  <xacro:property name="ur10_d4" value="0.163941" />
-  <xacro:property name="ur10_d5" value="0.1157" />
-  <xacro:property name="ur10_d6" value="0.0922" />
-
-  <!-- Arbitrary offsets for shoulder/elbow joints -->
-  <xacro:property name="shoulder_offset" value="0.220941" />  <!-- measured from model -->
-  <xacro:property name="elbow_offset" value="-0.1719" /> <!-- measured from model -->
-
-  <!-- link lengths used in model -->
-  <xacro:property name="shoulder_height" value="${ur10_d1}" />
-  <xacro:property name="upper_arm_length" value="${-ur10_a2}" />
-  <xacro:property name="forearm_length" value="${-ur10_a3}" />
-  <xacro:property name="wrist_1_length" value="${ur10_d4 - elbow_offset - shoulder_offset}" />
-  <xacro:property name="wrist_2_length" value="${ur10_d5}" />
-  <xacro:property name="wrist_3_length" value="${ur10_d6}" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
@@ -60,14 +19,55 @@
     </inertial>
   </xacro:macro>
 
-
   <xacro:macro name="ur10_robot" params="prefix joint_limited
-		 shoulder_pan_lower_limit:=${-pi}    shoulder_pan_upper_limit:=${pi}
-		 shoulder_lift_lower_limit:=${-pi}    shoulder_lift_upper_limit:=${pi}
-		 elbow_joint_lower_limit:=${-pi}    elbow_joint_upper_limit:=${pi}
-		 wrist_1_lower_limit:=${-pi}    wrist_1_upper_limit:=${pi}
-		 wrist_2_lower_limit:=${-pi}    wrist_2_upper_limit:=${pi}
-		 wrist_3_lower_limit:=${-pi}    wrist_3_upper_limit:=${pi}">
+    shoulder_pan_lower_limit:=${-pi}    shoulder_pan_upper_limit:=${pi}
+    shoulder_lift_lower_limit:=${-pi}    shoulder_lift_upper_limit:=${pi}
+    elbow_joint_lower_limit:=${-pi}    elbow_joint_upper_limit:=${pi}
+    wrist_1_lower_limit:=${-pi}    wrist_1_upper_limit:=${pi}
+    wrist_2_lower_limit:=${-pi}    wrist_2_upper_limit:=${pi}
+    wrist_3_lower_limit:=${-pi}    wrist_3_upper_limit:=${pi}
+    transmission_hw_interface:=hardware_interface/PositionJointInterface">
+
+    <!-- Inertia parameters -->
+    <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
+    <xacro:property name="shoulder_mass" value="7.778" />
+    <xacro:property name="upper_arm_mass" value="12.93" />
+    <xacro:property name="forearm_mass" value="3.87" />
+    <xacro:property name="wrist_1_mass" value="1.96" />
+    <xacro:property name="wrist_2_mass" value="1.96" />
+    <xacro:property name="wrist_3_mass" value="0.202" />
+
+    <!-- These parameters are borrowed from the urcontrol.conf file
+        but are not verified for the correct permutation.
+        The permutation was guessed by looking at the UR5 parameters.
+        Serious use of these parameters needs further inspection. -->
+    <xacro:property name="shoulder_cog" value="0.00008 0.00244 -0.037" />
+    <xacro:property name="upper_arm_cog" value="0.00001 0.15061 0.38757" />
+    <xacro:property name="forearm_cog" value="-0.00012 0.06112 0.1984" />
+    <xacro:property name="wrist_1_cog" value="-0.00021 -0.00112 0.02269" />
+    <xacro:property name="wrist_2_cog" value="-0.00021 0.00112 0.002269" />
+    <xacro:property name="wrist_3_cog" value="0 -0.001156 -0.00149" />
+
+    <!-- Kinematic model -->
+    <!-- Properties from urcontrol.conf -->
+    <xacro:property name="d1" value="0.1273" />
+    <xacro:property name="a2" value="-0.612" />
+    <xacro:property name="a3" value="-0.5723" />
+    <xacro:property name="d4" value="0.163941" />
+    <xacro:property name="d5" value="0.1157" />
+    <xacro:property name="d6" value="0.0922" />
+
+    <!-- Arbitrary offsets for shoulder/elbow joints -->
+    <xacro:property name="shoulder_offset" value="0.220941" />  <!-- measured from model -->
+    <xacro:property name="elbow_offset" value="-0.1719" /> <!-- measured from model -->
+
+    <!-- link lengths used in model -->
+    <xacro:property name="shoulder_height" value="${d1}" />
+    <xacro:property name="upper_arm_length" value="${-a2}" />
+    <xacro:property name="forearm_length" value="${-a3}" />
+    <xacro:property name="wrist_1_length" value="${d4 - elbow_offset - shoulder_offset}" />
+    <xacro:property name="wrist_2_length" value="${d5}" />
+    <xacro:property name="wrist_3_length" value="${d6}" />
 
     <link name="${prefix}base_link" >
       <visual>
@@ -149,8 +149,8 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/upperarm.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="${-ur10_a2}" mass="${upper_arm_mass}">
-        <origin xyz="0.0 0.0 ${-ur10_a2/2.0}" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.075" length="${-a2}" mass="${upper_arm_mass}">
+        <origin xyz="0.0 0.0 ${-a2/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -182,8 +182,8 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/forearm.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="${-ur10_a3}" mass="${forearm_mass}">
-        <origin xyz="0.0 0.0 ${-ur10_a3/2.0}" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.075" length="${-a3}" mass="${forearm_mass}">
+        <origin xyz="0.0 0.0 ${-a3/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -301,7 +301,7 @@
       </collision>
     </link>
 
-    <xacro:ur_arm_transmission prefix="${prefix}" />
+    <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
     <xacro:ur_arm_gazebo prefix="${prefix}" />
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->

@@ -1,22 +1,25 @@
 <?xml version="1.0"?>
 <package>
   <name>ur_bringup</name>
-  <version>1.2.1</version>
+  <version>1.2.5</version>
   <description>The ur_bringup package</description>
 
   <author>Wim Meeussen</author>
-  <author email="sedwards@swri.org">Shaun Edwards</author>
-  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Shaun Edwards</author>
+  <author>Felix Messmer</author>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
 
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/ur_bringup</url>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>roslaunch</test_depend>
   <run_depend>tf2_ros</run_depend>
   <run_depend>ur_description</run_depend>
   <run_depend>ur_driver</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
 
   <export>
   </export>

@@ -1,13 +1,14 @@
 <package>
 
   <name>ur3_moveit_config</name>
-  <version>1.2.1</version>
+  <version>1.2.5</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur3 with the MoveIt Motion Planning Framework
   </description>
-  <author email="fxm@ipa.fhg.de">Felix Messmer</author>
-  <maintainer email="fxm@ipa.fhg.de">Felix Messmer</maintainer>
+  <author>Felix Messmer</author>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
   
   <license>BSD</license>
 
@@ -26,7 +27,7 @@
   <build_depend>ur_description</build_depend>
   <run_depend>ur_description</run_depend>
 
-
+  <test_depend>roslaunch</test_depend>
   <buildtool_depend>catkin</buildtool_depend>
   
 </package>

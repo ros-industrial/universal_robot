@@ -2,6 +2,14 @@
 Changelog for package ur_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.5 (2019-04-05)
+------------------
+* Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
+* update maintainer and author information.
+* Add roslaunch tests (`#362 <https://github.com/ros-industrial/universal_robot/issues/362>`_)
+* Using the 'doc' attribute on 'arg' elements.
+* Contributors: gavanderhoorn, Harsh Deshpande, Nadia Hammoudeh García
+
 1.2.1 (2018-01-06)
 ------------------
 * Merge pull request `#322 <https://github.com//ros-industrial/universal_robot/issues/322>`_ from gavanderhoorn/use_robot_state_publisher
