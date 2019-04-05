@@ -1,7 +1,7 @@
 <package>
 
   <name>ur5_moveit_config</name>
-  <version>1.2.1</version>
+  <version>1.2.5</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur5 with the MoveIt Motion Planning Framework
   </description>

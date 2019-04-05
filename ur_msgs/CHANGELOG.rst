@@ -2,8 +2,8 @@
 Changelog for package ur_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.5 (2019-04-05)
+------------------
 * Correct width and type of 'digital\_*_bits'. (`#416 <https://github.com/ros-industrial/universal_robot/issues/416>`_)
 * Clarify use of fields in SetIO svc. (`#415 <https://github.com/ros-industrial/universal_robot/issues/415>`_)
 * Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)

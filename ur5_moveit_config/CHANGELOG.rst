@@ -2,8 +2,8 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.5 (2019-04-05)
+------------------
 * Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
 * MoveGroupExecuteService is Deprecated by MoveIt! (`#391 <https://github.com/ros-industrial/universal_robot/issues/391>`_)
 * Update maintainer and author information.
