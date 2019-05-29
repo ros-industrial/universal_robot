@@ -60,6 +60,7 @@
     <!-- Arbitrary offsets for shoulder/elbow joints -->
     <xacro:property name="shoulder_offset" value="0.220941" />  <!-- measured from model -->
     <xacro:property name="elbow_offset" value="-0.1719" /> <!-- measured from model -->
+    <xacro:property name="upper_arm_inertia_offset" value="0.045" />  <!-- measured from model -->
 
     <!-- link lengths used in model -->
     <xacro:property name="shoulder_height" value="${d1}" />
@@ -150,7 +151,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="${-a2}" mass="${upper_arm_mass}">
-        <origin xyz="0.0 0.0 ${-a2/2.0}" rpy="0 0 0" />
+        <origin xyz="0.0 ${-upper_arm_inertia_offset} ${-a2/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -216,7 +217,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_1_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -249,7 +250,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_2_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -281,8 +282,8 @@
           <mesh filename="package://ur_description/meshes/ur10/collision/wrist3.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.045" length="0.0305" mass="${wrist_3_mass}">
+        <origin xyz="0.0 ${wrist_3_length - 0.0305/2} 0.0" rpy="${pi/2} 0 0" />
       </xacro:cylinder_inertial>
     </link>
 

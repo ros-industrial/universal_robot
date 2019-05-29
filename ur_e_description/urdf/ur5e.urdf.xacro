@@ -164,8 +164,8 @@
           <mesh filename="package://ur_e_description/meshes/ur5e/collision/upperarm.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.56" mass="${upper_arm_mass}">
-        <origin xyz="0.0 0.0 0.28" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="${upper_arm_length}" mass="${upper_arm_mass}">
+        <origin xyz="0.0 0.0 ${upper_arm_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -197,8 +197,8 @@
           <mesh filename="package://ur_e_description/meshes/ur5e/collision/forearm.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.5" mass="${forearm_mass}">
-        <origin xyz="0.0 0.0 0.25" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="${forearm_length}" mass="${forearm_mass}">
+        <origin xyz="0.0 0.0 ${forearm_length/2}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -230,8 +230,8 @@
           <mesh filename="package://ur_e_description/meshes/ur5e/collision/wrist1.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_1_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="0.12" mass="${wrist_1_mass}">
+        <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -263,8 +263,8 @@
           <mesh filename="package://ur_e_description/meshes/ur5e/collision/wrist2.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_2_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.06" length="0.12" mass="${wrist_2_mass}">
+        <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -296,8 +296,8 @@
           <mesh filename="package://ur_e_description/meshes/ur5e/collision/wrist3.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.6" length="0.12" mass="${wrist_3_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.0375" length="0.0458" mass="${wrist_3_mass}">
+        <origin xyz="0.0 ${wrist_3_length - 0.0458/2} 0.0" rpy="${pi/2} 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
