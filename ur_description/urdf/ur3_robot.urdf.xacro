@@ -11,8 +11,10 @@
   <xacro:include filename="$(find ur_description)/urdf/ur3.urdf.xacro" />
 
   <!-- arm -->
+  <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur3_default.yaml"/>
   <xacro:ur3_robot prefix="" joint_limited="false"
     transmission_hw_interface="$(arg transmission_hw_interface)"
+    kinematics_file="${load_yaml('$(arg kinematics_config)')}"
   />
 
   <link name="world" />
