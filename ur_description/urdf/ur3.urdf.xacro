@@ -8,7 +8,7 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
-   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
+  <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
       <xacro:insert_block name="origin" />
@@ -166,7 +166,7 @@
     <link name="${prefix}forearm_link">
       <visual>
         <origin xyz="0 0 ${elbow_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
-         <geometry>
+        <geometry>
           <mesh filename="package://ur_description/meshes/ur3/visual/forearm.dae"/>
         </geometry>
         <material name="LightGrey">

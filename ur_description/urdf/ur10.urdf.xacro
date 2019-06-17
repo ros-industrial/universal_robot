@@ -167,7 +167,7 @@
     <link name="${prefix}forearm_link">
       <visual>
         <origin xyz="0 0 ${elbow_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
-         <geometry>
+        <geometry>
           <mesh filename="package://ur_description/meshes/ur10/visual/forearm.dae"/>
         </geometry>
         <material name="LightGrey">
@@ -223,7 +223,7 @@
     <joint name="${prefix}wrist_2_joint" type="revolute">
       <parent link="${prefix}wrist_1_link" />
       <child link = "${prefix}wrist_2_link" />
-    <origin xyz="${__kinematics['wrist_2']['x']} ${__kinematics['wrist_2']['y']} ${__kinematics['wrist_2']['z']}" rpy="${__kinematics['wrist_2']['roll']} ${__kinematics['wrist_2']['pitch']} ${__kinematics['wrist_2']['yaw']}" />
+      <origin xyz="${__kinematics['wrist_2']['x']} ${__kinematics['wrist_2']['y']} ${__kinematics['wrist_2']['z']}" rpy="${__kinematics['wrist_2']['roll']} ${__kinematics['wrist_2']['pitch']} ${__kinematics['wrist_2']['yaw']}" />
       <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
@@ -258,7 +258,7 @@
     <joint name="${prefix}wrist_3_joint" type="revolute">
       <parent link="${prefix}wrist_2_link" />
       <child link = "${prefix}wrist_3_link" />
-    <origin xyz="${__kinematics['wrist_3']['x']} ${__kinematics['wrist_3']['y']} ${__kinematics['wrist_3']['z']}" rpy="${__kinematics['wrist_3']['roll']} ${__kinematics['wrist_3']['pitch']} ${__kinematics['wrist_3']['yaw']}" />
+      <origin xyz="${__kinematics['wrist_3']['x']} ${__kinematics['wrist_3']['y']} ${__kinematics['wrist_3']['z']}" rpy="${__kinematics['wrist_3']['roll']} ${__kinematics['wrist_3']['pitch']} ${__kinematics['wrist_3']['yaw']}" />
       <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
