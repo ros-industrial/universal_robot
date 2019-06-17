@@ -9,7 +9,10 @@
   <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur5e_robot prefix="" joint_limited="false"/>
+  <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur5e_default.yaml"/>
+  <xacro:ur5e_robot prefix="" joint_limited="false"
+    kinematics_file="${load_yaml('$(arg kinematics_config)')}"
+    />
 
   <link name="world" />
 
