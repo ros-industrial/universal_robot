@@ -187,7 +187,7 @@
       <parent link="${prefix}forearm_link" />
       <child link = "${prefix}wrist_1_link" />
       <origin xyz="${__kinematics['wrist_1']['x']} ${__kinematics['wrist_1']['y']} ${__kinematics['wrist_1']['z']}" rpy="${__kinematics['wrist_1']['roll']} ${__kinematics['wrist_1']['pitch']} ${__kinematics['wrist_1']['yaw']}" />
-      <axis xyz="0 1 0" />
+      <axis xyz="0 0 1" />
       <xacro:unless value="${joint_limited}">
         <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="6.28"/>
       </xacro:unless>
