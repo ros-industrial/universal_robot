@@ -13,7 +13,7 @@
     <xacro:read_file joints_limits_parameters_file="${joints_limits_parameters_file}" 
                     physical_parameters_file="${physical_parameters_file}"
                     visual_parameters_file="${visual_parameters_file}"/>
-    <xacro:compute_lenght d1="${d1}" a2="${a2}" a3="${a3}"
+    <xacro:compute_length d1="${d1}" a2="${a2}" a3="${a3}"
                           d4="${d4}" d5="${d5}" d6="${d6}"
                           shoulder_offset="${shoulder_offset}" elbow_offset="${elbow_offset}"/>
 
@@ -30,7 +30,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${base_colision_mesh}"/>
+          <mesh filename="${base_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${base_inertia_radius}" length="${base_inertia_length}" mass="${base_mass}">
@@ -59,7 +59,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${shoulder_colision_mesh}"/>
+          <mesh filename="${shoulder_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${shoulder_inertia_radius}" length="${shoulder_inertia_length}" mass="${shoulder_mass}">
@@ -88,7 +88,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${upper_arm_colision_mesh}"/>
+          <mesh filename="${upper_arm_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${upperarm_inertia_radius}" length="${-a2}" mass="${upper_arm_mass}">
@@ -117,7 +117,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${forearm_colision_mesh}"/>
+          <mesh filename="${forearm_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${forearm_inertia_radius}" length="${-a3}"  mass="${forearm_mass}">
@@ -146,7 +146,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${wrist_1_colision_mesh}"/>
+          <mesh filename="${wrist_1_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_1_inertia_radius}" length="${wrist_1_inertia_length}"  mass="${wrist_1_mass}">
@@ -175,7 +175,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${wrist_2_colision_mesh}"/>
+          <mesh filename="${wrist_2_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_2_inertia_radius}" length="${wrist_2_inertia_length}"  mass="${wrist_2_mass}">
@@ -204,7 +204,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="${wrist_3_colision_mesh}"/>
+          <mesh filename="${wrist_3_collision_mesh}"/>
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_3_inertia_radius}" length="${wrist_3_inertia_length}"  mass="${wrist_3_mass}">
