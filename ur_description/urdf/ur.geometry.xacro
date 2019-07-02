@@ -1,20 +1,23 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
+<!--
+  Author: Ludovic Delval
+  Contributor: Felix Messmer, Kelsey Hawkins, Jimmy Da Silva, Ajit Krisshna N L, Muhammad Asif Rana
+-->
 
-  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
+ <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+ <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
+ <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
 
-  <xacro:macro name="ur5_robot" params="prefix joints_limits_parameters_file 
-                                               physical_parameters_file 
-                                               visual_parameters_file 
-                                               transmission_hw_interface:=hardware_interface/PositionJointInterface">
+ <xacro:macro name="ur_robot" params="prefix joints_limits_parameters_file physical_parameters_file visual_parameters_file transmission_hw_interface:=hardware_interface/PositionJointInterface">
     <xacro:read_file joints_limits_parameters_file="${joints_limits_parameters_file}" 
                     physical_parameters_file="${physical_parameters_file}"
                     visual_parameters_file="${visual_parameters_file}"/>
     <xacro:compute_lenght d1="${d1}" a2="${a2}" a3="${a3}"
                           d4="${d4}" d5="${d5}" d6="${d6}"
                           shoulder_offset="${shoulder_offset}" elbow_offset="${elbow_offset}"/>
+
+
 
     <link name="${prefix}base_link" >
       <visual>
@@ -41,7 +44,7 @@
       <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
-        effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
+          effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -88,8 +91,8 @@
           <mesh filename="${upper_arm_colision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${upperarm_inertia_radius}" length="${upperarm_inertia_length}" mass="${upper_arm_mass}">
-        <origin xyz="0.0 0.0 0.28" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="${upperarm_inertia_radius}" length="${-a2}" mass="${upper_arm_mass}">
+        <origin xyz="0.0 0.0 ${-a2/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -117,8 +120,8 @@
           <mesh filename="${forearm_colision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${forearm_inertia_radius}" length="{-a3}"  mass="${forearm_mass}">
-        <origin xyz="0.0 0.0 ${-a3/2}" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="${forearm_inertia_radius}" length="${-a3}"  mass="${forearm_mass}">
+        <origin xyz="0.0 0.0 ${-a3/2.0}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -147,7 +150,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_1_inertia_radius}" length="${wrist_1_inertia_length}"  mass="${wrist_1_mass}">
-        <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -157,7 +160,7 @@
       <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <limit lower="${wrist_2_lower_limit}" upper="${wrist_2_upper_limit}"
-        effort="${wrist_2_effort_limit}" velocity="${wrist_2_velocity_limit}"/>
+             effort="${wrist_2_effort_limit}" velocity="${wrist_2_velocity_limit}"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -186,7 +189,7 @@
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <limit lower="${wrist_3_lower_limit}" upper="${wrist_3_upper_limit}"
-        effort="${wrist_3_effort_limit}" velocity="${wrist_3_velocity_limit}"/>
+             effort="${wrist_3_effort_limit}" velocity="${wrist_3_velocity_limit}"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -205,7 +208,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_3_inertia_radius}" length="${wrist_3_inertia_length}"  mass="${wrist_3_mass}">
-        <origin xyz="0.0 ${wrist_3_length - 0.0345/2} 0.0" rpy="0 0 0" />
+        <origin xyz="0.0 ${wrist_3_length - 0.02} 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 

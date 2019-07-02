@@ -9,10 +9,9 @@
    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
    <!-- common stuff -->
    <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
-   <!-- ur3 -->
-   <xacro:include filename="$(find ur_description)/urdf/ur3.urdf.xacro" />
+   <xacro:include filename="$(find ur_description)/urdf/ur.geometry.xacro" />
    <!-- arm -->
-   <xacro:ur3_robot prefix="" joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
+   <xacro:ur_robot prefix="" joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
                              physical_parameters_file="${load_yaml('$(arg physical_params)')}" 
                              visual_parameters_file="${load_yaml('$(arg visual_params)')}"
                              transmission_hw_interface="$(arg transmission_hw_interface)"/>

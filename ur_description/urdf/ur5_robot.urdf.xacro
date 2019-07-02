@@ -6,12 +6,11 @@
   <xacro:arg name="physical_params" default="$(find ur_description)/config/ur5/physical_parameters.yaml"/>
   <xacro:arg name="visual_params" default="$(find ur_description)/config/ur5/visual_parameters.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-  <!-- common stuff -->
-  <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
-  <!-- ur5 -->
-  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
-  <!-- arm -->
-  <xacro:ur5_robot prefix=""  joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
+   <!-- common stuff -->
+   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
+   <xacro:include filename="$(find ur_description)/urdf/ur.geometry.xacro" />
+   <!-- arm -->
+   <xacro:ur_robot prefix="" joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
                              physical_parameters_file="${load_yaml('$(arg physical_params)')}" 
                              visual_parameters_file="${load_yaml('$(arg visual_params)')}"
                              transmission_hw_interface="$(arg transmission_hw_interface)"/>
