@@ -20,6 +20,6 @@ matrix:
     - env: ROS_DISTRO="melodic"   ROS_REPO=ros-shadow-fixed
     - env: ROS_DISTRO="melodic"   PRERELEASE=true
 install:
-  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+  - git clone --quiet --depth=1 https://github.com/ros-industrial/industrial_ci.git .ci_config
 script:
   - source .ci_config/travis.sh
