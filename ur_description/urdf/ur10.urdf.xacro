@@ -10,8 +10,13 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
 
-  <xacro:macro name="ur10_robot" params="prefix yaml_file transmission_hw_interface:=hardware_interface/PositionJointInterface">
-    <xacro:read_file yaml_file="${yaml_file}"/>
+  <xacro:macro name="ur10_robot" params="prefix joints_limits_parameters_file 
+                                                physical_parameters_file 
+                                                visual_parameters_file 
+                                                transmission_hw_interface:=hardware_interface/PositionJointInterface">
+    <xacro:read_file joints_limits_parameters_file="${joints_limits_parameters_file}" 
+                    physical_parameters_file="${physical_parameters_file}"
+                    visual_parameters_file="${visual_parameters_file}"/>
     <xacro:compute_lenght d1="${d1}" a2="${a2}" a3="${a3}"
                           d4="${d4}" d5="${d5}" d6="${d6}"
                           shoulder_offset="${shoulder_offset}" elbow_offset="${elbow_offset}"/>

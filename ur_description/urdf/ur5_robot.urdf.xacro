@@ -2,17 +2,18 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro"
        name="ur5" >
 
+  <xacro:arg name="joints_limits_params" default="$(find ur_description)/config/ur5/joints_limits_parameters.yaml"/>
+  <xacro:arg name="physical_params" default="$(find ur_description)/config/ur5/physical_parameters.yaml"/>
+  <xacro:arg name="visual_params" default="$(find ur_description)/config/ur5/visual_parameters.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-  <xacro:arg name="yaml_config" default="$(find ur_description)/config/ur5_default.yaml"/>
   <!-- common stuff -->
   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
-
   <!-- ur5 -->
   <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
-
   <!-- arm -->
-  <xacro:ur5_robot prefix="" yaml_file="${load_yaml('$(arg yaml_config)')}"
-    transmission_hw_interface="$(arg transmission_hw_interface)"
-  />
+  <xacro:ur5_robot prefix=""  joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
+                             physical_parameters_file="${load_yaml('$(arg physical_params)')}" 
+                             visual_parameters_file="${load_yaml('$(arg visual_params)')}"
+                             transmission_hw_interface="$(arg transmission_hw_interface)"/>
 
 </robot>

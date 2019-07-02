@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="joint_limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints ." />
-  <arg name="yaml_config" default=" " doc="Use the joints limits from the yaml file instead of the default [-PI, PI]."/>
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur10/joints_limits_parameters.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur10/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur10/visual_parameters.yaml"/>
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
-  <!--   <arg name="yaml_config" default="$(find ur_description)/config/joint_limit.yaml" doc="Use the joints limits from the yaml file instead of the default [-PI, PI]."/> -->
-  
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_robot_yaml.urdf.xacro' joint_limited:=$(arg joint_limited) yaml_config:=$(arg yaml_config) transmission_hw_interface:=$(arg transmission_hw_interface)" />
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur10_robot.urdf.xacro' --inorder joints_limits_params:=$(arg joints_limits_params) physical_params:=$(arg physical_params) visual_params:=$(arg visual_params) transmission_hw_interface:=$(arg transmission_hw_interface)"/>
 </launch>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
 <!--
   Author: Ludovic Delval
   Contributor: Felix Messmer
@@ -14,12 +14,12 @@
     </inertial>
   </xacro:macro>
 
-  <xacro:macro name="read_file" params="yaml_file">
-    <xacro:property name="__limits" value="${yaml_file['limits']}"/>
-    <xacro:property name="__dh_parameters" value="${yaml_file['dh_parameters']}"/>
-    <xacro:property name="__offsets" value="${yaml_file['offsets']}"/>
-    <xacro:property name="__inertia_parameters" value="${yaml_file['inertia_parameters']}" />
-    <xacro:property name="__mesh_files" value="${yaml_file['mesh_files']}" />
+  <xacro:macro name="read_file" params="joints_limits_parameters_file physical_parameters_file visual_parameters_file">
+    <xacro:property name="__limits" value="${joints_limits_parameters_file['limits']}"/>
+    <xacro:property name="__dh_parameters" value="${physical_parameters_file['dh_parameters']}"/>
+    <xacro:property name="__offsets" value="${physical_parameters_file['offsets']}"/>
+    <xacro:property name="__inertia_parameters" value="${physical_parameters_file['inertia_parameters']}" />
+    <xacro:property name="__mesh_files" value="${visual_parameters_file['mesh_files']}" />
 
     <!-- JOINTS LIMIT PARAMETERS -->
     <xacro:property name="shoulder_pan_lower_limit" value="${__limits['shoulder_pan']['lower']}" scope="parent"/>

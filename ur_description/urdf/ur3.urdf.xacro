@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
 
 <!--
   Author: Felix Messmer
@@ -9,12 +9,13 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
 
-  <xacro:macro name="ur3_robot" params="prefix yaml_file transmission_hw_interface:=hardware_interface/PositionJointInterface">
-    <xacro:read_file yaml_file="${yaml_file}"/>
+  <xacro:macro name="ur3_robot" params="prefix joints_limits_parameters_file physical_parameters_file visual_parameters_file transmission_hw_interface:=hardware_interface/PositionJointInterface">
+    <xacro:read_file joints_limits_parameters_file="${joints_limits_parameters_file}" 
+                    physical_parameters_file="${physical_parameters_file}"
+                    visual_parameters_file="${visual_parameters_file}"/>
     <xacro:compute_lenght d1="${d1}" a2="${a2}" a3="${a3}"
                           d4="${d4}" d5="${d5}" d6="${d6}"
-                          shoulder_offset="${shoulder_offset}" elbow_offset="${elbow_offset}"
-/>
+                          shoulder_offset="${shoulder_offset}" elbow_offset="${elbow_offset}"/>
 
 
 
@@ -71,12 +72,8 @@
       <child link = "${prefix}upper_arm_link" />
       <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
       <axis xyz="0 1 0" />
-      <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
-      </xacro:unless>
-      <xacro:if value="${joint_limited}">
-        <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}" effort="330.0" velocity="2.16"/>
-      </xacro:if>
+      <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}"
+        effort="${shoulder_lift_effort_limit}" velocity="${shoulder_lift_velocity_limit}"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -230,7 +227,7 @@
       </collision>
     </link>
 
-    <xacro:ur_arm_transmission prefix="${prefix}" />
+    <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
     <xacro:ur_arm_gazebo prefix="${prefix}" />
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->

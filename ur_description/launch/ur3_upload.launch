@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="yaml_config" default="$(find ur_description)/config/ur3_default.yaml"/>
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur3/joints_limits_parameters.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur3/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur3/visual_parameters.yaml"/>
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
 
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur3_robot_yaml.urdf.xacro' joint_limited:=$(arg joint_limited) yaml_config:=$(arg yaml_config) transmission_hw_interface:=$(arg transmission_hw_interface)" />
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur3_robot.urdf.xacro' --inorder joints_limits_params:=$(arg joints_limits_params) physical_params:=$(arg physical_params) visual_params:=$(arg visual_params) transmission_hw_interface:=$(arg transmission_hw_interface)"/>
 </launch>
