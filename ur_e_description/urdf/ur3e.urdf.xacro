@@ -214,7 +214,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_1_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -247,7 +247,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_2_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
@@ -279,8 +279,8 @@
           <mesh filename="package://ur_e_description/meshes/ur3e/collision/wrist3.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <xacro:cylinder_inertial radius="0.032" length="0.042" mass="${wrist_3_mass}">
+        <origin xyz="0.0 ${wrist_3_length - 0.021} 0.0" rpy="${pi/2} 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
