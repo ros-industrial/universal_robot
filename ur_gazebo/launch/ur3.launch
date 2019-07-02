@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur3/joints_limits_parameters.yaml" doc="Yaml file containg the joints limits data"/>
   <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts gazebo gui" />
 
@@ -13,7 +13,7 @@
 
   <!-- send robot urdf to param server -->
   <include file="$(find ur_description)/launch/ur3_upload.launch">
-    <arg name="yaml_config" if="$(arg limited)" value="$(find ur_description)/config/ur3_joint_limited.yaml"/>
+    <arg name="joints_limits_params" value="$(arg joints_limits_params)"/>
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->

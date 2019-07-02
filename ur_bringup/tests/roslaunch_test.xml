@@ -2,7 +2,6 @@
 <launch>
   <arg name="robot_ip" value="127.0.0.1" />
   <arg name="reverse_port" default="50001"/>
-  <arg name="limited" default="false"/>
   <arg name="min_payload" default="0.0"/>
   <arg name="max_payload" default="20.0"/>
 
@@ -20,24 +19,6 @@
 
   <group ns="ur10_bringup__">
     <include file="$(find ur_bringup)/launch/ur10_bringup.launch">
-      <arg name="robot_ip" value="$(arg robot_ip)" />
-    </include>
-  </group>
-
-  <group ns="ur3_bringup_joint_limited__">
-    <include file="$(find ur_bringup)/launch/ur3_bringup_joint_limited.launch">
-      <arg name="robot_ip" value="$(arg robot_ip)" />
-    </include>
-  </group>
-
-  <group ns="ur5_bringup_joint_limited__">
-    <include file="$(find ur_bringup)/launch/ur5_bringup_joint_limited.launch">
-      <arg name="robot_ip" value="$(arg robot_ip)" />
-    </include>
-  </group>
-
-  <group ns="ur10_bringup_joint_limited__">
-    <include file="$(find ur_bringup)/launch/ur10_bringup_joint_limited.launch">
       <arg name="robot_ip" value="$(arg robot_ip)" />
     </include>
   </group>

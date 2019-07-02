@@ -13,20 +13,4 @@
     <include file="$(find ur_gazebo)/launch/ur10.launch"/>
   </group>
 
-  <group ns="ur3_joint_limited__">
-    <include file="$(find ur_gazebo)/launch/ur3_joint_limited.launch"/>
-  </group>
-
-  <group ns="ur5_joint_limited__">
-    <include file="$(find ur_gazebo)/launch/ur5_joint_limited.launch"/>
-  </group>
-
-  <group ns="ur10_joint_limited__">
-    <include file="$(find ur_gazebo)/launch/ur10_joint_limited.launch"/>
-  </group>
-
-  <group ns="controller_utils__">
-    <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
-  </group>
-
 </launch>
