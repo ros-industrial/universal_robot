@@ -13,4 +13,16 @@
     <include file="$(find ur_gazebo)/launch/ur10.launch"/>
   </group>
 
+  <group ns="ur3e__">
+    <include file="$(find ur_gazebo)/launch/ur3e.launch"/>
+  </group>
+
+  <group ns="ur5e__">
+    <include file="$(find ur_gazebo)/launch/ur5e.launch"/>
+  </group>
+
+  <group ns="ur10e__">
+    <include file="$(find ur_gazebo)/launch/ur10e.launch"/>
+  </group>
+
 </launch>

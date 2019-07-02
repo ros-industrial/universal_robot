@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur5e/joints_limits_parameters.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur5e_robot.urdf.xacro' --inorder joints_limits_params:=$(arg joints_limits_params) physical_params:=$(arg physical_params) visual_params:=$(arg visual_params) transmission_hw_interface:=$(arg transmission_hw_interface)"/>
+</launch>

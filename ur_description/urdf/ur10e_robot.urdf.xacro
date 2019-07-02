@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="ur10e" >
+
+  <!-- common stuff -->
+  <xacro:arg name="joints_limits_params" default="$(find ur_description)/config/ur10e/joints_limits_parameters.yaml"/>
+  <xacro:arg name="physical_params" default="$(find ur_description)/config/ur10e/physical_parameters.yaml"/>
+  <xacro:arg name="visual_params" default="$(find ur_description)/config/ur10e/visual_parameters.yaml"/>
+  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+   <!-- common stuff -->
+   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
+   <xacro:include filename="$(find ur_description)/urdf/ur.geometry.xacro" />
+   <!-- arm -->
+   <xacro:ur_robot prefix="" joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
+                             physical_parameters_file="${load_yaml('$(arg physical_params)')}" 
+                             visual_parameters_file="${load_yaml('$(arg visual_params)')}"
+                             transmission_hw_interface="$(arg transmission_hw_interface)"/>
+
+
+</robot>

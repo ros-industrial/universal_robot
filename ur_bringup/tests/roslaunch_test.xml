@@ -23,6 +23,24 @@
     </include>
   </group>
 
+  <group ns="ur3e_bringup__">
+    <include file="$(find ur_bringup)/launch/ur3e_bringup.launch">
+      <arg name="robot_ip" value="$(arg robot_ip)" />
+    </include>
+  </group>
+
+  <group ns="ur5e_bringup__">
+    <include file="$(find ur_bringup)/launch/ur5e_bringup.launch">
+      <arg name="robot_ip" value="$(arg robot_ip)" />
+    </include>
+  </group>
+
+  <group ns="ur10e_bringup__">
+    <include file="$(find ur_bringup)/launch/ur10e_bringup.launch">
+      <arg name="robot_ip" value="$(arg robot_ip)" />
+    </include>
+   </group>
+
   <group ns="ur_common__">
     <include file="$(find ur_bringup)/launch/ur_common.launch">
       <arg name="robot_ip" value="$(arg robot_ip)" />
