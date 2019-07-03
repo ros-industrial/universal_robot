@@ -58,6 +58,7 @@
     <!-- OFFSETS -->
     <xacro:property name="shoulder_offset" value="${__offsets['shoulder_offset']}" scope="parent"/>
     <xacro:property name="elbow_offset" value="${__offsets['elbow_offset']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_offset" value="${__offsets['upper_arm_inertia_offset']}" scope="parent"/>
 
     <!-- INERTIA PARAMETERS -->
     <!-- mass -->
@@ -77,7 +78,6 @@
     <xacro:property name="upperarm_inertia_radius" value="${__intertia_links['upperarm']['radius']}" scope="parent"/>
     <xacro:property name="upperarm_inertia_length" value="${__intertia_links['upperarm']['length']}" scope="parent"/>
     <xacro:property name="forearm_inertia_radius" value="${__intertia_links['forearm']['radius']}" scope="parent"/>
-    <xacro:property name="forearm_inertia_length" value="${__intertia_links['forearm']['length']}" scope="parent"/>
     <xacro:property name="wrist_1_inertia_radius" value="${__intertia_links['wrist_1']['radius']}" scope="parent"/>
     <xacro:property name="wrist_1_inertia_length" value="${__intertia_links['wrist_1']['length']}" scope="parent"/>
     <xacro:property name="wrist_2_inertia_radius" value="${__intertia_links['wrist_2']['radius']}" scope="parent"/>
