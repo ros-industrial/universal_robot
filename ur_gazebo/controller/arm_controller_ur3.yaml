@@ -29,3 +29,15 @@ joint_group_position_controller:
      - wrist_2_joint
      - wrist_3_joint
 
+
+#Although Gazebo 7 requires the defition of the pid parameters for a the position controller, this is not working. 
+#Please uncomment the following lines for Gazebo or gazebo_ros_control upgrades
+
+#gazebo_ros_control:
+#  pid_gains:
+#      shoulder_pan_joint: {p: 50.0,  i: 0.0, d: 0.1, i_clamp: 1}
+#      shoulder_lift_joint: {p: 50.0,  i: 0.0, d: 0.1, i_clamp: 1}
+#      elbow_joint: {p: 50.0,  i: 0.0, d: 0.1, i_clamp: 1}
+#      wrist_1_joint: {p: 50.0,  i: 0.0, d: 0.1, i_clamp: 1}
+#      wrist_2_joint: {p: 50.0,  i: 0.0, d: 0.1, i_clamp: 1}
+#      wrist_3_joint: {p: 50.0,  i: 0.0, d: 0.1, i_clamp: 1}
