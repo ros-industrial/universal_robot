@@ -1,8 +1,9 @@
 import numpy as np
 import sys
+from ur_kinematics.ur_kin_py import forward, inverse, UR3
 import roslib
 roslib.load_manifest("ur_kinematics")
-from ur_kin_py import forward, inverse
+
 
 def best_sol(sols, q_guess, weights):
     valid_sols = []
@@ -18,12 +19,13 @@ def best_sol(sols, q_guess, weights):
             valid_sols.append(test_sol)
     if len(valid_sols) == 0:
         return None
-    best_sol_ind = np.argmin(np.sum((weights*(valid_sols - np.array(q_guess)))**2,1))
+    best_sol_ind = np.argmin(np.sum((weights*(valid_sols - np.array(q_guess)))**2, 1))
     return valid_sols[best_sol_ind]
 
+
 def test_q(q):
-    x = forward(q)
-    sols = inverse(np.array(x), float(q[5]))
+    x = forward(UR3, q)
+    sols = inverse(UR3, np.array(x), float(q[5])).reshape(8, 6)
 
     qsol = best_sol(sols, q, [1.]*6)
     if qsol is None:
@@ -35,9 +37,9 @@ def test_q(q):
         print 'Actual:', np.array(q)
         print 'Diff:  ', q - qsol
         print 'Difdiv:', (q - qsol)/np.pi
-        print i1-3, i2-3, i3-3, i4-3, i5-3, i6-3
         if raw_input() == 'q':
             sys.exit()
+
 
 def main():
     np.set_printoptions(precision=3)
@@ -58,9 +60,6 @@ def main():
         test_q(q)
     print "Done!"
 
+
 if __name__ == "__main__":
-    if False:
-        import cProfile
-        cProfile.run('main()', 'ik_prof')
-    else:
-        main()
+    main()

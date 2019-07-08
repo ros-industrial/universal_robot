@@ -35,8 +35,8 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
-#ifndef UR_KIN_V2_H
-#define UR_KIN_V2_H
+#ifndef UR_KIN_H
+#define UR_KIN_H
 
 // These kinematics find the tranfrom from the base link to the end effector.
 // Though the raw D-H parameters specify a transform from the 0th link to the 6th link,
@@ -59,7 +59,7 @@
 #include <array>
 #include <type_traits>
 
-namespace ur_kinematics_v2 {
+namespace ur_kinematics {
 
   const double ZERO_THRESH = 1e-8;
   inline int SIGN(double x) {
@@ -514,4 +514,4 @@ namespace ur_kinematics_v2 {
 
 }
 
-#endif //UR_KIN_V2_H
+#endif //UR_KIN_H
