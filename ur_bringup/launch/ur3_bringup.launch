@@ -7,19 +7,23 @@
     ur3_bringup.launch robot_ip:=<value>
 -->
 <launch>
-  
+
   <!-- robot_ip: IP-address of the robot's socket-messaging server -->
   <arg name="robot_ip" doc="IP of the controller" />
   <arg name="reverse_port" default="50001" doc="Port on which controller listens for position values passed to servoj thread from the driver" />
-  <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints."/>
   <arg name="min_payload"  default="0.0" doc="lower payload bound for the robot" />
   <arg name="max_payload"  default="3.0" doc="upper payload bound for the robot" />
 
+  <!-- robot model parameters files-->
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur3/joints_limits_parameters.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur3/physical_parameters.yaml"/>
+
   <!-- robot model -->
   <include file="$(find ur_description)/launch/ur3_upload.launch">
-    <arg name="limited" value="$(arg limited)"/>
+    <arg name="joints_limits_params" value="$(arg joints_limits_params)"/>
+    <arg name="physical_params" value="$(arg physical_params)"/>
   </include>
-  
+
   <!-- ur common -->
   <include file="$(find ur_bringup)/launch/ur_common.launch">
     <arg name="robot_ip" value="$(arg robot_ip)"/>
@@ -27,5 +31,6 @@
     <arg name="min_payload"  value="$(arg min_payload)"/>
     <arg name="max_payload"  value="$(arg max_payload)"/>
   </include>
+
 
 </launch>
