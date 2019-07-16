@@ -57,6 +57,8 @@
 
 #include <cmath>
 #include <array>
+#include <vector>
+#include <map>
 #include <type_traits>
 
 namespace ur_kinematics {
@@ -151,13 +153,13 @@ namespace ur_kinematics {
   }
 
   template<typename ValueType>
-  inline void forward_all(const UR_PARAMS& p, const ValueType* const q, 
-                          ValueType* const T1, 
-                          ValueType* const T2, 
+  inline void forward_all(const UR_PARAMS& p, const ValueType* const q,
+                          ValueType* const T1,
+                          ValueType* const T2,
                           ValueType* const T3,
-                          ValueType* const T4, 
-                          ValueType* const T5, 
-                          ValueType* const T6) {                    
+                          ValueType* const T4,
+                          ValueType* const T5,
+                          ValueType* const T6) {
     const auto s1 = std::sin(q[0]);
     const auto c1 = std::cos(q[0]);
 
@@ -286,15 +288,14 @@ namespace ur_kinematics {
   }
 
   template<typename ValueType>
-  inline void forward_all(const UR_PARAMS& p, const std::array<ValueType, 6>& q, 
-                          std::array<ValueType, 16>& T1, 
-                          std::array<ValueType, 16>& T2, 
+  inline void forward_all(const UR_PARAMS& p, const std::array<ValueType, 6>& q,
+                          std::array<ValueType, 16>& T1,
+                          std::array<ValueType, 16>& T2,
                           std::array<ValueType, 16>& T3,
-                          std::array<ValueType, 16>& T4, 
-                          std::array<ValueType, 16>& T5, 
+                          std::array<ValueType, 16>& T4,
+                          std::array<ValueType, 16>& T5,
                           std::array<ValueType, 16>& T6)
   {
-                            
     return forward_all(p, q.data(), T1.data(), T2.data(), T3.data(), T4.data(), T5.data(), T6.data());
   }
 
@@ -511,7 +512,57 @@ namespace ur_kinematics {
   }
 
 
+  constexpr auto joints_count = 6u;
+
+  template<typename ValueType>
+  using Solution = std::array<ValueType, joints_count>;
+
+  template <typename ValueType>
+  inline void expand_solution(const Solution<ValueType>& initial_solution, const std::array<std::pair<ValueType, ValueType>, joints_count>& joints_limit, Solution<ValueType>& partial_solution, std::vector<Solution<ValueType>>& expanded_solutions, std::size_t current_joint)
+  {
+    if(current_joint == joints_count)
+    {
+      expanded_solutions.emplace_back(partial_solution);
+    }
+    else
+    {
+      auto q = initial_solution[current_joint];
+      if(joints_limit[current_joint].first <= q && q <= joints_limit[current_joint].second)
+      {
+        partial_solution[current_joint] = q;
+        expand_solution(initial_solution, joints_limit, partial_solution, expanded_solutions, current_joint+1);
+      }
+
+      q = initial_solution[current_joint] + 2.0*M_PI;
+      while(q <= joints_limit[current_joint].second)
+      {
+        partial_solution[current_joint] = q;
+        q += 2.0*M_PI;
+        expand_solution(initial_solution, joints_limit, partial_solution, expanded_solutions, current_joint+1);
+      }
+
+      q = initial_solution[current_joint] - 2.0*M_PI;
+      while(q >= joints_limit[current_joint].first)
+      {
+        partial_solution[current_joint] = q;
+        q -= 2.0*M_PI;
+        expand_solution(initial_solution, joints_limit, partial_solution, expanded_solutions, current_joint+1);
+      }
+    }
+  }
+
+
+  template <typename ValueType>
+  inline std::vector<Solution<ValueType>> expand_solutions(const std::vector<Solution<ValueType>>& initial_solution_set, const std::array<std::pair<ValueType, ValueType>, joints_count>& joints_limit)
+  {
+    std::vector<Solution<ValueType>> expanded_solutions;
+    Solution<ValueType> partial{0};
+    for(const auto& sol : initial_solution_set)
+    {
+      expand_solution(sol, joints_limit, partial, expanded_solutions, 0);
+    }
+    return expanded_solutions;
+  }
 
 }
-
 #endif //UR_KIN_H

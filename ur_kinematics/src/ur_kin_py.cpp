@@ -52,20 +52,59 @@ py::array_t<double> forward_wrapper(ur_kinematics::UR_PARAMS params, py::array_t
 
   ur_kinematics::forward(params, (double *)input_buffer.ptr, (double *)output_buffer.ptr);
 
+  result.resize({4,4});
   return result;
 }
 
 
-py::array_t<double> inverse_wrapper(ur_kinematics::UR_PARAMS params, py::array_t<double> T, double q6_des) {
+py::array_t<double> inverse_wrapper(ur_kinematics::UR_PARAMS params, py::array_t<double> T, py::array_t<double> joint_limits,  double q6_des) {
   py::buffer_info input_buffer = T.request();
   if(input_buffer.size != 16)
-    throw std::runtime_error("Must contain 16 elements");
+    throw std::runtime_error("T must contain 16 elements");
 
-  auto result = py::array_t<double>(48);
+  py::buffer_info joint_limits_buffer = joint_limits.request();
+  if(joint_limits_buffer.size != 12)
+    throw std::runtime_error("T must contain 12 elements");
+
+  std::array<double, 48> solutions;
+  auto solution_count = ur_kinematics::inverse(params, (double *)input_buffer.ptr, solutions.data(), q6_des);
+
+
+  std::vector<std::array<double, 6>> solutions_as_vector;
+  solutions_as_vector.reserve(solution_count);
+  for(auto i = 0; i < solution_count; ++i)
+  {
+    std::array<double, 6> solution;
+    auto start = std::begin(solutions) + i*6;
+    auto end = start + 6;
+    std::copy(start, end, std::begin(solution));
+    solutions_as_vector.emplace_back(solution);
+  }
+
+  std::array<std::pair<double, double>, 6> joint_limits_array;
+  auto j = 0u;
+  for(auto i = 0; i < 6; ++i)
+  {
+    const auto min = static_cast<double*>(joint_limits_buffer.ptr)[j++];
+    const auto max = static_cast<double*>(joint_limits_buffer.ptr)[j++];
+    joint_limits_array[i] = std::make_pair(min, max);
+  }
+
+  auto expanded_solutions = ur_kinematics::expand_solutions(solutions_as_vector, joint_limits_array);
+
+  auto result = py::array_t<double>(expanded_solutions.size() * 6);
   py::buffer_info output_buffer = result.request();
 
-  ur_kinematics::inverse(params, (double *)input_buffer.ptr, (double *)output_buffer.ptr, q6_des);
+  auto current_index = 0u;
+  for(const auto& solution : expanded_solutions)
+  {
+    for(auto joint_value : solution)
+    {
+      static_cast<double*>(output_buffer.ptr)[current_index++] = joint_value;
+    }
+  }
 
+  result.resize(std::vector<std::size_t>{expanded_solutions.size(), 6u});
   return result;
 }
 

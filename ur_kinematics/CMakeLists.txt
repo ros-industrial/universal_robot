@@ -4,7 +4,8 @@ project(ur_kinematics)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(BUILD_BENCHMARK "Build the ur_kinematics benchmarks" OFF)
+option(BUILD_BENCHMARK "Build the ur_kinematics benchmarks (requires google benchmark)" OFF)
+option(BUILD_TESTS "Build tests (requires GTest)" ON)
 
 find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs moveit_core moveit_kinematics
   moveit_ros_planning pluginlib tf_conversions)
@@ -46,7 +47,7 @@ function(ADD_ROBOT ROBOT)
 
   add_library(${TARGET_NAME} src/ur_moveit_plugin.cpp)
   set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_DEFINITIONS ${ROBOT_PARAMS})
-  target_link_libraries(${TARGET_NAME} 
+  target_link_libraries(${TARGET_NAME}
     ${catkin_LIBRARIES}
     ${Boost_LIBRARIES})
 
@@ -69,13 +70,20 @@ set_target_properties(ur_kin_py PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEV
 
 if(BUILD_BENCHMARK)
   find_package(benchmark REQUIRED)
-  add_executable(benchmark_kinematics src/test_kinematics.cpp)
+  add_executable(benchmark_kinematics src/benchmark_kinematics.cpp)
   target_link_libraries(benchmark_kinematics
     ${catkin_LIBRARIES}
     ${Boost_LIBRARIES}
     benchmark)
   set_property(GLOBAL APPEND PROPERTY UR_TARGETS_PROP benchmark_kinematics)
-  set(UR_TARGETS ${$UR_TARGETS} benchmark_kinematics)
+endif()
+
+if(BUILD_TESTS)
+find_package(GTest REQUIRED)
+  add_executable(ur_kinematics_tests src/test_kinematics.cpp )
+  # Link test executable against gtest & gtest_main
+  target_link_libraries(ur_kinematics_tests GTest::Main GTest::GTest)
+  gtest_discover_tests(ur_kinematics_tests)
 endif()
 
 #############
