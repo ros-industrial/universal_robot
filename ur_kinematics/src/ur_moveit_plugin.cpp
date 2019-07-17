@@ -2,6 +2,7 @@
 * Software License Agreement (BSD License)
 *
 * Copyright (c) 2014, Georgia Tech
+* Copyright (c) 2019, Ascent Robotics inc.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,7 +33,7 @@
 * POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Kelsey Hawkins */
+/* Authors: Kelsey Hawkins, Leo Ghafari */
 
 /* Based on orignal source from Willow Garage. License copied below */
 

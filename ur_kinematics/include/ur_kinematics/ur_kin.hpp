@@ -2,10 +2,12 @@
  *
  * Provides forward and inverse kinematics for Univeral robot designs
  * Author: Kelsey Hawkins (kphawkins@gatech.edu)
+ *         Leo Ghafari (leo@ascent.ai)
  *
  * Software License Agreement (BSD License)
  *
  *  Copyright (c) 2013, Georgia Institute of Technology
+ *  Copyright (c) 2019, Ascent Robotics inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -68,7 +70,9 @@ namespace ur_kinematics {
     return (x > 0) - (x < 0);
   }
 
-
+  // Denavit–Hartenberg parameters for calculations of kinematics of UR robots
+  // Values for the existing UR robots are provided for simplicity and are obtained from:
+  // https://www.universal-robots.com/how-tos-and-faqs/faq/ur-faq/parameters-for-calculations-of-kinematics-and-dynamics-45257/
   struct UR_PARAMS
   {
     double d1;
@@ -87,6 +91,9 @@ namespace ur_kinematics {
   constexpr UR_PARAMS UR5E{0.1625, -0.425, -0.3922, 0.1333, 0.0997, 0.0996};
   constexpr UR_PARAMS UR10E{ 0.1807, -0.6127, -0.57155, 0.17415, 0.11985, 0.11655};
 
+  // @param p       The Denavit–Hartenberg parameters of the robot 
+  // @param q       The 6 joint values (Must be pre-allocated)
+  // @param T       The 4x4 end effector pose in row-major ordering (Must be pre-allocated)
   template<typename ValueType>
   inline void forward(const UR_PARAMS& p, const ValueType* const q, ValueType* const T) {
     const auto s1 = std::sin(q[0]);
@@ -147,11 +154,17 @@ namespace ur_kinematics {
     T[15] = 1.0;
   }
 
+  // @param p       The Denavit–Hartenberg parameters of the robot 
+  // @param q       The 6 joint values 
+  // @param T       The 4x4 end effector pose in row-major ordering
   template<typename ValueType>
   inline int forward(const UR_PARAMS& p, const std::array<ValueType, 6>& q , std::array<ValueType, 16>& T){
       forward(p, q.data(), T.data());
   }
 
+  // @param p       The Denavit–Hartenberg parameters of the robot 
+  // @param q       The 6 joint values (Must be pre-allocated)
+  // @param Ti      The 4x4 link i pose in row-major ordering (Must be pre-allocated).
   template<typename ValueType>
   inline void forward_all(const UR_PARAMS& p, const ValueType* const q,
                           ValueType* const T1,
@@ -287,6 +300,9 @@ namespace ur_kinematics {
 
   }
 
+  // @param p       The Denavit–Hartenberg parameters of the robot 
+  // @param q       The 6 joint values 
+  // @param Ti      The 4x4 link i pose in row-major ordering.
   template<typename ValueType>
   inline void forward_all(const UR_PARAMS& p, const std::array<ValueType, 6>& q,
                           std::array<ValueType, 16>& T1,
@@ -299,7 +315,12 @@ namespace ur_kinematics {
     return forward_all(p, q.data(), T1.data(), T2.data(), T3.data(), T4.data(), T5.data(), T6.data());
   }
 
-
+  // @param p       The Denavit–Hartenberg parameters of the robot 
+  // @param T       The 4x4 end effector pose in row-major ordering (Must be pre-allocated)
+  // @param q_sols  An 8x6 array of doubles returned, all angles should be in [0,2*PI) (Must be pre-allocated)
+  // @param q6_des  An optional parameter which designates what the q6 value should take
+  //                in case of an infinite solution on that joint.
+  // @return        Number of solutions found (maximum of 8)
   template<typename ValueType>
   inline int inverse(const UR_PARAMS& p, const ValueType* const T, ValueType* const q_sols, ValueType q6_des = 0.0) {
     int num_sols = 0;
@@ -506,6 +527,12 @@ namespace ur_kinematics {
     return num_sols;
   }
 
+  // @param p       The Denavit–Hartenberg parameters of the robot 
+  // @param T       The 4x4 end effector pose in row-major ordering
+  // @param q_sols  An 8x6 array of doubles returned, all angles should be in [0,2*PI)
+  // @param q6_des  An optional parameter which designates what the q6 value should take
+  //                in case of an infinite solution on that joint.
+  // @return        Number of solutions found (maximum of 8)
   template<typename ValueType>
   inline int inverse(const UR_PARAMS& p, const std::array<ValueType, 16>& T , std::array<ValueType, 48>& q_sols, ValueType q6_des = 0.0){
       return inverse(p, T.data(), q_sols.data(), q6_des);
@@ -517,8 +544,25 @@ namespace ur_kinematics {
   template<typename ValueType>
   using Solution = std::array<ValueType, joints_count>;
 
+  template<typename ValueType>
+  using SolutionVec = std::vector<Solution<ValueType>>;
+
+  template<typename ValueType>
+  using ExpandedSolutionVec = std::vector<SolutionVec<ValueType>>;
+
+  template<typename ValueType>
+  using Limit = std::pair<ValueType, ValueType>;
+
+  template<typename ValueType>
+  using JointsLimits = std::array<Limit<ValueType>, joints_count>;
+
+  // @param initial_solution_set    Vector of initial solutions for an end effector position
+  // @param joints_limit            Joints limits of the robot
+  // @param partial_solution        Current partial solution
+  // @param expanded_solutions      List of expanded solutions
+  // @param current_joint           Joint id being currently rotated
   template <typename ValueType>
-  inline void expand_solution(const Solution<ValueType>& initial_solution, const std::array<std::pair<ValueType, ValueType>, joints_count>& joints_limit, Solution<ValueType>& partial_solution, std::vector<Solution<ValueType>>& expanded_solutions, std::size_t current_joint)
+  inline void expand_solution(const Solution<ValueType>& initial_solution, const JointsLimits<ValueType>& joints_limit, Solution<ValueType>& partial_solution, SolutionVec<ValueType>& expanded_solutions, std::size_t current_joint)
   {
     if(current_joint == joints_count)
     {
@@ -551,15 +595,19 @@ namespace ur_kinematics {
     }
   }
 
-
+  // @param initial_solution_set    Vector of initial solutions for an end effector position
+  // @param joints_limit            Joints limits of the robot
+  // @return                        The list of all solutions for the end effector position
   template <typename ValueType>
-  inline std::vector<Solution<ValueType>> expand_solutions(const std::vector<Solution<ValueType>>& initial_solution_set, const std::array<std::pair<ValueType, ValueType>, joints_count>& joints_limit)
+  inline ExpandedSolutionVec<double> expand_solutions(const SolutionVec<ValueType>& initial_solution_set, const JointsLimits<ValueType>& joints_limit)
   {
-    std::vector<Solution<ValueType>> expanded_solutions;
+    ExpandedSolutionVec<double> expanded_solutions;
     Solution<ValueType> partial{0};
     for(const auto& sol : initial_solution_set)
     {
-      expand_solution(sol, joints_limit, partial, expanded_solutions, 0);
+      SolutionVec<ValueType> current_expansion;
+      expand_solution(sol, joints_limit, partial, current_expansion, 0);
+      expanded_solutions.emplace_back(current_expansion);
     }
     return expanded_solutions;
   }

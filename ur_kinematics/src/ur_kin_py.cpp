@@ -1,10 +1,12 @@
 /*********************************************************************
  *
  * Python wrapper for UR kinematics
- * Author: Leo Ghafari (leo@ascent.ai)
+ * Authors: Kelsey Hawkins (kphawkins@gatech.edu)
+ *          Leo Ghafari (leo@ascent.ai)
  *
  * Software License Agreement (BSD License)
  *
+ *  Copyright (c) 2013, Georgia Institute of Technology
  *  Copyright (c) 2019, Ascent Robotics inc.
  *  All rights reserved.
  *
@@ -18,7 +20,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *   * Neither the name of Ascent Robotics inc. nor the names of
+ *   * Neither the name of the Georgia Institute of Technology nor the names of
  *     its contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -38,77 +40,33 @@
 
 #include <ur_kinematics/ur_kin.hpp>
 #include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
-py::array_t<double> forward_wrapper(ur_kinematics::UR_PARAMS params, py::array_t<double> q) {
-  py::buffer_info input_buffer = q.request();
-  if(input_buffer.size != 6)
-    throw std::runtime_error("Must contain 6 elements");
-
-  auto result = py::array_t<double>(16);
-  py::buffer_info output_buffer = result.request();
-
-  ur_kinematics::forward(params, (double *)input_buffer.ptr, (double *)output_buffer.ptr);
-
-  result.resize({4,4});
-  return result;
+std::array<double, 16> forward_wrapper(ur_kinematics::UR_PARAMS params, ur_kinematics::Solution<double> q) {
+  std::array<double, 16> T;
+  ur_kinematics::forward(params, q, T);
+  return T;
 }
 
-
-py::array_t<double> inverse_wrapper(ur_kinematics::UR_PARAMS params, py::array_t<double> T, py::array_t<double> joint_limits,  double q6_des) {
-  py::buffer_info input_buffer = T.request();
-  if(input_buffer.size != 16)
-    throw std::runtime_error("T must contain 16 elements");
-
-  py::buffer_info joint_limits_buffer = joint_limits.request();
-  if(joint_limits_buffer.size != 12)
-    throw std::runtime_error("T must contain 12 elements");
-
+ur_kinematics::ExpandedSolutionVec<double> inverse_wrapper(ur_kinematics::UR_PARAMS params, std::array<double, 16> T, ur_kinematics::JointsLimits<double> joint_limits,  double q6_des) {
   std::array<double, 48> solutions;
-  auto solution_count = ur_kinematics::inverse(params, (double *)input_buffer.ptr, solutions.data(), q6_des);
+  auto solution_count = ur_kinematics::inverse(params, T, solutions, q6_des);
 
-
-  std::vector<std::array<double, 6>> solutions_as_vector;
+  ur_kinematics::SolutionVec<double> solutions_as_vector;
   solutions_as_vector.reserve(solution_count);
   for(auto i = 0; i < solution_count; ++i)
   {
-    std::array<double, 6> solution;
+    ur_kinematics::Solution<double> solution;
     auto start = std::begin(solutions) + i*6;
     auto end = start + 6;
     std::copy(start, end, std::begin(solution));
     solutions_as_vector.emplace_back(solution);
   }
 
-  std::array<std::pair<double, double>, 6> joint_limits_array;
-  auto j = 0u;
-  for(auto i = 0; i < 6; ++i)
-  {
-    const auto min = static_cast<double*>(joint_limits_buffer.ptr)[j++];
-    const auto max = static_cast<double*>(joint_limits_buffer.ptr)[j++];
-    joint_limits_array[i] = std::make_pair(min, max);
-  }
-
-  auto expanded_solutions = ur_kinematics::expand_solutions(solutions_as_vector, joint_limits_array);
-
-  auto result = py::array_t<double>(expanded_solutions.size() * 6);
-  py::buffer_info output_buffer = result.request();
-
-  auto current_index = 0u;
-  for(const auto& solution : expanded_solutions)
-  {
-    for(auto joint_value : solution)
-    {
-      static_cast<double*>(output_buffer.ptr)[current_index++] = joint_value;
-    }
-  }
-
-  result.resize(std::vector<std::size_t>{expanded_solutions.size(), 6u});
-  return result;
+  return ur_kinematics::expand_solutions(solutions_as_vector, joint_limits);
 }
-
-
 
 PYBIND11_MODULE(ur_kin_py, m)
 {

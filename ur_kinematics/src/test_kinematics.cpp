@@ -1,3 +1,40 @@
+/*********************************************************************
+ *
+ * Unit testing for forward and inverse kinematics for Univeral robot designs
+ * Author: Leo Ghafari (leo@ascent.ai)
+ *
+ * Software License Agreement (BSD License)
+ *
+ *  Copyright (c) 2019, Ascent Robotics inc.
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *   * Neither the name of Ascent Robotics inc. nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ *********************************************************************/
 #include <random>
 #include <algorithm>
 #include <cmath>
@@ -79,26 +116,26 @@ TEST(ConsistencyTests, forward_inverse)
     };
 
     auto expanded = ur_kinematics::expand_solutions(solutions_as_vector, joint_limits);
-    auto found = std::find_if(std::begin(expanded), std::end(expanded), [q_arr](const std::array<double,6>& value)
+    auto found = false;
+
+    for(const auto& expansion_set : expanded)
     {
-      for(int j = 0; j < 6; ++j)
+      if(not found)
       {
-        if(std::abs(q_arr[j] - value[j]) > 1e-3)
+        found = std::find_if(std::begin(expansion_set), std::end(expansion_set), [q_arr](const std::array<double,6>& value)
         {
-          return false;
-        }
+          for(int j = 0; j < 6; ++j)
+          {
+            if(std::abs(q_arr[j] - value[j]) > 1e-3)
+            {
+              return false;
+            }
+          }
+          return true;
+        }) != std::end(expansion_set);
       }
-      return true;
-    }) != std::end(expanded);
+    }
+
     ASSERT_EQ(found, true);
   }
-}
-
-
-
-
-int main(int argc, char **argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }
