@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_BENCHMARK "Build the ur_kinematics benchmarks (requires google benchmark)" OFF)
-option(BUILD_TESTS "Build tests (requires GTest)" ON)
+option(BUILD_TESTS "Build tests (requires GTest)" OFF)
 
 find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs moveit_core moveit_kinematics
   moveit_ros_planning pluginlib tf_conversions)
