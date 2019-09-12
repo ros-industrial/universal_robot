@@ -1,3 +1,5 @@
+# This sets the speed slider to the given value.
+# The target value has to be between 0 and 1.0
 float64 speed_slider_fraction
 ---
 bool success
