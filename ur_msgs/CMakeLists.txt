@@ -23,7 +23,7 @@ add_message_files(
 add_service_files(
    FILES
    SetPayload.srv
-   SetSpeedSlider.srv
+   SetSpeedSliderFraction
    SetIO.srv
 )
 
