@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>universal_robot</name>
   <version>1.2.5</version>
   <description>
@@ -20,7 +20,7 @@
   <author email="fxm@ipa.fhg.de">Felix Messmer</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>universal_robots</run_depend>
+  <exec_depend>universal_robots</exec_depend>
 
   <export>
     <metapackage/>
