@@ -459,7 +459,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
 
                 if not buf:
                     buf = buf + self.recv_more()
-        except EOF, ex:
+        except EOF as ex:
             print("Connection closed (command):", ex)
             setConnectedRobot(None)
 
@@ -964,7 +964,7 @@ def main():
                     prevent_programming = rospy.get_param("~prevent_programming")
                     update = {'prevent_programming': prevent_programming}
                     reconfigure_srv.update_configuration(update)
-                except KeyError, ex:
+                except KeyError as ex:
                     print("Parameter 'prevent_programming' not set. Value: " + str(prevent_programming))
                     pass
                 if prevent_programming:
@@ -985,7 +985,7 @@ def main():
                         prevent_programming = rospy.get_param("~prevent_programming")
                         update = {'prevent_programming': prevent_programming}
                         reconfigure_srv.update_configuration(update)
-                    except KeyError, ex:
+                    except KeyError as ex:
                         print("Parameter 'prevent_programming' not set. Value: " + str(prevent_programming))
                         pass
                     connection.send_program()
