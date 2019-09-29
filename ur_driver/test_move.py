@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import time
 import roslib; roslib.load_manifest('ur_driver')
 import rospy
@@ -79,7 +80,7 @@ def move_interrupt():
     
     client.send_goal(g)
     time.sleep(2.0)
-    print "Interrupting"
+    print("Interrupting")
     client.send_goal(g)
     try:
         client.wait_for_result()
@@ -92,9 +93,9 @@ def main():
     try:
         rospy.init_node("test_move", anonymous=True, disable_signals=True)
         client = actionlib.SimpleActionClient('follow_joint_trajectory', FollowJointTrajectoryAction)
-        print "Waiting for server..."
+        print("Waiting for server...")
         client.wait_for_server()
-        print "Connected to server"
+        print("Connected to server")
         #move1()
         move_repeated()
         #move_disordered()
