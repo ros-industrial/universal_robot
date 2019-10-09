@@ -35,14 +35,26 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
-
-#include <boost/numpy.hpp>
+#include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
 #include <boost/scoped_array.hpp>
 
 #include <ur_kinematics/ur_kin.h>
 
+#ifdef UR10_PARAMS
+#define MODULE_NAME ur10_kin_py
+#endif
+
+#ifdef UR5_PARAMS
+#define MODULE_NAME ur5_kin_py
+#endif
+
+#ifdef UR3_PARAMS
+#define MODULE_NAME ur3_kin_py
+#endif
+
 namespace p = boost::python;
-namespace np = boost::numpy;
+namespace np = boost::python::numpy;
 
 np::ndarray forward_wrapper(np::ndarray const & q_arr) {
   if(q_arr.get_dtype() != np::dtype::get_builtin<double>()) {
@@ -58,9 +70,36 @@ np::ndarray forward_wrapper(np::ndarray const & q_arr) {
     p::throw_error_already_set();
   }
   Py_intptr_t shape[2] = { 4, 4 };
-  np::ndarray result = np::zeros(2,shape,np::dtype::get_builtin<double>()); 
+  np::ndarray result = np::zeros(2, shape, np::dtype::get_builtin<double>()); 
   ur_kinematics::forward(reinterpret_cast<double*>(q_arr.get_data()), 
                          reinterpret_cast<double*>(result.get_data()));
+  return result;
+}
+
+np::ndarray forward_all_wrapper(np::ndarray const & q_arr) {
+  if(q_arr.get_dtype() != np::dtype::get_builtin<double>()) {
+    PyErr_SetString(PyExc_TypeError, "Incorrect array data type");
+    p::throw_error_already_set();
+  }
+  if(q_arr.get_nd() != 1) {
+    PyErr_SetString(PyExc_TypeError, "Incorrect number of dimensions");
+    p::throw_error_already_set();
+  }
+  if(q_arr.shape(0) != 6) {
+    PyErr_SetString(PyExc_TypeError, "Incorrect shape (should be 6)");
+    p::throw_error_already_set();
+  }
+  Py_intptr_t shape[3] = { 6, 4, 4 };
+  np::ndarray result = np::zeros(3, shape,np::dtype::get_builtin<double>()); 
+
+  double* result_ptr = reinterpret_cast<double*>(result.get_data());
+  ur_kinematics::forward_all(reinterpret_cast<double*>(q_arr.get_data()),
+    result_ptr,
+    result_ptr + 16,
+    result_ptr + (16 * 2),
+    result_ptr + (16 * 3),
+    result_ptr + (16 * 4),
+    result_ptr + (16 * 5));
   return result;
 }
 
@@ -85,8 +124,9 @@ np::ndarray inverse_wrapper(np::ndarray const & array, PyObject * q6_des_py) {
   return np::from_data(q_sols, np::dtype::get_builtin<double>() , p::make_tuple(num_sols, 6), p::make_tuple(6*sizeof(double), sizeof(double)), p::object());
 }
 
-BOOST_PYTHON_MODULE(ur_kin_py) {
+BOOST_PYTHON_MODULE(MODULE_NAME) {
   np::initialize();  // have to put this in any module that uses Boost.NumPy
   p::def("forward", forward_wrapper);
+  p::def("forward_all", forward_all_wrapper);
   p::def("inverse", inverse_wrapper);
 }
