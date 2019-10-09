@@ -55,6 +55,13 @@
 //  1,  0,  0,  0
 //  0,  0,  0,  1
 
+// The size 6 array of joint values are always in this order (as defined in ur_description package)
+// ["shoulder_pan_joint",
+//  "shoulder_lift_joint",
+//  "elbow_joint",
+//  "wrist_1_joint",
+//  "wrist_2_joint",
+//  "wrist_3_joint"]
 namespace ur_kinematics {
   // @param q       The 6 joint values 
   // @param T       The 4x4 end effector pose in row-major ordering
