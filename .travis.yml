@@ -19,6 +19,10 @@ matrix:
     - env: ROS_DISTRO="melodic"   ROS_REPO=ros
     - env: ROS_DISTRO="melodic"   ROS_REPO=ros-shadow-fixed
     - env: ROS_DISTRO="melodic"   PRERELEASE=true
+before_install:
+  - pyenv local 3.7.1
+  - python3 -m pip install flake8
+  - python3 -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 install:
   - git clone --quiet --depth=1 https://github.com/ros-industrial/industrial_ci.git .ci_config
 script:
