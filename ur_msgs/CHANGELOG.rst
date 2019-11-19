@@ -2,6 +2,13 @@
 Changelog for package ur_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added a service to set the speed slider position (`#454 <https://github.com/ros-industrial/universal_robot/issues/454>`_)
+* Added a domain field to Analog.msg (`#450 <https://github.com/ros-industrial/universal_robot/issues/450>`_)
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch
+
 1.2.5 (2019-04-05)
 ------------------
 * Correct width and type of 'digital\_*_bits'. (`#416 <https://github.com/ros-industrial/universal_robot/issues/416>`_)
