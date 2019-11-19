@@ -2,6 +2,11 @@
 Changelog for package ur3_e_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.6 (2019-11-19)
+------------------
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch
+
 1.2.5 (2019-04-05)
 ------------------
 * First release (of this package)

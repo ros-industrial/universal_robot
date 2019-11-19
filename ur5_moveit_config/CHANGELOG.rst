@@ -2,6 +2,11 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.6 (2019-11-19)
+------------------
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch, Qiang Qiu
+
 1.2.5 (2019-04-05)
 ------------------
 * Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
