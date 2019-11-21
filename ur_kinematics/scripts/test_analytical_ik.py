@@ -1,8 +1,7 @@
+#!/usr/bin/env python
 import numpy as np
 import sys
-import roslib
-roslib.load_manifest("ur_kinematics")
-from ur_kin_py import forward, inverse
+from ur_kinematics.ur10_kin_py import (forward, inverse)
 
 def best_sol(sols, q_guess, weights):
     valid_sols = []
@@ -64,3 +63,4 @@ if __name__ == "__main__":
         cProfile.run('main()', 'ik_prof')
     else:
         main()
+
