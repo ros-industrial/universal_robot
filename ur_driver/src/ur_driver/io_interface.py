@@ -21,25 +21,25 @@ ANALOG_TOLERANCE_VALUE = 0.01
 def set_io_val(fun, pin, val):
     try:
         set_io(fun, pin, val)
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
 def set_tool_voltage(volts):
     try:
         set_io(FUN_SET_TOOL_VOLTAGE, volts, 0)
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
 def set_digital_out(pin, val):
     try:
         set_io(FUN_SET_DIGITAL_OUT, pin, val)
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
 def set_analog_out(pin, val):
     try:
         set_io(FUN_SET_ANALOG_OUT, pin, val)
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
 def set_flag(pin, val):

@@ -1,13 +1,14 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import time
 from ur_driver.io_interface import *
 
 if __name__ == "__main__":
-    print "testing io-interface"
+    print("testing io-interface")
     get_states()
-    print "listener has been activated"
+    print("listener has been activated")
     set_states()
-    print "service-server has been started"
+    print("service-server has been started")
     while(True):
         set_tool_voltage(12)
         set_digital_out(0, True)
