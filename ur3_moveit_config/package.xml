@@ -2,7 +2,7 @@
 <package format="2">
 
   <name>ur3_moveit_config</name>
-  <version>1.2.6</version>
+  <version>1.2.7</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur3 with the MoveIt Motion Planning Framework
   </description>

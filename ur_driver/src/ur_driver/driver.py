@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import roslib; roslib.load_manifest('ur_driver')
 import time, sys, threading, math
 import copy
@@ -106,10 +107,10 @@ def dumpstacks():
             code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
             if line:
                 code.append("  %s" % (line.strip()))
-    print "\n".join(code)
+    print("\n".join(code))
 
 def log(s):
-    print "[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s)
+    print("[%s] %s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'), s))
 
 
 RESET_PROGRAM = '''def resetProg():
@@ -420,7 +421,7 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         self.__socket_lock = threading.Lock()
         setConnectedRobot(self)
-        print "Handling a request"
+        print("Handling a request")
         try:
             buf = self.recv_more()
             if not buf: return
@@ -445,21 +446,21 @@ class CommanderTCPHandler(SocketServer.BaseRequestHandler):
                     log("Out: %s" % s)
                 
                 elif mtype == MSG_QUIT:
-                    print "Quitting"
+                    print("Quitting")
                     raise EOF("Received quit")
                 elif mtype == MSG_WAYPOINT_FINISHED:
                     while len(buf) < 4:
                         buf = buf + self.recv_more()
                     waypoint_id = struct.unpack_from("!i", buf, 0)[0]
                     buf = buf[4:]
-                    print "Waypoint finished (not handled)"
+                    print("Waypoint finished (not handled)")
                 else:
                     raise Exception("Unknown message type: %i" % mtype)
 
                 if not buf:
                     buf = buf + self.recv_more()
-        except EOF, ex:
-            print "Connection closed (command):", ex
+        except EOF as ex:
+            print("Connection closed (command):", ex)
             setConnectedRobot(None)
 
     def __send_message(self, data):
@@ -629,7 +630,7 @@ class URServiceProvider(object):
 
     def setPayload(self, req):
         if req.payload < min_payload or req.payload > max_payload:
-            print 'ERROR: Payload ' + str(req.payload) + ' out of bounds (' + str(min_payload) + ', ' + str(max_payload) + ')'
+            print('ERROR: Payload ' + str(req.payload) + ' out of bounds (' + str(min_payload) + ', ' + str(max_payload) + ')')
             return False
         
         if self.robot:
@@ -691,7 +692,7 @@ class URTrajectoryFollower(object):
     def start(self):
         self.init_traj_from_robot()
         self.server.start()
-        print "The action server for this driver has been started"
+        print("The action server for this driver has been started")
 
     def on_goal(self, goal_handle):
         log("on_goal")
@@ -892,7 +893,7 @@ def main():
     reconfigure_srv = Server(URDriverConfig, reconfigure_callback)
     
     prefix = rospy.get_param("~prefix", "")
-    print "Setting prefix to %s" % prefix
+    print("Setting prefix to %s" % prefix)
     global joint_names
     joint_names = [prefix + name for name in JOINT_NAMES]
 
@@ -963,14 +964,14 @@ def main():
                     prevent_programming = rospy.get_param("~prevent_programming")
                     update = {'prevent_programming': prevent_programming}
                     reconfigure_srv.update_configuration(update)
-                except KeyError, ex:
-                    print "Parameter 'prevent_programming' not set. Value: " + str(prevent_programming)
+                except KeyError as ex:
+                    print("Parameter 'prevent_programming' not set. Value: " + str(prevent_programming))
                     pass
                 if prevent_programming:
-                    print "Programming now prevented"
+                    print("Programming now prevented")
                     connection.send_reset_program()
             else:
-                print "Disconnected.  Reconnecting"
+                print("Disconnected.  Reconnecting")
                 if action_server:
                     action_server.set_robot(None)
 
@@ -978,14 +979,14 @@ def main():
                 while True:
                     # Sends the program to the robot
                     while not connection.ready_to_program():
-                        print "Waiting to program"
+                        print("Waiting to program")
                         time.sleep(1.0)
                     try:
                         prevent_programming = rospy.get_param("~prevent_programming")
                         update = {'prevent_programming': prevent_programming}
                         reconfigure_srv.update_configuration(update)
-                    except KeyError, ex:
-                        print "Parameter 'prevent_programming' not set. Value: " + str(prevent_programming)
+                    except KeyError as ex:
+                        print("Parameter 'prevent_programming' not set. Value: " + str(prevent_programming))
                         pass
                     connection.send_program()
 

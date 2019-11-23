@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>ur_driver</name>
-  <version>1.2.6</version>
+  <version>1.2.7</version>
   <description>
       Driver for the UR5/10 arm based on the Polyscope control scheme.
   </description>

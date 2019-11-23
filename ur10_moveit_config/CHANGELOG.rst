@@ -2,6 +2,9 @@
 Changelog for package ur10_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.7 (2019-11-23)
+------------------
+
 1.2.6 (2019-11-19)
 ------------------
 * Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
