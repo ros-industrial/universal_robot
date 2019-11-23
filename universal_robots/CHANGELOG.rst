@@ -2,6 +2,9 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.2.6 (2019-11-19)
 ------------------
 

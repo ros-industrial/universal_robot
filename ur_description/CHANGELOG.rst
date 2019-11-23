@@ -2,6 +2,9 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.2.6 (2019-11-19)
 ------------------
 * Add optional safety_controller tags to all joints in xacro macros (`#437 <https://github.com/ros-industrial/universal_robot/issues/437>`_)

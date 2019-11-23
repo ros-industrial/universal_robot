@@ -2,6 +2,9 @@
 Changelog for package ur_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.2.6 (2019-11-19)
 ------------------
 * Added a service to set the speed slider position (`#454 <https://github.com/ros-industrial/universal_robot/issues/454>`_)
