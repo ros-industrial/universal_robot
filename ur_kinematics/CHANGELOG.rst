@@ -2,8 +2,8 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.7 (2019-11-23)
+------------------
 * Modernize python 2 codes (`#457 <https://github.com/ros-industrial/universal_robot/issues/457>`_)
 * Contributors: cclauss, gavanderhoorn
 

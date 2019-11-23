@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>ur_e_gazebo</name>
-  <version>1.2.6</version>
+  <version>1.2.7</version>
   <description>
       Gazebo wrapper for the Universal UR5/10 robot arms.
   </description>
