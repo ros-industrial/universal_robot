@@ -18,5 +18,6 @@
   <exec_depend>message_runtime</exec_depend>
 
   <export>
+    <architecture_independent />
   </export>
 </package>
