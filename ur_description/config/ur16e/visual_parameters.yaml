@@ -1,0 +1,69 @@
+# Visualisation
+# UR16e uses the same parts as UR10e except the upper and lower arm are shortened
+
+mesh_files:
+  base:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/base.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/base.stl"
+
+  shoulder:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/shoulder.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/shoulder.stl"
+
+  # TODO: This needs to be updated with a shorter one
+  upper_arm:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/upperarm.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/upperarm.stl"
+      mesh_files:
+
+  # TODO: This needs to be updated with a shorter one
+  forearm:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/forearm.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/forearm.stl"
+
+  wrist_1:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/wrist1.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/wrist1.stl"
+
+  wrist_2:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/wrist2.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/wrist2.stl"
+
+  wrist_3:
+    visual:
+      mesh: "package://ur_description/meshes/ur10e/visual/wrist3.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur10e/collision/wrist3.stl"
