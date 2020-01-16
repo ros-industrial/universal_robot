@@ -3,6 +3,7 @@
 
   <gazebo>
     <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      <legacyModeNS>true</legacyModeNS>
       <!--robotNamespace>/</robotNamespace-->
       <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
     </plugin>
