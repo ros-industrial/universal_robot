@@ -72,9 +72,6 @@
 
 /* Author: Sachin Chitta, David Lu!!, Ugo Cupcic */
 
-#include <class_loader/class_loader.h>
-
-//#include <tf/transform_datatypes.h>
 #include <tf_conversions/tf_kdl.h>
 #include <kdl_parser/kdl_parser.hpp>
 
@@ -88,7 +85,8 @@
 #include <ur_kinematics/ur_moveit_plugin.h>
 #include <ur_kinematics/ur_kin.h>
 
-//register KDLKinematics as a KinematicsBase implementation
+// register URKinematicsPlugin as a KinematicsBase implementation
+#include <class_loader/class_loader.hpp>
 CLASS_LOADER_REGISTER_CLASS(ur_kinematics::URKinematicsPlugin, kinematics::KinematicsBase)
 
 namespace ur_kinematics
@@ -165,25 +163,13 @@ bool URKinematicsPlugin::checkConsistency(const KDL::JntArray& seed_state,
   return true;
 }
 
-bool URKinematicsPlugin::initialize(const std::string &robot_description,
-                                     const std::string& group_name,
-                                     const std::string& base_frame,
-                                     const std::string& tip_frame,
-                                     double search_discretization)
+bool URKinematicsPlugin::initialize(const moveit::core::RobotModel& robot_model,
+                                    const std::string& group_name,
+                                    const std::string& base_frame,
+                                    const std::vector<std::string>& tip_frames,
+                                    double search_discretization)
 {
-  setValues(robot_description, group_name, base_frame, tip_frame, search_discretization);
-
-  rdf_loader::RDFLoader rdf_loader(robot_description_);
-  const srdf::ModelSharedPtr &srdf = rdf_loader.getSRDF();
-  const urdf::ModelInterfaceSharedPtr &urdf_model = rdf_loader.getURDF();
-
-  if (!urdf_model || !srdf)
-  {
-    ROS_ERROR_NAMED("kdl","URDF and SRDF must be loaded for KDL kinematics solver to work.");
-    return false;
-  }
-
-  robot_model_.reset(new robot_model::RobotModel(urdf_model, srdf));
+  storeValues(robot_model, group_name, base_frame, tip_frames, search_discretization);
 
   robot_model::JointModelGroup* joint_model_group = robot_model_->getJointModelGroup(group_name);
   if (!joint_model_group)
@@ -202,7 +188,7 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
 
   KDL::Tree kdl_tree;
 
-  if (!kdl_parser::treeFromUrdfModel(*urdf_model, kdl_tree))
+  if (!kdl_parser::treeFromUrdfModel(*robot_model.getURDF(), kdl_tree))
   {
     ROS_ERROR_NAMED("kdl","Could not initialize tree object");
     return false;
