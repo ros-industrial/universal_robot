@@ -157,11 +157,12 @@ namespace ur_kinematics
                                const std::vector<double> &joint_angles,
                                std::vector<geometry_msgs::Pose> &poses) const;
 
-    virtual bool initialize(const std::string &robot_description,
-                            const std::string &group_name,
-                            const std::string &base_name,
-                            const std::string &tip_name,
+    virtual bool initialize(const moveit::core::RobotModel& robot_model,
+                            const std::string& group_name,
+                            const std::string& base_frame,
+                            const std::vector<std::string>& tip_frames,
                             double search_discretization);
+
 
     /**
 * @brief Return all the joint names in the order they are used internally
