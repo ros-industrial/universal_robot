@@ -5,21 +5,89 @@
 
     <gazebo reference="${prefix}shoulder_link">
       <selfCollide>true</selfCollide>
+      <!-- Contact Sensor -->
+      <sensor name='shoulder_link_contact' type='contact'>
+        <update_rate> 50 </update_rate>
+        <always_on>true</always_on>
+         <contact>
+             <collision>${prefix}shoulder_link_collision</collision>
+         </contact>
+         <plugin name="my_plugin1" filename="libgazebo_ros_bumper.so">
+            <bumperTopicName>${prefix}shoulder_collision</bumperTopicName>
+            <frameName>${prefix}shoulder_link</frameName>
+         </plugin>
+      </sensor>
     </gazebo>
     <gazebo reference="${prefix}upper_arm_link">
       <selfCollide>true</selfCollide>
+      <sensor name='upper_arm_link_contact' type='contact'>
+        <update_rate> 50 </update_rate>
+        <always_on>true</always_on>
+         <contact>
+             <collision>${prefix}upper_arm_link_collision</collision>
+         </contact>
+         <plugin name="my_plugin2" filename="libgazebo_ros_bumper.so">
+            <bumperTopicName>${prefix}upper_arm_collision</bumperTopicName>
+            <frameName>${prefix}upper_arm_link</frameName>
+         </plugin>
+      </sensor>
     </gazebo>
     <gazebo reference="${prefix}forearm_link">
       <selfCollide>true</selfCollide>
+      <sensor name='forearm_link_contact' type='contact'>
+        <update_rate> 50 </update_rate>
+        <always_on>true</always_on>
+         <contact>
+             <collision>${prefix}forearm_link_collision</collision>
+         </contact>
+         <plugin name="my_plugin3" filename="libgazebo_ros_bumper.so">
+            <bumperTopicName>${prefix}forearm_collision</bumperTopicName>
+            <frameName>${prefix}forearm_link</frameName>
+         </plugin>
+      </sensor>
     </gazebo>
     <gazebo reference="${prefix}wrist_1_link">
       <selfCollide>true</selfCollide>
+      <sensor name='wrist_1_link_contact' type='contact'>
+        <update_rate> 50 </update_rate>
+        <always_on>true</always_on>
+         <contact>
+             <collision>${prefix}wrist_1_link_collision</collision>
+         </contact>
+         <plugin name="my_plugin4" filename="libgazebo_ros_bumper.so">
+            <bumperTopicName>${prefix}wrist_1_collision</bumperTopicName>
+            <frameName>${prefix}wrist_1_link</frameName>
+         </plugin>
+      </sensor>
     </gazebo>
     <gazebo reference="${prefix}wrist_3_link">
       <selfCollide>true</selfCollide>
+      <sensor name='wrist_3_link_contact' type='contact'>
+        <update_rate> 50 </update_rate>
+        <always_on>true</always_on>
+         <contact>
+             <collision>${prefix}wrist_3_link_collision</collision>
+         </contact>
+         <plugin name="my_plugin6" filename="libgazebo_ros_bumper.so">
+            <bumperTopicName>${prefix}wrist_3_collision</bumperTopicName>
+            <frameName>${prefix}wrist_3_link</frameName>
+         </plugin>
+      </sensor>
+
     </gazebo>
     <gazebo reference="${prefix}wrist_2_link">
       <selfCollide>true</selfCollide>
+      <sensor name='wrist_2_link_contact' type='contact'>
+        <update_rate> 50 </update_rate>
+        <always_on>true</always_on>
+         <contact>
+             <collision>${prefix}wrist_2_link_collision</collision>
+         </contact>
+         <plugin name="my_plugin5" filename="libgazebo_ros_bumper.so">
+            <bumperTopicName>${prefix}wrist_2_collision</bumperTopicName>
+            <frameName>${prefix}wrist_2_link</frameName>
+         </plugin>
+      </sensor>
     </gazebo>
     <gazebo reference="${prefix}ee_link">
       <selfCollide>true</selfCollide>
