@@ -3,6 +3,9 @@
        name="ur10" >
 
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+  <xacro:arg name="max_torque_scale_factor" default="1.0"/>
+  <xacro:arg name="max_velocity_scale_factor" default="1.0"/>
+
 
   <!-- common stuff -->
   <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
@@ -13,6 +16,8 @@
   <!-- arm -->
   <xacro:ur10_robot prefix="" joint_limited="false"
     transmission_hw_interface="$(arg transmission_hw_interface)"
+    max_torque_scale_factor="$(arg max_torque_scale_factor)"
+    max_velocity_scale_factor="$(arg max_velocity_scale_factor)"
   />
 
   <link name="world" />

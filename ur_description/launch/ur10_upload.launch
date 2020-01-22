@@ -2,7 +2,10 @@
 <launch>
   <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+  <arg name="max_torque_scale_factor" default="1.0" doc="Scale factor multplied by maximum joint torque value"/>
+  <arg name="max_velocity_scale_factor" default="1.0" doc="Scale factor multplied by maximum joint velocity value"/>
 
-  <param unless="$(arg limited)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
-  <param if="$(arg limited)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_joint_limited_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
+
+  <param unless="$(arg limited)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface) max_torque_scale_factor:=$(arg max_torque_scale_factor) max_velocity_scale_factor:=$(arg max_velocity_scale_factor)" />
+  <param if="$(arg limited)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur_description)/urdf/ur10_joint_limited_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface) max_torque_scale_factor:=$(arg max_torque_scale_factor) max_velocity_scale_factor:=$(arg max_velocity_scale_factor)" />
 </launch>

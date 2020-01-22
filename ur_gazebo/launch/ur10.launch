@@ -4,6 +4,8 @@
   <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts gazebo gui" />
   <arg name="world_name" default="worlds/empty.world" doc="Gazebo world name"/>
+  <arg name="max_torque_scale_factor" default="1.0" doc="Scale factor multplied by maximum joint torque value"/>
+  <arg name="max_velocity_scale_factor" default="1.0" doc="Scale factor multplied by maximum joint velocity value"/>
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -15,6 +17,8 @@
   <!-- send robot urdf to param server -->
   <include file="$(find ur_description)/launch/ur10_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
+    <arg name="max_torque_scale_factor" value="$(arg max_torque_scale_factor)"/>
+    <arg name="max_velocity_scale_factor" value="$(arg max_velocity_scale_factor)"/>
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
