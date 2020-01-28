@@ -20,26 +20,24 @@ mesh_files:
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/shoulder.stl"
 
-  # TODO: This needs to be updated with a shorter one
   upper_arm:
     visual:
-      mesh: "package://ur_description/meshes/ur10e/visual/upperarm.dae"
+      mesh: "package://ur_description/meshes/ur16e/visual/upperarm.dae"
       material:
         name: "LightGrey"
         color: "0.7 0.7 0.7 1.0"
     collision:
-      mesh: "package://ur_description/meshes/ur10e/collision/upperarm.stl"
+      mesh: "package://ur_description/meshes/ur16e/collision/upperarm.stl"
       mesh_files:
 
-  # TODO: This needs to be updated with a shorter one
   forearm:
     visual:
-      mesh: "package://ur_description/meshes/ur10e/visual/forearm.dae"
+      mesh: "package://ur_description/meshes/ur16e/visual/forearm.dae"
       material:
         name: "LightGrey"
         color: "0.7 0.7 0.7 1.0"
     collision:
-      mesh: "package://ur_description/meshes/ur10e/collision/forearm.stl"
+      mesh: "package://ur_description/meshes/ur16e/collision/forearm.stl"
 
   wrist_1:
     visual:
