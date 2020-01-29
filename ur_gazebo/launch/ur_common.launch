@@ -3,6 +3,7 @@
 
   <!-- urdf model related parameters -->
   <arg name="joints_limits_params" doc="YAML file containing the joints limits values"/>
+  <arg name="kinematics_params" doc="YAML file containing the robot's kinematic parameters. These will be different foreach robot as they contain the robot's calibration."/>
   <arg name="physical_params" doc="YAML file containing the phycical parameters of the robots"/>
   <arg name="visual_params" doc="YAML file containing the visual model of the robots"/>
 
@@ -26,6 +27,7 @@
   <!-- set robot urdf to param server -->
     <param name="robot_description" command="$(find xacro)/xacro '$(find ur_gazebo)/urdf/ur_robot.urdf.xacro' --inorder 
       joints_limits_params:=$(arg joints_limits_params) 
+      kinematics_params:=$(arg kinematics_params) 
       physical_params:=$(arg physical_params) 
       visual_params:=$(arg visual_params) 
       transmission_hw_interface:=$(arg transmission_hw_interface)

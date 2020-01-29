@@ -14,12 +14,13 @@
     </inertial>
   </xacro:macro>
 
-  <xacro:macro name="read_model_data" params="joints_limits_parameters_file physical_parameters_file visual_parameters_file">
+  <xacro:macro name="read_model_data" params="joints_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file">
     <xacro:property name="__limits" value="${joints_limits_parameters_file['limits']}"/>
     <xacro:property name="__dh_parameters" value="${physical_parameters_file['dh_parameters']}"/>
     <xacro:property name="__offsets" value="${physical_parameters_file['offsets']}"/>
     <xacro:property name="__inertia_parameters" value="${physical_parameters_file['inertia_parameters']}" />
     <xacro:property name="__mesh_files" value="${visual_parameters_file['mesh_files']}" />
+    <xacro:property name="__kinematics" value="${kinematics_parameters_file['kinematics']}" />
 
     <!-- JOINTS LIMIT PARAMETERS -->
     <xacro:property name="shoulder_pan_lower_limit" value="${__limits['shoulder_pan']['lower']}" scope="parent"/>
@@ -55,16 +56,59 @@
     <xacro:property name="d5" value="${__dh_parameters['d5']}" scope="parent"/>
     <xacro:property name="d6" value="${__dh_parameters['d6']}" scope="parent"/>
 
+    <!-- kinematics -->
+    <xacro:property name="shoulder_x" value="${__kinematics['shoulder']['x']}" scope="parent"/>
+    <xacro:property name="shoulder_y" value="${__kinematics['shoulder']['y']}" scope="parent"/>
+    <xacro:property name="shoulder_z" value="${__kinematics['shoulder']['z']}" scope="parent"/>
+    <xacro:property name="shoulder_roll" value="${__kinematics['shoulder']['roll']}" scope="parent"/>
+    <xacro:property name="shoulder_pitch" value="${__kinematics['shoulder']['pitch']}" scope="parent"/>
+    <xacro:property name="shoulder_yaw" value="${__kinematics['shoulder']['yaw']}" scope="parent"/>
+
+    <xacro:property name="upper_arm_x" value="${__kinematics['upper_arm']['x']}" scope="parent"/>
+    <xacro:property name="upper_arm_y" value="${__kinematics['upper_arm']['y']}" scope="parent"/>
+    <xacro:property name="upper_arm_z" value="${__kinematics['upper_arm']['z']}" scope="parent"/>
+    <xacro:property name="upper_arm_roll" value="${__kinematics['upper_arm']['roll']}" scope="parent"/>
+    <xacro:property name="upper_arm_pitch" value="${__kinematics['upper_arm']['pitch']}" scope="parent"/>
+    <xacro:property name="upper_arm_yaw" value="${__kinematics['upper_arm']['yaw']}" scope="parent"/>
+
+    <xacro:property name="forearm_x" value="${__kinematics['forearm']['x']}" scope="parent"/>
+    <xacro:property name="forearm_y" value="${__kinematics['forearm']['y']}" scope="parent"/>
+    <xacro:property name="forearm_z" value="${__kinematics['forearm']['z']}" scope="parent"/>
+    <xacro:property name="forearm_roll" value="${__kinematics['forearm']['roll']}" scope="parent"/>
+    <xacro:property name="forearm_pitch" value="${__kinematics['forearm']['pitch']}" scope="parent"/>
+    <xacro:property name="forearm_yaw" value="${__kinematics['forearm']['yaw']}" scope="parent"/>
+
+    <xacro:property name="wrist_1_x" value="${__kinematics['wrist_1']['x']}" scope="parent"/>
+    <xacro:property name="wrist_1_y" value="${__kinematics['wrist_1']['y']}" scope="parent"/>
+    <xacro:property name="wrist_1_z" value="${__kinematics['wrist_1']['z']}" scope="parent"/>
+    <xacro:property name="wrist_1_roll" value="${__kinematics['wrist_1']['roll']}" scope="parent"/>
+    <xacro:property name="wrist_1_pitch" value="${__kinematics['wrist_1']['pitch']}" scope="parent"/>
+    <xacro:property name="wrist_1_yaw" value="${__kinematics['wrist_1']['yaw']}" scope="parent"/>
+
+    <xacro:property name="wrist_2_x" value="${__kinematics['wrist_2']['x']}" scope="parent"/>
+    <xacro:property name="wrist_2_y" value="${__kinematics['wrist_2']['y']}" scope="parent"/>
+    <xacro:property name="wrist_2_z" value="${__kinematics['wrist_2']['z']}" scope="parent"/>
+    <xacro:property name="wrist_2_roll" value="${__kinematics['wrist_2']['roll']}" scope="parent"/>
+    <xacro:property name="wrist_2_pitch" value="${__kinematics['wrist_2']['pitch']}" scope="parent"/>
+    <xacro:property name="wrist_2_yaw" value="${__kinematics['wrist_2']['yaw']}" scope="parent"/>
+
+    <xacro:property name="wrist_3_x" value="${__kinematics['wrist_3']['x']}" scope="parent"/>
+    <xacro:property name="wrist_3_y" value="${__kinematics['wrist_3']['y']}" scope="parent"/>
+    <xacro:property name="wrist_3_z" value="${__kinematics['wrist_3']['z']}" scope="parent"/>
+    <xacro:property name="wrist_3_roll" value="${__kinematics['wrist_3']['roll']}" scope="parent"/>
+    <xacro:property name="wrist_3_pitch" value="${__kinematics['wrist_3']['pitch']}" scope="parent"/>
+    <xacro:property name="wrist_3_yaw" value="${__kinematics['wrist_3']['yaw']}" scope="parent"/>
+
     <!-- OFFSETS -->
     <xacro:property name="shoulder_offset" value="${__offsets['shoulder_offset']}" scope="parent"/>
     <xacro:property name="elbow_offset" value="${__offsets['elbow_offset']}" scope="parent"/>
-    <xacro:property name="upper_arm_inertia_offset" value="${__offsets['upper_arm_inertia_offset']}" scope="parent"/>
 
     <!-- INERTIA PARAMETERS -->
     <!-- mass -->
     <xacro:property name="base_mass" value="${__inertia_parameters['base_mass']}" scope="parent"/>
     <xacro:property name="shoulder_mass" value="${__inertia_parameters['shoulder_mass']}" scope="parent"/>
     <xacro:property name="upper_arm_mass" value="${__inertia_parameters['upper_arm_mass']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_offset" value="${__inertia_parameters['upper_arm_inertia_offset']}" scope="parent"/>
     <xacro:property name="forearm_mass" value="${__inertia_parameters['forearm_mass']}" scope="parent"/>
     <xacro:property name="wrist_1_mass" value="${__inertia_parameters['wrist_1_mass']}" scope="parent"/>
     <xacro:property name="wrist_2_mass" value="${__inertia_parameters['wrist_2_mass']}" scope="parent"/>
@@ -78,6 +122,7 @@
     <xacro:property name="upperarm_inertia_radius" value="${__intertia_links['upperarm']['radius']}" scope="parent"/>
     <xacro:property name="upperarm_inertia_length" value="${__intertia_links['upperarm']['length']}" scope="parent"/>
     <xacro:property name="forearm_inertia_radius" value="${__intertia_links['forearm']['radius']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_length" value="${__intertia_links['forearm']['length']}" scope="parent"/>
     <xacro:property name="wrist_1_inertia_radius" value="${__intertia_links['wrist_1']['radius']}" scope="parent"/>
     <xacro:property name="wrist_1_inertia_length" value="${__intertia_links['wrist_1']['length']}" scope="parent"/>
     <xacro:property name="wrist_2_inertia_radius" value="${__intertia_links['wrist_2']['radius']}" scope="parent"/>
@@ -135,26 +180,20 @@
     <xacro:property name="wrist_1_visual_material_name" value="${__wrist_1_mesh['visual']['material']['name']}" scope="parent"/>
     <xacro:property name="wrist_1_visual_material_color" value="${__wrist_1_mesh['visual']['material']['color']}" scope="parent"/>
     <xacro:property name="wrist_1_collision_mesh" value="${__wrist_1_mesh['collision']['mesh']}" scope="parent"/>
+    <xacro:property name="wrist_1_visual_offset" value="${__wrist_1_mesh['visual_offset']}" scope="parent"/>
 
     <xacro:property name="__wrist_2_mesh" value="${__mesh_files['wrist_2']}"/>
     <xacro:property name="wrist_2_visual_mesh" value="${__wrist_2_mesh['visual']['mesh']}" scope="parent"/>
     <xacro:property name="wrist_2_visual_material_name" value="${__wrist_2_mesh['visual']['material']['name']}" scope="parent"/>
     <xacro:property name="wrist_2_visual_material_color" value="${__wrist_2_mesh['visual']['material']['color']}" scope="parent"/>
     <xacro:property name="wrist_2_collision_mesh" value="${__wrist_2_mesh['collision']['mesh']}" scope="parent"/>
+    <xacro:property name="wrist_2_visual_offset" value="${__wrist_2_mesh['visual_offset']}" scope="parent"/>
 
     <xacro:property name="__wrist_3_mesh" value="${__mesh_files['wrist_3']}"/>
     <xacro:property name="wrist_3_visual_mesh" value="${__wrist_3_mesh['visual']['mesh']}" scope="parent"/>
     <xacro:property name="wrist_3_visual_material_name" value="${__wrist_3_mesh['visual']['material']['name']}" scope="parent"/>
     <xacro:property name="wrist_3_visual_material_color" value="${__wrist_3_mesh['visual']['material']['color']}" scope="parent"/>
     <xacro:property name="wrist_3_collision_mesh" value="${__wrist_3_mesh['collision']['mesh']}" scope="parent"/>
-  </xacro:macro>
-
-  <xacro:macro name="compute_length" params="d1 a2 a3 d4 d5 d6 shoulder_offset elbow_offset">
-    <xacro:property name="shoulder_height" value="${d1}" scope="parent"/>
-    <xacro:property name="upper_arm_length" value="${-a2}" scope="parent"/>
-    <xacro:property name="forearm_length" value="${-a3}" scope="parent"/>
-    <xacro:property name="wrist_1_length" value="${d4 - elbow_offset - shoulder_offset}" scope="parent"/>
-    <xacro:property name="wrist_2_length" value="${d5}" scope="parent"/>
-    <xacro:property name="wrist_3_length" value="${d6}" scope="parent"/>
+    <xacro:property name="wrist_3_visual_offset" value="${__wrist_3_mesh['visual_offset']}" scope="parent"/>
   </xacro:macro>
 </robot>

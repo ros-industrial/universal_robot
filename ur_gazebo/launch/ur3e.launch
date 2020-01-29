@@ -2,6 +2,7 @@
 <launch>
   <!--ur3e parameters files -->
   <arg name="joints_limits_params" default="$(find ur_description)/config/ur3e/joints_limits_parameters.yaml"/>
+  <arg name="kinematics_params" default="$(find ur_description)/config/ur3e/default_kinematics.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur3e/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur3e/visual_parameters.yaml"/>
   <!-- gazebo parameters-->
@@ -11,6 +12,7 @@
   <!-- send robot urdf to param server -->
   <include file="$(find ur_gazebo)/launch/ur_common.launch">
     <arg name="joints_limits_params" value="$(arg joints_limits_params)"/>
+    <arg name="kinematics_params" value="$(arg kinematics_params)"/>
     <arg name="physical_params" value="$(arg physical_params)"/>
     <arg name="visual_params" value="$(arg visual_params)"/>
     <arg name="paused" value="$(arg paused)"/>
