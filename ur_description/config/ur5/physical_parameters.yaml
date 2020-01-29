@@ -10,13 +10,13 @@ dh_parameters:
 
 offsets:
   shoulder_offset: 0.13585 # measured from model
-  elbow_offset: -0.1197 # measured from model
-  upper_arm_inertia_offset: 0.0 # measured from model
+  elbow_offset: 0.0165 # measured from model
 
 inertia_parameters:
   base_mass: 4.0  # This mass might be incorrect
   shoulder_mass: 3.7000
   upper_arm_mass: 8.3930
+  upper_arm_inertia_offset: 0.136
   forearm_mass: 2.2750
   wrist_1_mass: 1.2190
   wrist_2_mass: 1.2190
@@ -33,13 +33,14 @@ inertia_parameters:
       radius: 0.06
       length: 0.05
     shoulder:
-      radius: 0.06
-      length: 0.15
+      radius: 0.075
+      length: 0.178
     upperarm:
       radius: 0.06
-      length: 0.56
+      length: 0.425
     forearm:
       radius: 0.06
+      length: 0.39225
     wrist_1:
       radius: 0.06
       length: 0.12
@@ -49,6 +50,15 @@ inertia_parameters:
     wrist_3:
       radius: 0.0375
       length: 0.0345
+    wrist_1:
+      radius: 0.06
+      length: 0.095
+    wrist_2:
+      radius: 0.06
+      length: 0.085
+    wrist_3:
+      radius: 0.0375
+      length: 0.0305
 
   center_of_mass:
     shoulder_cog:
