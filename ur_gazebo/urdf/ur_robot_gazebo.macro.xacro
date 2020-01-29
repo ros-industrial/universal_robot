@@ -7,14 +7,18 @@
 
  <xacro:include filename="$(find ur_description)/urdf/ur_robot.macro.xacro"/>
 
- <xacro:macro name="ur_gazebo_robot" params="prefix joints_limits_parameters_file physical_parameters_file visual_parameters_file 
+ <xacro:macro name="ur_gazebo_robot" params="prefix joints_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file 
                   transmission_hw_interface:=hardware_interface/PositionJointInterface
                   safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20">
 
     <xacro:ur_robot prefix="${prefix}" joints_limits_parameters_file="${joints_limits_parameters_file}"
-                    physical_parameters_file="${physical_parameters_file}" visual_parameters_file="${visual_parameters_file}"
-                    transmission_hw_interface="${transmission_hw_interface}" safety_limits="${safety_limits}"
-                    safety_pos_margin="${safety_pos_margin}" safety_k_position="${safety_k_position}"/>
+                    kinematics_parameters_file="${kinematics_parameters_file}"
+                    physical_parameters_file="${physical_parameters_file}"
+                    visual_parameters_file="${visual_parameters_file}"
+                    transmission_hw_interface="${transmission_hw_interface}"
+                    safety_limits="${safety_limits}"
+                    safety_pos_margin="${safety_pos_margin}"
+                    safety_k_position="${safety_k_position}"/>
 
     <gazebo reference="${prefix}shoulder_link">
       <selfCollide>true</selfCollide>

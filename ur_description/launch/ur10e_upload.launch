@@ -2,6 +2,7 @@
 <launch>
   <!--ur10e parameters files -->
   <arg name="joints_limits_params" default="$(find ur_description)/config/ur10e/joints_limits_parameters.yaml"/>
+  <arg name="kinematics_params" default="$(find ur_description)/config/ur10e/default_kinematics.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur10e/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur10e/visual_parameters.yaml"/>
   <!--common parameters -->
@@ -12,6 +13,7 @@
 
   <include file="$(find ur_description)/launch/ur_common.launch">
     <arg name="joints_limits_params" value="$(arg joints_limits_params)"/>
+    <arg name="kinematics_params" value="$(arg kinematics_params)"/>
     <arg name="physical_params" value="$(arg physical_params)"/>
     <arg name="visual_params" value="$(arg visual_params)"/>
     <arg name="transmission_hw_interface" value="$(arg transmission_hw_interface)"/>
