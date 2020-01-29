@@ -11,14 +11,14 @@ dh_parameters:
 
 offsets:
   shoulder_offset: 0.176 # measured from model
-  elbow_offset: -0.137 # measured from model
-  upper_arm_inertia_offset: 0.0 # measured from model
+  elbow_offset: 0.040 # measured from model
 
 inertia_parameters:
   # taken from https://www.universal-robots.com/how-tos-and-faqs/faq/ur-faq/parameters-for-calculations-of-kinematics-and-dynamics-45257/
   base_mass: 4.0  # This mass might be incorrect
   shoulder_mass: 7.369
   upper_arm_mass: 10.450
+  upper_arm_inertia_offset: 0.175 # measured from model
   forearm_mass: 4.321
   wrist_1_mass: 2.180
   wrist_2_mass: 2.033
@@ -39,10 +39,10 @@ inertia_parameters:
       length: 0.178
     upperarm:
       radius: 0.075
-      length: 0.612 # currently, the kinematic length (-a2) is used, so this value doesn't matter
+      length: 0.4784
     forearm:
       radius: 0.075
-      # length: currently, the kinematic length (-a3) is used, so this value doesn't matter
+      length: 0.36
     wrist_1:
       radius: 0.075
       length: 0.12
