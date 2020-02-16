@@ -25,7 +25,7 @@
   <exec_depend>joint_state_publisher</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>xacro</exec_depend>
-  <depend>ur_description</depend>
+  <depend>ur_e_description</depend>
 
   <test_depend>roslaunch</test_depend>
   <buildtool_depend>catkin</buildtool_depend>
