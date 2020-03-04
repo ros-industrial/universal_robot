@@ -17,6 +17,7 @@
   <!-- robot model parameters files-->
   <arg name="joints_limits_params" default="$(find ur_description)/config/ur5/joints_limits_parameters.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur5/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur5/visual_parameters.yaml"/>
 
   <!-- robot model -->
   <include file="$(find ur_description)/launch/ur5_upload.launch">
