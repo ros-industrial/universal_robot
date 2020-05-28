@@ -2,6 +2,8 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro"
        name="ur3e" >
 
+  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
   <!-- common stuff -->
   <xacro:include filename="$(find ur_e_description)/urdf/common.gazebo.xacro" />
 
@@ -17,6 +19,7 @@
     wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
     wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
     wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+    transmission_hw_interface="$(arg transmission_hw_interface)"
     kinematics_file="${load_yaml('$(arg kinematics_config)')}"
   />
 

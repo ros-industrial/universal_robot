@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
   <arg name="kinematics_config" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
 
   <param unless="$(arg limited)" name="robot_description"
     command="$(find xacro)/xacro --inorder '$(find ur_e_description)/urdf/ur10e_robot.urdf.xacro'
+      transmission_hw_interface:=$(arg transmission_hw_interface)
       kinematics_config:=$(arg kinematics_config)"
     />
   <param if="$(arg limited)" name="robot_description"
     command="$(find xacro)/xacro --inorder '$(find ur_e_description)/urdf/ur10e_joint_limited_robot.urdf.xacro'
+      transmission_hw_interface:=$(arg transmission_hw_interface)
       kinematics_config:=$(arg kinematics_config)"
     />
 </launch>
