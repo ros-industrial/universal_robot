@@ -11,7 +11,7 @@
   <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
   <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
 
-  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur_robot.urdf.xacro' 
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur.xacro'
     joints_limits_params:=$(arg joints_limits_params) 
     kinematics_params:=$(arg kinematics_params) 
     physical_params:=$(arg physical_params) 

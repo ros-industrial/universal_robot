@@ -12,7 +12,7 @@
    <xacro:arg name="safety_pos_margin" default="0.15"/>
    <xacro:arg name="safety_k_position" default="20"/>
    <!-- common stuff -->
-   <xacro:include filename="$(find ur_description)/urdf/ur_robot.macro.xacro"/>
+   <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
 
    <!-- arm -->
    <xacro:ur_robot prefix="" joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
