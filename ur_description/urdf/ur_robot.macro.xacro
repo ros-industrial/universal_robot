@@ -1,25 +1,84 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <!--
-  Author: Ludovic Delval
-  Contributor: Felix Messmer, Kelsey Hawkins, Jimmy Da Silva, Ajit Krisshna N L, Muhammad Asif Rana
+    Base UR robot series xacro macro.
+
+    NOTE: this is NOT a URDF. It cannot directly be loaded by consumers
+    expecting a flattened '.urdf' file. See the top-level '.xacro' for that
+    (but note: that .xacro must still be processed by the xacro command).
+
+    For use in '.launch' files: use one of the 'urX_upload.launch' convenience
+    launch files.
+
+    This file models the base kinematic chain of a UR robot, which then gets
+    parameterised by various configuration files to convert it into a UR3(3),
+    UR5(e), UR10(e) or UR16e.
+
+    NOTE: the default kinematic parameters (ie: link lengths, frame locations,
+    offets, etc) do not correspond to any particular robot. They are defaults
+    only. There WILL be non-zero offsets between the Forward Kinematics results
+    in TF (ie: robot_state_publisher) and the values reported by the Teach
+    Pendant.
+
+    For accurate (and robot-specific) transforms, the 'kinematics_parameters_file'
+    parameter MUST point to a .yaml file containing the appropriate values for
+    the targetted robot.
+
+    If using the UniversalRobots/Universal_Robots_ROS_Driver, follow the steps
+    described in the readme to extract the kinematic calibration from the
+    controller and generate the required .yaml file.
+
+    Main author of the migration to yaml configs: Ludovic Delval.
+
+    Contributors to previous versions (in no particular order):
+
+     - Felix Messmer
+     - Kelsey Hawkins
+     - Wim Meeussen
+     - Shaun Edwards
+     - Nadia Hammoudeh Garcia
+     - Dave Hershberger
+     - G. vd. Hoorn
+     - Philip Long
+     - Dave Coleman
+     - Miguel Prada
+     - Marcel Schnirring
+     - Felix von Drigalski
+     - Felix Mauch
+     - Jimmy Da Silva
+     - Ajit Krisshna N L
+     - Muhammad Asif Rana
   -->
 
- <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
- <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.common.xacro" />
 
- <xacro:macro name="ur_robot" params="prefix joints_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file 
-                  transmission_hw_interface:=hardware_interface/PositionJointInterface
-                  safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20">
+  <xacro:macro name="ur_robot" params="
+    prefix
+    joints_limits_parameters_file
+    kinematics_parameters_file
+    physical_parameters_file
+    visual_parameters_file
+    transmission_hw_interface:=hardware_interface/PositionJointInterface
+    safety_limits:=false
+    safety_pos_margin:=0.15
+    safety_k_position:=20"
+  >
+    <!-- Load configuration data from the provided .yaml files -->
+    <xacro:read_model_data
+      joints_limits_parameters_file="${joints_limits_parameters_file}" 
+      kinematics_parameters_file="${kinematics_parameters_file}"
+      physical_parameters_file="${physical_parameters_file}"
+      visual_parameters_file="${visual_parameters_file}"/>
 
-    <xacro:read_model_data joints_limits_parameters_file="${joints_limits_parameters_file}" 
-                    kinematics_parameters_file="${kinematics_parameters_file}"
-                    physical_parameters_file="${physical_parameters_file}"
-                    visual_parameters_file="${visual_parameters_file}"/>
-
+    <!-- Add URDF transmission elements (for ros_control) -->
     <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
 
-    <!-- This is for compatibility reasons, as transformation between base and base_link was always 180 degree in the ur_description -->
+    <!-- This is for compatibility reasons, as transformation between base and
+         base_link was always 180 degree in the ur_description.
+
+         NOTE: this will be removed in a future revision of this file
+     -->
     <xacro:property name="base_correction" value="${pi}" />
 
     <!-- links: main serial chain -->
@@ -40,7 +99,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${base_inertia_radius}" length="${base_inertia_length}" mass="${base_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}shoulder_link">
@@ -60,7 +119,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${shoulder_inertia_radius}" length="${shoulder_inertia_length}" mass="${shoulder_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}upper_arm_link">
@@ -121,7 +180,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_1_inertia_radius}" length="${wrist_1_inertia_length}"  mass="${wrist_1_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}wrist_2_link">
@@ -141,7 +200,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_2_inertia_radius}" length="${wrist_2_inertia_length}"  mass="${wrist_2_mass}">
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}wrist_3_link">
@@ -165,6 +224,11 @@
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}ee_link">
+      <!-- TODO: remove this. This was only added to work-around a MoveIt issue
+           where links without geometry were ignored while collision checking.
+
+           NOTE: this will be removed in a future revision of this file.
+      -->
       <collision>
         <geometry>
           <box size="0.01 0.01 0.01"/>
@@ -176,16 +240,16 @@
     <!-- joints: main serial chain -->
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
       <parent link="${prefix}base_link" />
-      <child link = "${prefix}shoulder_link" />
+      <child link="${prefix}shoulder_link" />
       <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw + base_correction}" />
       <axis xyz="0 0 1" />
       <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
         effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
-      <dynamics damping="0.0" friction="0.0"/>
+      <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}shoulder_lift_joint" type="revolute">
       <parent link="${prefix}shoulder_link" />
-      <child link = "${prefix}upper_arm_link" />
+      <child link="${prefix}upper_arm_link" />
       <origin xyz="${upper_arm_x} ${upper_arm_y} ${upper_arm_z}" rpy="${upper_arm_roll} ${upper_arm_pitch} ${upper_arm_yaw}" />
       <axis xyz="0 0 1" />
       <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}"
@@ -193,11 +257,11 @@
       <xacro:if value="${safety_limits}">
          <safety_controller soft_lower_limit="${shoulder_lift_lower_limit + safety_pos_margin}" soft_upper_limit="${shoulder_lift_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
       </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
+      <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}elbow_joint" type="revolute">
       <parent link="${prefix}upper_arm_link" />
-      <child link = "${prefix}forearm_link" />
+      <child link="${prefix}forearm_link" />
       <origin xyz="${forearm_x} ${forearm_y} ${forearm_z}" rpy="${forearm_roll} ${forearm_pitch} ${forearm_yaw}" />
       <axis xyz="0 0 1" />
       <limit lower="${elbow_joint_lower_limit}" upper="${elbow_joint_upper_limit}"
@@ -205,11 +269,11 @@
       <xacro:if value="${safety_limits}">
          <safety_controller soft_lower_limit="${elbow_joint_lower_limit + safety_pos_margin}" soft_upper_limit="${elbow_joint_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
       </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
+      <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}wrist_1_joint" type="revolute">
       <parent link="${prefix}forearm_link" />
-      <child link = "${prefix}wrist_1_link" />
+      <child link="${prefix}wrist_1_link" />
       <origin xyz="${wrist_1_x} ${wrist_1_y} ${wrist_1_z}" rpy="${wrist_1_roll} ${wrist_1_pitch} ${wrist_1_yaw}" />
       <axis xyz="0 0 1" />
       <limit lower="${wrist_1_lower_limit}" upper="${wrist_1_upper_limit}"
@@ -217,11 +281,11 @@
       <xacro:if value="${safety_limits}">
          <safety_controller soft_lower_limit="${wrist_1_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_1_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
       </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
+      <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}wrist_2_joint" type="revolute">
       <parent link="${prefix}wrist_1_link" />
-      <child link = "${prefix}wrist_2_link" />
+      <child link="${prefix}wrist_2_link" />
       <origin xyz="${wrist_2_x} ${wrist_2_y} ${wrist_2_z}" rpy="${wrist_2_roll} ${wrist_2_pitch} ${wrist_2_yaw}" />
       <axis xyz="0 0 1" />
       <limit lower="${wrist_2_lower_limit}" upper="${wrist_2_upper_limit}"
@@ -229,11 +293,11 @@
       <xacro:if value="${safety_limits}">
          <safety_controller soft_lower_limit="${wrist_2_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_2_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
       </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
+      <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}wrist_3_joint" type="revolute">
       <parent link="${prefix}wrist_2_link" />
-      <child link = "${prefix}wrist_3_link" />
+      <child link="${prefix}wrist_3_link" />
       <origin xyz="${wrist_3_x} ${wrist_3_y} ${wrist_3_z}" rpy="${wrist_3_roll} ${wrist_3_pitch} ${wrist_3_yaw}" />
       <axis xyz="0 0 1" />
       <limit lower="${wrist_3_lower_limit}" upper="${wrist_3_upper_limit}"
@@ -241,17 +305,12 @@
       <xacro:if value="${safety_limits}">
          <safety_controller soft_lower_limit="${wrist_3_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_3_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
       </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
+      <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}wrist_3_link" />
-      <child link = "${prefix}ee_link" />
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} ${pi/2.0}" />
-    </joint>
-    <joint name="${prefix}wrist_3_passive_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <parent link="${prefix}wrist_3_link"/>
-      <child link="${prefix}tool0"/>
+      <child link="${prefix}ee_link" />
+      <origin xyz="0 0 0" rpy="0.0 ${-pi/2.0} ${pi/2.0}" />
     </joint>
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
@@ -268,5 +327,10 @@
 
     <!-- Frame coincident with all-zeros TCP on UR controller -->
     <link name="${prefix}tool0"/>
+    <joint name="${prefix}wrist_3_passive_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${prefix}wrist_3_link"/>
+      <child link="${prefix}tool0"/>
+    </joint>
   </xacro:macro>
 </robot>
