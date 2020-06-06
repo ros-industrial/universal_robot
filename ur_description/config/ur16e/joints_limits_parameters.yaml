@@ -1,0 +1,34 @@
+# Joints limits
+# According to https://www.universal-robots.com/how-tos-and-faqs/faq/ur-faq/max-joint-torques-17260/
+#          and ur16e fact sheet (e.g. https://cdn2.hubspot.net/hubfs/4316198/1_VENDOR-LITERATURE/Universal%20Robots/UR16e/UR16e_Fact%20Sheet_(2sided).pdf)
+limits:
+  shoulder_pan:
+    lower: -6.28318530718
+    upper: 6.28318530718
+    velocity: 2.094
+    effort: 330.0
+  shoulder_lift:
+    lower: -6.28318530718
+    upper: 6.28318530718
+    velocity: 2.094
+    effort: 330.0
+  elbow_joint:
+    lower: -6.28318530718
+    upper: 6.28318530718
+    velocity: 3.141
+    effort: 150.0
+  wrist_1:
+    lower: -6.28318530718
+    upper: 6.28318530718
+    velocity: 3.141
+    effort: 56.0
+  wrist_2:
+    lower: -6.28318530718
+    upper: 6.28318530718
+    velocity: 3.141
+    effort: 56.0
+  wrist_3:
+    lower: -6.28318530718
+    upper: 6.28318530718
+    velocity: 3.141
+    effort: 56.0
