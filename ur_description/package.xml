@@ -28,4 +28,5 @@
 
   <export>
   </export>
+  <test_depend>roslaunch</test_depend>
 </package>

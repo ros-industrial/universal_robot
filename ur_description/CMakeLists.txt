@@ -9,6 +9,16 @@ find_package(catkin REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+if (CATKIN_ENABLE_TESTING)
+  find_package(roslaunch REQUIRED)
+  roslaunch_add_file_check(tests/roslaunch_test_ur10e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur10.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur16e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur3e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur3.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur5e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur5.xml)
+endif()
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
