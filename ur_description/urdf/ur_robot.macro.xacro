@@ -17,9 +17,12 @@
                     physical_parameters_file="${physical_parameters_file}"
                     visual_parameters_file="${visual_parameters_file}"/>
 
+    <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
+
     <!-- This is for compatibility reasons, as transformation between base and base_link was always 180 degree in the ur_description -->
     <xacro:property name="base_correction" value="${pi}" />
 
+    <!-- links: main serial chain -->
     <link name="${prefix}base_link" >
       <visual>
         <origin xyz="0 0 0" rpy="0 0 ${base_correction}"/>
@@ -40,17 +43,6 @@
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}shoulder_pan_joint" type="revolute">
-      <parent link="${prefix}base_link" />
-      <child link = "${prefix}shoulder_link" />
-      <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw + base_correction}" />
-      <axis xyz="0 0 1" />
-      <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
-        effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
-      <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-
     <link name="${prefix}shoulder_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
@@ -71,20 +63,6 @@
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}shoulder_lift_joint" type="revolute">
-      <parent link="${prefix}shoulder_link" />
-      <child link = "${prefix}upper_arm_link" />
-      <origin xyz="${upper_arm_x} ${upper_arm_y} ${upper_arm_z}" rpy="${upper_arm_roll} ${upper_arm_pitch} ${upper_arm_yaw}" />
-      <axis xyz="0 0 1" />
-      <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}"
-        effort="${shoulder_lift_effort_limit}" velocity="${shoulder_lift_velocity_limit}"/>
-      <xacro:if value="${safety_limits}">
-         <safety_controller soft_lower_limit="${shoulder_lift_lower_limit + safety_pos_margin}" soft_upper_limit="${shoulder_lift_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
-      </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-
     <link name="${prefix}upper_arm_link">
       <visual>
         <origin xyz="0 0 ${shoulder_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
@@ -105,20 +83,6 @@
         <origin xyz="${-0.5 * upperarm_inertia_length} 0.0 ${upper_arm_inertia_offset}" rpy="0 ${pi/2} 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}elbow_joint" type="revolute">
-      <parent link="${prefix}upper_arm_link" />
-      <child link = "${prefix}forearm_link" />
-      <origin xyz="${forearm_x} ${forearm_y} ${forearm_z}" rpy="${forearm_roll} ${forearm_pitch} ${forearm_yaw}" />
-      <axis xyz="0 0 1" />
-      <limit lower="${elbow_joint_lower_limit}" upper="${elbow_joint_upper_limit}"
-        effort="${elbow_joint_effort_limit}" velocity="${elbow_joint_velocity_limit}"/>
-      <xacro:if value="${safety_limits}">
-         <safety_controller soft_lower_limit="${elbow_joint_lower_limit + safety_pos_margin}" soft_upper_limit="${elbow_joint_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
-      </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-
     <link name="${prefix}forearm_link">
       <visual>
         <origin xyz="0 0 ${elbow_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
@@ -139,20 +103,6 @@
         <origin xyz="${-0.5 * forearm_inertia_length} 0.0 ${elbow_offset}" rpy="0 ${pi/2} 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}wrist_1_joint" type="revolute">
-      <parent link="${prefix}forearm_link" />
-      <child link = "${prefix}wrist_1_link" />
-      <origin xyz="${wrist_1_x} ${wrist_1_y} ${wrist_1_z}" rpy="${wrist_1_roll} ${wrist_1_pitch} ${wrist_1_yaw}" />
-      <axis xyz="0 0 1" />
-      <limit lower="${wrist_1_lower_limit}" upper="${wrist_1_upper_limit}"
-        effort="${wrist_1_effort_limit}" velocity="${wrist_1_velocity_limit}"/>
-      <xacro:if value="${safety_limits}">
-         <safety_controller soft_lower_limit="${wrist_1_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_1_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
-      </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-
     <link name="${prefix}wrist_1_link">
       <visual>
         <!-- TODO: Move this to a parameter -->
@@ -174,20 +124,6 @@
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}wrist_2_joint" type="revolute">
-      <parent link="${prefix}wrist_1_link" />
-      <child link = "${prefix}wrist_2_link" />
-      <origin xyz="${wrist_2_x} ${wrist_2_y} ${wrist_2_z}" rpy="${wrist_2_roll} ${wrist_2_pitch} ${wrist_2_yaw}" />
-      <axis xyz="0 0 1" />
-      <limit lower="${wrist_2_lower_limit}" upper="${wrist_2_upper_limit}"
-             effort="${wrist_2_effort_limit}" velocity="${wrist_2_velocity_limit}"/>
-      <xacro:if value="${safety_limits}">
-         <safety_controller soft_lower_limit="${wrist_2_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_2_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
-      </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-
     <link name="${prefix}wrist_2_link">
       <visual>
         <origin xyz="0 0 ${wrist_2_visual_offset}" rpy="0 0 0"/>
@@ -208,20 +144,6 @@
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}wrist_3_joint" type="revolute">
-      <parent link="${prefix}wrist_2_link" />
-      <child link = "${prefix}wrist_3_link" />
-      <origin xyz="${wrist_3_x} ${wrist_3_y} ${wrist_3_z}" rpy="${wrist_3_roll} ${wrist_3_pitch} ${wrist_3_yaw}" />
-      <axis xyz="0 0 1" />
-      <limit lower="${wrist_3_lower_limit}" upper="${wrist_3_upper_limit}"
-             effort="${wrist_3_effort_limit}" velocity="${wrist_3_velocity_limit}"/>
-      <xacro:if value="${safety_limits}">
-         <safety_controller soft_lower_limit="${wrist_3_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_3_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
-      </xacro:if>
-      <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-
     <link name="${prefix}wrist_3_link">
       <visual>
         <origin xyz="0 0 ${wrist_3_visual_offset}" rpy="${pi/2} 0 0"/>
@@ -242,13 +164,6 @@
         <origin xyz="0.0 0.0 ${-0.5 * wrist_3_inertia_length}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-
-    <joint name="${prefix}ee_fixed_joint" type="fixed">
-      <parent link="${prefix}wrist_3_link" />
-      <child link = "${prefix}ee_link" />
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} ${pi/2.0}" />
-    </joint>
-
     <link name="${prefix}ee_link">
       <collision>
         <geometry>
@@ -258,13 +173,86 @@
       </collision>
     </link>
 
+    <!-- joints: main serial chain -->
+    <joint name="${prefix}shoulder_pan_joint" type="revolute">
+      <parent link="${prefix}base_link" />
+      <child link = "${prefix}shoulder_link" />
+      <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw + base_correction}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
+        effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    <joint name="${prefix}shoulder_lift_joint" type="revolute">
+      <parent link="${prefix}shoulder_link" />
+      <child link = "${prefix}upper_arm_link" />
+      <origin xyz="${upper_arm_x} ${upper_arm_y} ${upper_arm_z}" rpy="${upper_arm_roll} ${upper_arm_pitch} ${upper_arm_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}"
+        effort="${shoulder_lift_effort_limit}" velocity="${shoulder_lift_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${shoulder_lift_lower_limit + safety_pos_margin}" soft_upper_limit="${shoulder_lift_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    <joint name="${prefix}elbow_joint" type="revolute">
+      <parent link="${prefix}upper_arm_link" />
+      <child link = "${prefix}forearm_link" />
+      <origin xyz="${forearm_x} ${forearm_y} ${forearm_z}" rpy="${forearm_roll} ${forearm_pitch} ${forearm_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${elbow_joint_lower_limit}" upper="${elbow_joint_upper_limit}"
+        effort="${elbow_joint_effort_limit}" velocity="${elbow_joint_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${elbow_joint_lower_limit + safety_pos_margin}" soft_upper_limit="${elbow_joint_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    <joint name="${prefix}wrist_1_joint" type="revolute">
+      <parent link="${prefix}forearm_link" />
+      <child link = "${prefix}wrist_1_link" />
+      <origin xyz="${wrist_1_x} ${wrist_1_y} ${wrist_1_z}" rpy="${wrist_1_roll} ${wrist_1_pitch} ${wrist_1_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${wrist_1_lower_limit}" upper="${wrist_1_upper_limit}"
+        effort="${wrist_1_effort_limit}" velocity="${wrist_1_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${wrist_1_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_1_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    <joint name="${prefix}wrist_2_joint" type="revolute">
+      <parent link="${prefix}wrist_1_link" />
+      <child link = "${prefix}wrist_2_link" />
+      <origin xyz="${wrist_2_x} ${wrist_2_y} ${wrist_2_z}" rpy="${wrist_2_roll} ${wrist_2_pitch} ${wrist_2_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${wrist_2_lower_limit}" upper="${wrist_2_upper_limit}"
+             effort="${wrist_2_effort_limit}" velocity="${wrist_2_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${wrist_2_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_2_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    <joint name="${prefix}wrist_3_joint" type="revolute">
+      <parent link="${prefix}wrist_2_link" />
+      <child link = "${prefix}wrist_3_link" />
+      <origin xyz="${wrist_3_x} ${wrist_3_y} ${wrist_3_z}" rpy="${wrist_3_roll} ${wrist_3_pitch} ${wrist_3_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${wrist_3_lower_limit}" upper="${wrist_3_upper_limit}"
+             effort="${wrist_3_effort_limit}" velocity="${wrist_3_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${wrist_3_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_3_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+    <joint name="${prefix}ee_fixed_joint" type="fixed">
+      <parent link="${prefix}wrist_3_link" />
+      <child link = "${prefix}ee_link" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${-pi/2.0} ${pi/2.0}" />
+    </joint>
     <joint name="${prefix}wrist_3_passive_joint" type="fixed">
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <parent link="${prefix}wrist_3_link"/>
       <child link="${prefix}tool0"/>
     </joint>
-
-    <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
