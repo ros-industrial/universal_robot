@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="ur" >
+
+   <!-- common stuff -->
+   <xacro:arg name="joints_limits_params" default="$(find ur_description)/config/ur3/joints_limits_parameters.yaml"/>
+   <xacro:arg name="physical_params" default="$(find ur_description)/config/ur3/physical_parameters.yaml"/>
+   <xacro:arg name="visual_params" default="$(find ur_description)/config/ur3/visual_parameters.yaml"/>
+   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+   <xacro:arg name="safety_limits" default="false"/>
+   <xacro:arg name="safety_pos_margin" default="0.15"/>
+   <xacro:arg name="safety_k_position" default="20"/>
+
+   <!-- common stuff -->
+   <xacro:include filename="$(find ur_gazebo)/urdf/ur_robot_gazebo.macro.xacro"/>
+   <xacro:include filename="$(find ur_gazebo)/urdf/common.gazebo.xacro"/>
+
+   <!-- arm -->
+   <xacro:ur_gazebo_robot prefix="" joints_limits_parameters_file="${load_yaml('$(arg joints_limits_params)')}" 
+                             physical_parameters_file="${load_yaml('$(arg physical_params)')}" 
+                             visual_parameters_file="${load_yaml('$(arg visual_params)')}"
+                             transmission_hw_interface="$(arg transmission_hw_interface)"
+                             safety_limits="$(arg safety_limits)"
+                             safety_pos_margin="$(arg safety_pos_margin)"
+                             safety_k_position="$(arg safety_k_position)"/>
+
+   <link name="world" />
+   <joint name="world_joint" type="fixed">
+      <parent link="world" />
+      <child link = "base_link" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+   </joint>
+
+</robot>

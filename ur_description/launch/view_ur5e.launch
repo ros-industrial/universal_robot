@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <include file="$(find ur_description)/launch/ur10_upload.launch"/>
+  <include file="$(find ur_description)/launch/ur5e_upload.launch"/>
 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
     <param name="use_gui" value="true"/>

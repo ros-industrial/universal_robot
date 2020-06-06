@@ -29,8 +29,6 @@
   <exec_depend>ur_bringup</exec_depend>
   <exec_depend>ur_description</exec_depend>
   <exec_depend>ur_driver</exec_depend>
-  <exec_depend>ur_e_description</exec_depend>
-  <exec_depend>ur_e_gazebo</exec_depend>
   <exec_depend>ur_gazebo</exec_depend>
   <exec_depend>ur_kinematics</exec_depend>
   <exec_depend>ur_msgs</exec_depend>

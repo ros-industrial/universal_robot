@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <!--ur parameters files -->
+  <arg name="joints_limits_params" doc="YAML file containing the joints limits values"/>
+  <arg name="physical_params" doc="YAML file containing the phycical parameters of the robots"/>
+  <arg name="visual_params" doc="YAML file containing the visual model of the robots"/>
+  <!--common parameters  -->
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+  <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
+  <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
+  <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur_robot.urdf.xacro' 
+    joints_limits_params:=$(arg joints_limits_params) 
+    physical_params:=$(arg physical_params) 
+    visual_params:=$(arg visual_params) 
+    transmission_hw_interface:=$(arg transmission_hw_interface) 
+    safety_limits:=$(arg safety_limits) 
+    safety_pos_margin:=$(arg safety_pos_margin) 
+    safety_k_position:=$(arg safety_k_position)"
+    />
+</launch>

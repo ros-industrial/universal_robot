@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- urdf model related parameters -->
+  <arg name="joints_limits_params" doc="YAML file containing the joints limits values"/>
+  <arg name="physical_params" doc="YAML file containing the phycical parameters of the robots"/>
+  <arg name="visual_params" doc="YAML file containing the visual model of the robots"/>
+
+  <!-- common parameters -->
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+  <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
+  <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
+  <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
+  
+  <!-- gazebo parameters -->
+  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="worlds/empty.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- set robot urdf to param server -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find ur_gazebo)/urdf/ur_robot.urdf.xacro' --inorder 
+      joints_limits_params:=$(arg joints_limits_params) 
+      physical_params:=$(arg physical_params) 
+      visual_params:=$(arg visual_params) 
+      transmission_hw_interface:=$(arg transmission_hw_interface)
+      safety_limits:=$(arg safety_limits)
+      safety_pos_margin:=$(arg safety_pos_margin)
+      safety_k_position:=$(arg safety_k_position)"
+    />
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
+
+  <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
+
+  <!-- load other controllers -->
+  <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load joint_group_position_controller" />
+
+</launch>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <!--ur3 parameters files -->
-  <arg name="joints_limits_params" default="$(find ur_description)/config/ur3/joints_limits_parameters.yaml"/>
-  <arg name="physical_params" default="$(find ur_description)/config/ur3/physical_parameters.yaml"/>
-  <arg name="visual_params" default="$(find ur_description)/config/ur3/visual_parameters.yaml"/>
+  <!--ur3e parameters files -->
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur3e/joints_limits_parameters.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur3e/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur3e/visual_parameters.yaml"/>
   <!-- gazebo parameters-->
   <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts gazebo gui" />

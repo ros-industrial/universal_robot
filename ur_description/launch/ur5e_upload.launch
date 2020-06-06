@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <!--ur10 parameters files -->
-  <arg name="joints_limits_params" default="$(find ur_description)/config/ur10/joints_limits_parameters.yaml"/>
-  <arg name="physical_params" default="$(find ur_description)/config/ur10/physical_parameters.yaml"/>
-  <arg name="visual_params" default="$(find ur_description)/config/ur10/visual_parameters.yaml"/>
+  <!--ur5e parameters files -->
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur5e/joints_limits_parameters.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
   <!--common parameters -->
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
   <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
