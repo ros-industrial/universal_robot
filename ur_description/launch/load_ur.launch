@@ -11,6 +11,23 @@
   <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
   <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
 
+  <!-- Load the top-level (ie: stand-alone and complete) xacro for the UR
+       variant defined by the set of yaml parameter files (so to load a UR5
+       onto the ROS parameter server, provide paths to the .yaml files which
+       contain the limits, kinematics, physical and visual parameters which
+       together describe a UR5 robot.
+
+       NOTE: users will typically want to use use one of the other .launch files
+       in this directory (ie: 'load_urXXX.launch'), as those already contain
+       appropriate default values for the required arguments for the various
+       supported robots.
+
+       NOTE2: if you have a custom robot configuration, or your robot is
+       integrated into a work cell, do NOT change this file or add all of the
+       work cell objects to the ur.xacro file. Create a new top-level xacro and
+       include the ur_macro.xacro file into it. Then write a new .launch file
+       to load it onto the parameter server.
+  -->
   <param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur.xacro'
     joints_limits_params:=$(arg joints_limits_params)
     kinematics_params:=$(arg kinematics_params)
