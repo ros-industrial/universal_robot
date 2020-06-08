@@ -75,10 +75,11 @@
     <!-- Add URDF transmission elements (for ros_control) -->
     <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
 
-    <!-- This is for compatibility reasons, as transformation between base and
-         base_link was always 180 degree in the ur_description.
+    <!-- This is for compatibility reasons, as the rotiation between base and
+         base_link has always been 180 degrees in ur_description. The reason
+         for this is unknown, but for now this kept as a form of bw-compatibility.
 
-         NOTE: this will be removed in a future revision of this file
+         NOTE: this WILL be removed in a future revision of this file
      -->
     <xacro:property name="base_correction" value="${pi}" />
 
