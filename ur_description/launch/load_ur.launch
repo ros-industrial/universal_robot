@@ -2,7 +2,7 @@
 <launch>
   <!--ur parameters files -->
   <arg name="joints_limits_params" doc="YAML file containing the joints limits values"/>
-  <arg name="kinematics_params" doc="YAML file containing the robot's kinematic parameters. These will be different foreach robot as they contain the robot's calibration."/>
+  <arg name="kinematics_params" doc="YAML file containing the robot's kinematic parameters. These will be different for each robot as they contain the robot's calibration."/>
   <arg name="physical_params" doc="YAML file containing the phycical parameters of the robots"/>
   <arg name="visual_params" doc="YAML file containing the visual model of the robots"/>
   <!--common parameters  -->
