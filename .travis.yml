@@ -2,24 +2,26 @@ language: generic
 services:
   - docker
 
-notifications:
-  email:
-    on_success: always
-    on_failure: always
+cache:
+  directories:
+    - $HOME/.ccache
+
+git:
+  quiet: true
+
 env:
+  global:
+    - CCACHE_DIR=$HOME/.ccache
   matrix:
-    - ROS_DISTRO="kinetic"   ROS_REPO=ros
-    - ROS_DISTRO="kinetic"   ROS_REPO=ros-shadow-fixed
-    - ROS_DISTRO="kinetic"   PRERELEASE=true
-    - ROS_DISTRO="melodic"   ROS_REPO=ros
-    - ROS_DISTRO="melodic"   ROS_REPO=ros-shadow-fixed
-    - ROS_DISTRO="melodic"   PRERELEASE=true
-matrix:
-  allow_failures:
-    - env: ROS_DISTRO="melodic"   ROS_REPO=ros
-    - env: ROS_DISTRO="melodic"   ROS_REPO=ros-shadow-fixed
-    - env: ROS_DISTRO="melodic"   PRERELEASE=true
+    - ROS_DISTRO="kinetic" ROS_REPO=main
+    - ROS_DISTRO="kinetic" ROS_REPO=testing
+    - ROS_DISTRO="kinetic" PRERELEASE=true
+    - ROS_DISTRO="melodic" ROS_REPO=main
+    - ROS_DISTRO="melodic" ROS_REPO=testing
+    - ROS_DISTRO="melodic" PRERELEASE=true
+
 install:
-  - git clone --quiet --depth=1 https://github.com/ros-industrial/industrial_ci.git .ci_config
+  - git clone --quiet --depth=1 -b master https://github.com/ros-industrial/industrial_ci.git .industrial_ci
+
 script:
-  - source .ci_config/travis.sh
+  - .industrial_ci/travis.sh
