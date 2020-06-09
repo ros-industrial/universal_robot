@@ -3,7 +3,7 @@
   <name>ur_description</name>
   <version>1.2.5</version>
   <description>
-      URDF description for Universal UR5/10 robot arms
+      URDF description for Universal UR3(e), UR5(e), UR10(e) and UR16e robots
   </description>
 
   <author>Wim Meeussen</author>
@@ -16,15 +16,15 @@
 
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/ur_description</url>
+  <url type="website">http://wiki.ros.org/ur_description</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <exec_depend>joint_state_publisher</exec_depend>
+
+  <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rviz</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
 
-  <export>
-  </export>
+  <test_depend>roslaunch</test_depend>
 </package>
