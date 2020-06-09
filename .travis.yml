@@ -21,12 +21,6 @@ env:
     - ROS_DISTRO="melodic" ROS_REPO=ros-shadow-fixed
     - ROS_DISTRO="melodic" PRERELEASE=true
 
-matrix:
-  allow_failures:
-    - env: ROS_DISTRO="melodic"   ROS_REPO=ros
-    - env: ROS_DISTRO="melodic"   ROS_REPO=ros-shadow-fixed
-    - env: ROS_DISTRO="melodic"   PRERELEASE=true
-
 install:
   - git clone --quiet --depth=1 -b master https://github.com/ros-industrial/industrial_ci.git .ci_config
 
