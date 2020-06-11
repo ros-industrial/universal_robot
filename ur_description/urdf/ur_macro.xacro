@@ -320,7 +320,8 @@
     <!-- Frame coincident with all-zeros TCP on UR controller -->
     <link name="${prefix}tool0"/>
     <joint name="${prefix}flange-tool0" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!-- default toolframe: X+ left, Y+ up, Z+ front -->
+      <origin xyz="0 0 0" rpy="${pi/2.0} 0 ${pi/2.0}"/>
       <parent link="${prefix}flange"/>
       <child link="${prefix}tool0"/>
     </joint>
