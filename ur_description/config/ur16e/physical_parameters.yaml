@@ -53,28 +53,28 @@ inertia_parameters:
       radius: 0.045
       length: 0.05
 
-  center_of_mass: # Adjusted manually
+  center_of_mass: # model referring to https://www.universal-robots.com/how-tos-and-faqs/faq/ur-faq/parameters-for-calculations-of-kinematics-and-dynamics-45257/
     shoulder_cog:
-      x: 0.0
-      y: 0.00244
-      z: -0.037
+      x: 0.0 # model.x
+      y: -0.030 # -model.z
+      z: -0.016 # model.y
     upper_arm_cog:
-      x: 0.00001
-      y: 0.15061
-      z: 0.38757
+      x: -0.1764 # model.x - upperarm_length
+      y: 0.0 # model.y
+      z: 0.16 # model.z
     forearm_cog:
-      x: -0.00012
-      y: 0.06112
-      z: 0.1984
+      x: -0.166 # model.x - forearm_length
+      y: 0.0 # model.y
+      z: 0.065 # model.z
     wrist_1_cog:
-      x: -0.00021
-      y: -0.00112
-      z: 0.02269
+      x: 0.0 # model.x
+      y: -0.011 # -model.z
+      z: -0.009 # model.y
     wrist_2_cog:
-      x: -0.00021
-      y: 0.00112
-      z: 0.002269
+      x: 0.0 # model.x
+      y: 0.012 # model.z
+      z: -0.018 # -model.y
     wrist_3_cog:
-      x: 0.0
-      y: -0.001156
-      z: -0.00149
+      x: 0.0 # model.x
+      y: 0.0 # model.y
+      z: -0.044 # model.z

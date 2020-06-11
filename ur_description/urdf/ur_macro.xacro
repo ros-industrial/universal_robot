@@ -114,7 +114,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${shoulder_inertia_radius}" length="${shoulder_inertia_length}" mass="${shoulder_mass}">
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="${shoulder_cog}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}upper_arm_link">
@@ -134,7 +134,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${upperarm_inertia_radius}" length="${upperarm_inertia_length}" mass="${upper_arm_mass}">
-        <origin xyz="${-0.5 * upperarm_inertia_length} 0.0 ${upper_arm_inertia_offset}" rpy="0 ${pi/2} 0" />
+        <origin xyz="${upper_arm_cog}" rpy="0 ${pi/2} 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}forearm_link">
@@ -154,7 +154,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${forearm_inertia_radius}" length="${forearm_inertia_length}"  mass="${forearm_mass}">
-        <origin xyz="${-0.5 * forearm_inertia_length} 0.0 ${elbow_offset}" rpy="0 ${pi/2} 0" />
+        <origin xyz="${forearm_cog}" rpy="0 ${pi/2} 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}wrist_1_link">
@@ -175,7 +175,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_1_inertia_radius}" length="${wrist_1_inertia_length}"  mass="${wrist_1_mass}">
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="${wrist_1_cog}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}wrist_2_link">
@@ -195,7 +195,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_2_inertia_radius}" length="${wrist_2_inertia_length}"  mass="${wrist_2_mass}">
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="${wrist_2_cog}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}wrist_3_link">
@@ -215,7 +215,7 @@
         </geometry>
       </collision>
       <xacro:cylinder_inertial radius="${wrist_3_inertia_radius}" length="${wrist_3_inertia_length}"  mass="${wrist_3_mass}">
-        <origin xyz="0.0 0.0 ${-0.5 * wrist_3_inertia_length}" rpy="0 0 0" />
+        <origin xyz="${wrist_3_cog}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
 
