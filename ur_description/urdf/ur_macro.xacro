@@ -309,11 +309,19 @@
       <child link="${prefix}base"/>
     </joint>
 
+    <!-- ROS-Industrial 'flange' frame: attachment point for EEF models -->
+    <link name="${prefix}flange" />
+    <joint name="${prefix}wrist_3-flange" type="fixed">
+      <parent link="${prefix}wrist_3_link" />
+      <child link="${prefix}flange" />
+      <origin xyz="0 0 0" rpy="0 ${-pi/2.0} ${-pi/2.0}" />
+    </joint>
+
     <!-- Frame coincident with all-zeros TCP on UR controller -->
     <link name="${prefix}tool0"/>
-    <joint name="${prefix}wrist_3_passive_joint" type="fixed">
+    <joint name="${prefix}flange-tool0" type="fixed">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <parent link="${prefix}wrist_3_link"/>
+      <parent link="${prefix}flange"/>
       <child link="${prefix}tool0"/>
     </joint>
   </xacro:macro>
