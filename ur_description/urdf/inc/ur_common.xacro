@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-<!--
-  Author: Ludovic Delval
-  Contributor: Felix Messmer
--->
+  <!--
+    NOTE: the macros defined in this file are NOT part of the public API of this
+          package. Users CANNOT rely on this file being available, or stored in
+          this location. Nor can they rely on the existence of the two macros.
+
+    Author: Ludovic Delval
+    Contributor: Felix Messmer
+  -->
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
@@ -14,6 +18,15 @@
     </inertial>
   </xacro:macro>
 
+
+  <!--
+    NOTE: this macro stores the defined properties in the scope of the caller.
+          However, users MUST NOT rely on these properties, their contents or
+          their names.
+
+          This macro is NOT part of the public API of the ur_description pkg,
+          and as such should be considered to be for internal use only.
+  -->
   <xacro:macro name="read_model_data" params="joints_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file">
     <xacro:property name="__limits" value="${joints_limits_parameters_file['limits']}"/>
     <xacro:property name="__dh_parameters" value="${physical_parameters_file['dh_parameters']}"/>

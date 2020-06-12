@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <!--
+    NOTE: the macro defined in this file is NOT part of the public API of this
+          package. Users CANNOT rely on this file being available, or stored in
+          this location. Nor can they rely on the existence of the macro.
+  -->
 
   <xacro:macro name="ur_arm_transmission" params="prefix hw_interface">
 
