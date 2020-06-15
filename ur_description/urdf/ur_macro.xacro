@@ -303,7 +303,12 @@
     <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
     <joint name="${prefix}base_link-base_fixed_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!-- Note the rotation over Z of pi radians: as base_link is REP-103
+           aligned (ie: has X+ forward, Y+ left and Z+ up), this is needed
+           to correctly align 'base' with the 'Base' coordinate system of
+           the UR controller.
+      -->
+      <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
       <parent link="${prefix}base_link"/>
       <child link="${prefix}base"/>
     </joint>
