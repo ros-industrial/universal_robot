@@ -225,19 +225,6 @@
         <origin xyz="0.0 0.0 ${-0.5 * wrist_3_inertia_length}" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
-    <link name="${prefix}ee_link">
-      <!-- TODO: remove this. This was only added to work-around a MoveIt issue
-           where links without geometry were ignored while collision checking.
-
-           NOTE: this will be removed in a future revision of this file.
-      -->
-      <collision>
-        <geometry>
-          <box size="0.01 0.01 0.01"/>
-        </geometry>
-        <origin rpy="0 0 0" xyz="-0.01 0 0"/>
-      </collision>
-    </link>
 
     <!-- joints: main serial chain -->
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
@@ -309,13 +296,8 @@
       </xacro:if>
       <dynamics damping="0" friction="0"/>
     </joint>
-    <joint name="${prefix}ee_fixed_joint" type="fixed">
-      <parent link="${prefix}wrist_3_link" />
-      <child link="${prefix}ee_link" />
-      <origin xyz="0 0 0" rpy="0.0 ${-pi/2.0} ${pi/2.0}" />
-    </joint>
 
-    <!-- ROS base_link to UR 'Base' Coordinates transform -->
+    <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
     <joint name="${prefix}base_link-base_fixed_joint" type="fixed">
       <!-- NOTE: this rotation is only needed as long as base_link itself is
@@ -327,11 +309,20 @@
       <child link="${prefix}base"/>
     </joint>
 
-    <!-- Frame coincident with all-zeros TCP on UR controller -->
+    <!-- ROS-Industrial 'flange' frame: attachment point for EEF models -->
+    <link name="${prefix}flange" />
+    <joint name="${prefix}wrist_3-flange" type="fixed">
+      <parent link="${prefix}wrist_3_link" />
+      <child link="${prefix}flange" />
+      <origin xyz="0 0 0" rpy="0 ${-pi/2.0} ${-pi/2.0}" />
+    </joint>
+
+    <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
     <link name="${prefix}tool0"/>
-    <joint name="${prefix}wrist_3_passive_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <parent link="${prefix}wrist_3_link"/>
+    <joint name="${prefix}flange-tool0" type="fixed">
+      <!-- default toolframe: X+ left, Y+ up, Z+ front -->
+      <origin xyz="0 0 0" rpy="${pi/2.0} 0 ${pi/2.0}"/>
+      <parent link="${prefix}flange"/>
       <child link="${prefix}tool0"/>
     </joint>
   </xacro:macro>
