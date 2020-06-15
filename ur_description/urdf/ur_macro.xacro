@@ -223,7 +223,12 @@
     <joint name="${prefix}base_link-base_link_inertia" type="fixed">
       <parent link="${prefix}base_link" />
       <child link="${prefix}base_link_inertia" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
+           frames of the robot/controller have X+ pointing backwards.
+           Use the joint between 'base_link' and 'base_link_inertia' (a dummy
+           link/frame) to introduce the necessary rotation over Z (of pi rad).
+      -->
+      <origin xyz="0 0 0" rpy="0 0 ${pi}" />
     </joint>
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
       <parent link="${prefix}base_link_inertia" />
