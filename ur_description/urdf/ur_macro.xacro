@@ -7,11 +7,11 @@
     expecting a flattened '.urdf' file. See the top-level '.xacro' for that
     (but note: that .xacro must still be processed by the xacro command).
 
-    For use in '.launch' files: use one of the 'urX_upload.launch' convenience
+    For use in '.launch' files: use one of the 'load_urX.launch' convenience
     launch files.
 
     This file models the base kinematic chain of a UR robot, which then gets
-    parameterised by various configuration files to convert it into a UR3(3),
+    parameterised by various configuration files to convert it into a UR3(e),
     UR5(e), UR10(e) or UR16e.
 
     NOTE: the default kinematic parameters (ie: link lengths, frame locations,
@@ -25,8 +25,8 @@
     the targetted robot.
 
     If using the UniversalRobots/Universal_Robots_ROS_Driver, follow the steps
-    described in the readme to extract the kinematic calibration from the
-    controller and generate the required .yaml file.
+    described in the readme of that repository to extract the kinematic
+    calibration from the controller and generate the required .yaml file.
 
     Main author of the migration to yaml configs: Ludovic Delval.
 
