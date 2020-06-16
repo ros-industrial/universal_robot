@@ -11,14 +11,6 @@
   <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
   <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
 
-  <include file="$(find ur_description)/launch/load_ur.launch">
-    <arg name="joints_limits_params" value="$(arg joints_limits_params)"/>
-    <arg name="kinematics_params" value="$(arg kinematics_params)"/>
-    <arg name="physical_params" value="$(arg physical_params)"/>
-    <arg name="visual_params" value="$(arg visual_params)"/>
-    <arg name="transmission_hw_interface" value="$(arg transmission_hw_interface)"/>
-    <arg name="safety_limits" value="$(arg safety_limits)"/>
-    <arg name="safety_pos_margin" value="$(arg safety_pos_margin)"/>
-    <arg name="safety_k_position" value="$(arg safety_k_position)"/>
-  </include>
+  <!-- use common launch file and pass all arguments to it -->
+  <include file="$(find ur_description)/launch/load_ur.launch" pass_all_args="true"/>
 </launch>
