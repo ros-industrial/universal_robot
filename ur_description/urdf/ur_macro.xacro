@@ -75,18 +75,11 @@
     <!-- Add URDF transmission elements (for ros_control) -->
     <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
 
-    <!-- This is for compatibility reasons, as the rotiation between base and
-         base_link has always been 180 degrees in ur_description. The reason
-         for this is unknown, but for now this kept as a form of bw-compatibility.
-
-         NOTE: this WILL be removed in a future revision of this file
-     -->
-    <xacro:property name="base_correction" value="${pi}" />
-
     <!-- links: main serial chain -->
-    <link name="${prefix}base_link" >
+    <link name="${prefix}base_link"/>
+    <link name="${prefix}base_link_inertia">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 ${base_correction}"/>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
         <geometry>
           <mesh filename="${base_visual_mesh}"/>
         </geometry>
@@ -95,7 +88,7 @@
         </material>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 ${base_correction}"/>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
         <geometry>
           <mesh filename="${base_collision_mesh}"/>
         </geometry>
@@ -227,10 +220,20 @@
     </link>
 
     <!-- joints: main serial chain -->
-    <joint name="${prefix}shoulder_pan_joint" type="revolute">
+    <joint name="${prefix}base_link-base_link_inertia" type="fixed">
       <parent link="${prefix}base_link" />
+      <child link="${prefix}base_link_inertia" />
+      <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
+           frames of the robot/controller have X+ pointing backwards.
+           Use the joint between 'base_link' and 'base_link_inertia' (a dummy
+           link/frame) to introduce the necessary rotation over Z (of pi rad).
+      -->
+      <origin xyz="0 0 0" rpy="0 0 ${pi}" />
+    </joint>
+    <joint name="${prefix}shoulder_pan_joint" type="revolute">
+      <parent link="${prefix}base_link_inertia" />
       <child link="${prefix}shoulder_link" />
-      <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw + base_correction}" />
+      <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw}" />
       <axis xyz="0 0 1" />
       <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
         effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
@@ -300,11 +303,12 @@
     <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>
     <joint name="${prefix}base_link-base_fixed_joint" type="fixed">
-      <!-- NOTE: this rotation is only needed as long as base_link itself is
-      not corrected wrt the real robot (ie: rotated over 180
-      degrees)
+      <!-- Note the rotation over Z of pi radians: as base_link is REP-103
+           aligned (ie: has X+ forward, Y+ left and Z+ up), this is needed
+           to correctly align 'base' with the 'Base' coordinate system of
+           the UR controller.
       -->
-      <origin xyz="0 0 0" rpy="0 0 ${-pi}"/>
+      <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
       <parent link="${prefix}base_link"/>
       <child link="${prefix}base"/>
     </joint>
