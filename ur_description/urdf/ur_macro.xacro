@@ -90,8 +90,8 @@
         <geometry>
           <mesh filename="${base_visual_mesh}"/>
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
+        <material name="${base_visual_material_name}">
+          <color rgba="${base_visual_material_color}"/>
         </material>
       </visual>
       <collision>
