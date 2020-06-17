@@ -237,6 +237,9 @@
       <axis xyz="0 0 1" />
       <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
         effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${shoulder_pan_lower_limit + safety_pos_margin}" soft_upper_limit="${shoulder_pan_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
       <dynamics damping="0" friction="0"/>
     </joint>
     <joint name="${prefix}shoulder_lift_joint" type="revolute">
