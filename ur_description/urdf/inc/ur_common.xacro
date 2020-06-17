@@ -27,8 +27,8 @@
           This macro is NOT part of the public API of the ur_description pkg,
           and as such should be considered to be for internal use only.
   -->
-  <xacro:macro name="read_model_data" params="joints_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file">
-    <xacro:property name="__limits" value="${joints_limits_parameters_file['limits']}"/>
+  <xacro:macro name="read_model_data" params="joint_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file">
+    <xacro:property name="__limits" value="${joint_limits_parameters_file['limits']}"/>
     <xacro:property name="__dh_parameters" value="${physical_parameters_file['dh_parameters']}"/>
     <xacro:property name="__offsets" value="${physical_parameters_file['offsets']}"/>
     <xacro:property name="__inertia_parameters" value="${physical_parameters_file['inertia_parameters']}" />
