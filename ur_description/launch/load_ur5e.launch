@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!--ur5e parameters files -->
-  <arg name="joints_limits_params" default="$(find ur_description)/config/ur5e/joints_limits_parameters.yaml"/>
+  <arg name="joints_limits_params" default="$(find ur_description)/config/ur5e/joint_limits.yaml"/>
   <arg name="kinematics_params" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
