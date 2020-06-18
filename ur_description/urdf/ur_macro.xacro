@@ -56,7 +56,7 @@
 
   <xacro:macro name="ur_robot" params="
     prefix
-    joints_limits_parameters_file
+    joint_limits_parameters_file
     kinematics_parameters_file
     physical_parameters_file
     visual_parameters_file
@@ -67,7 +67,7 @@
   >
     <!-- Load configuration data from the provided .yaml files -->
     <xacro:read_model_data
-      joints_limits_parameters_file="${joints_limits_parameters_file}" 
+      joint_limits_parameters_file="${joint_limits_parameters_file}" 
       kinematics_parameters_file="${kinematics_parameters_file}"
       physical_parameters_file="${physical_parameters_file}"
       visual_parameters_file="${visual_parameters_file}"/>
