@@ -25,16 +25,16 @@
   </include>
 
   <!-- set robot urdf to param server -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find ur_gazebo)/urdf/ur.xacro' --inorder 
-      joints_limits_params:=$(arg joints_limits_params) 
-      kinematics_params:=$(arg kinematics_params) 
-      physical_params:=$(arg physical_params) 
-      visual_params:=$(arg visual_params) 
-      transmission_hw_interface:=$(arg transmission_hw_interface)
-      safety_limits:=$(arg safety_limits)
-      safety_pos_margin:=$(arg safety_pos_margin)
-      safety_k_position:=$(arg safety_k_position)"
-    />
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_gazebo)/urdf/ur.xacro' --inorder 
+    joints_limits_params:=$(arg joints_limits_params) 
+    kinematics_params:=$(arg kinematics_params) 
+    physical_params:=$(arg physical_params) 
+    visual_params:=$(arg visual_params) 
+    transmission_hw_interface:=$(arg transmission_hw_interface)
+    safety_limits:=$(arg safety_limits)
+    safety_pos_margin:=$(arg safety_pos_margin)
+    safety_k_position:=$(arg safety_k_position)"
+  />
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
