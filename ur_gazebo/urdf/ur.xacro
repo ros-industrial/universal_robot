@@ -14,7 +14,6 @@
 
    <!-- common stuff -->
    <xacro:include filename="$(find ur_gazebo)/urdf/ur_macro.xacro"/>
-   <xacro:include filename="$(find ur_gazebo)/urdf/common.gazebo.xacro"/>
 
    <!-- arm -->
    <xacro:ur_gazebo_robot prefix="" joint_limits_parameters_file="$(arg joint_limit_params)" 
