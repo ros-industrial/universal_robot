@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://wiki.ros.org/xacro"
-       name="ur" >
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur_robot_gazebo">
 
    <!-- common stuff -->
    <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/ur3/joint_limits.yaml"/>
@@ -16,7 +15,7 @@
    <xacro:include filename="$(find ur_gazebo)/urdf/ur_macro.xacro"/>
 
    <!-- arm -->
-   <xacro:ur_gazebo_robot prefix="" joint_limits_parameters_file="$(arg joint_limit_params)" 
+   <xacro:ur_robot_gazebo prefix="" joint_limits_parameters_file="$(arg joint_limit_params)" 
                              kinematics_parameters_file="$(arg kinematics_params)" 
                              physical_parameters_file="$(arg physical_params)" 
                              visual_parameters_file="$(arg visual_params)"
