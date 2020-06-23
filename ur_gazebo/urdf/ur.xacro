@@ -13,7 +13,7 @@
    <xacro:arg name="safety_k_position" default="20"/>
 
    <!-- common stuff -->
-   <xacro:include filename="$(find ur_gazebo)/urdf/ur_robot_gazebo.macro.xacro"/>
+   <xacro:include filename="$(find ur_gazebo)/urdf/ur_macro.xacro"/>
    <xacro:include filename="$(find ur_gazebo)/urdf/common.gazebo.xacro"/>
 
    <!-- arm -->
