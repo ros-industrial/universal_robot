@@ -30,10 +30,10 @@
   <xacro:include filename="$(find ur_gazebo)/urdf/ur_macro.xacro"/>
 
   <!--Declare arguments -->
-  <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/ur3/joint_limits.yaml"/>
-  <xacro:arg name="physical_params" default="$(find ur_description)/config/ur3/physical_parameters.yaml"/>
-  <xacro:arg name="kinematics_params" default="$(find ur_description)/config/ur3/default_kinematics.yaml"/>
-  <xacro:arg name="visual_params" default="$(find ur_description)/config/ur3/visual_parameters.yaml"/>
+  <xacro:arg name="joint_limit_params" default=""/>
+  <xacro:arg name="physical_params" default=""/>
+  <xacro:arg name="kinematics_params" default=""/>
+  <xacro:arg name="visual_params" default=""/>
   <!-- legal values:
       - hardware_interface/PositionJointInterface
       - hardware_interface/VelocityJointInterface
