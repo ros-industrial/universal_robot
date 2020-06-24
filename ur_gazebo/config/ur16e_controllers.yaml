@@ -1,6 +1,6 @@
 joint_state_controller:
   type: joint_state_controller/JointStateController
-  publish_rate: 50
+  publish_rate: &loop_hz 500
 
 pos_traj_controller:
   type: position_controllers/JointTrajectoryController
@@ -21,7 +21,7 @@ pos_traj_controller:
     wrist_2_joint: {trajectory: 0.1, goal: 0.1}
     wrist_3_joint: {trajectory: 0.1, goal: 0.1}
   stop_trajectory_duration: 0.5
-  state_publish_rate: 25
+  state_publish_rate: *loop_hz
   action_monitor_rate: 10
 
 joint_group_pos_controller:
