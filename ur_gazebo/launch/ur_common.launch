@@ -1,55 +1,44 @@
 <?xml version="1.0"?>
 <launch>
+  <!-- Parameters we share with ur_robot_driver (as they are shared with all
+       other ros_control based systems)
+  -->
+  <arg name="controller_config_file" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="kinematics_params" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
+  <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
+  <!-- vel_based_pos_traj_controller ? -->
+  <arg name="controllers" default="joint_state_controller pos_traj_controller" doc="Controllers that are activated by default."/>
+  <arg name="stopped_controllers" default="joint_group_pos_controller" doc="Controllers that are initally loaded, but not started."/>
+  <arg name="robot_description_file" doc="Robot description launch file."/>
 
-  <!-- urdf model related parameters -->
-  <arg name="joints_limits_params" doc="YAML file containing the joints limits values"/>
-  <arg name="kinematics_params" doc="YAML file containing the robot's kinematic parameters. These will be different foreach robot as they contain the robot's calibration."/>
-  <arg name="physical_params" doc="YAML file containing the phycical parameters of the robots"/>
-  <arg name="visual_params" doc="YAML file containing the visual model of the robots"/>
-
-  <!-- common parameters -->
+  <!-- Common parameters -->
+  <!-- determine whether we should pass these on to 'robot_description_file' -->
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
   <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
   <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
   <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
-  
-  <!-- gazebo parameters -->
-  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
-  <arg name="gui" default="true" doc="Starts gazebo gui" />
 
-  <!-- startup simulated world -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" default="worlds/empty.world"/>
-    <arg name="paused" value="$(arg paused)"/>
-    <arg name="gui" value="$(arg gui)"/>
+  <!-- Gazebo parameters -->
+  <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts Gazebo gui" />
+
+  <!-- Load robot model onto the parameter server -->
+  <include file="$(arg robot_description_file)">
+    <arg name="kinematics_params" value="$(arg kinematics_params)"/>
   </include>
-
-  <!-- set robot urdf to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro '$(find ur_gazebo)/urdf/ur.xacro' --inorder 
-    joints_limits_params:=$(arg joints_limits_params) 
-    kinematics_params:=$(arg kinematics_params) 
-    physical_params:=$(arg physical_params) 
-    visual_params:=$(arg visual_params) 
-    transmission_hw_interface:=$(arg transmission_hw_interface)
-    safety_limits:=$(arg safety_limits)
-    safety_pos_margin:=$(arg safety_pos_margin)
-    safety_k_position:=$(arg safety_k_position)"
-  />
-
-  <!-- push robot_description to factory and spawn robot in gazebo -->
-  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
 
   <!-- Robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="50.0" />
-    <param name="tf_prefix" type="string" value="" />
+    <param name="tf_prefix" value="$(arg tf_prefix)" />
   </node>
 
-  <!-- joint_state_controller -->
-  <rosparam file="$(find ur_gazebo)/controller/joint_state_controller.yaml" command="load"/>
-  <node name="joint_state_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn joint_state_controller" respawn="false" output="screen"/>
-
-  <!-- load other controllers -->
-  <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load joint_group_position_controller" />
-
+  <!-- Start the 'driver' (ie: Gazebo in this case) -->
+  <include file="$(find ur_gazebo)/launch/ur_control.launch">
+    <arg name="controller_config_file" value="$(arg controller_config_file)"/>
+    <arg name="controllers" value="$(arg controllers)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="stopped_controllers" value="$(arg stopped_controllers)"/>
+  </include>
 </launch>
