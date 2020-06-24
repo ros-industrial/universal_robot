@@ -11,5 +11,5 @@ if (CATKIN_ENABLE_TESTING)
   roslaunch_add_file_check(tests/roslaunch_test.xml)
 endif()
 
-install(DIRECTORY launch controller urdf
+install(DIRECTORY config launch urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
