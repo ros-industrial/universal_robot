@@ -6,7 +6,7 @@
 
   <arg name="controllers" default="joint_state_controller pos_traj_controller" doc="Controllers that are activated by default."/>
   <arg name="stopped_controllers" default="joint_group_pos_controller" doc="Controllers that are initally loaded, but not started."/>
-  <arg name="controller_config_file" default="$(find ur_gazebo)/controller/arm_controller_ur3.yaml" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur3_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="robot_description_file" default="$(find ur_gazebo)/launch/load_ur3e.launch" doc="Robot description launch file."/>
   <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
 
