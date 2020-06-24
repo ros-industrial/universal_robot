@@ -8,7 +8,13 @@ catkin_package()
 
 if (CATKIN_ENABLE_TESTING)
   find_package(roslaunch REQUIRED)
-  roslaunch_add_file_check(tests/roslaunch_test.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur3.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur3e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur5.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur5e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur10.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur10e.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur16e.xml)
 endif()
 
 install(DIRECTORY config launch urdf
