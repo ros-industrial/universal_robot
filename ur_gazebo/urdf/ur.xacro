@@ -56,7 +56,13 @@
     safety_pos_margin="$(arg safety_pos_margin)"
     safety_k_position="$(arg safety_k_position)"/>
 
-  <!-- Attach the Gazebo model to Gazebo's world frame -->
+  <!-- Attach the Gazebo model to Gazebo's world frame.
+
+       Note: if you're looking to integrate a UR into a larger scene and need
+       to add EEFs or other parts, DO NOT change this file or the 'world' link
+       here. Create a NEW xacro instead and decide whether you need to add
+       a 'world' link there.
+  -->
   <link name="world"/>
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
