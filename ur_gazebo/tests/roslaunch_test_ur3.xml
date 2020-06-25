@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <group ns="ur3__">
-    <include file="$(find ur_gazebo)/launch/load_ur3.launch"/>
+    <include file="$(find ur_gazebo)/launch/inc/load_ur3.launch.xml"/>
   </group>
 
   <group ns="ur3_bringup__">
