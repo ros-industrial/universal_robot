@@ -13,5 +13,5 @@
   <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
 
   <!-- Use common launch file and pass all arguments to it -->
-  <include file="$(find ur_gazebo)/launch/load_ur.launch" pass_all_args="true"/>
+  <include file="$(dirname)/load_ur.launch.xml" pass_all_args="true"/>
 </launch>

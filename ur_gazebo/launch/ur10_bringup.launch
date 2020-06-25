@@ -16,7 +16,7 @@
   <arg name="visual_params" default="$(find ur_description)/config/ur10/visual_parameters.yaml"/>
 
   <!-- Load robot model onto the parameter server -->
-  <include file="$(find ur_gazebo)/launch/load_ur10.launch">
+  <include file="$(dirname)/inc/load_ur10.launch.xml">
     <arg name="joint_limit_params" value="$(arg joint_limit_params)"/>
     <arg name="kinematics_params" value="$(arg kinematics_params)"/>
     <arg name="physical_params" value="$(arg physical_params)"/>
