@@ -5,11 +5,9 @@
   -->
   <arg name="controller_config_file" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="kinematics_params" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
-  <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
   <!-- vel_based_pos_traj_controller ? -->
   <arg name="controllers" default="joint_state_controller pos_traj_controller" doc="Controllers that are activated by default."/>
   <arg name="stopped_controllers" default="joint_group_pos_controller" doc="Controllers that are initally loaded, but not started."/>
-  <arg name="robot_description_file" doc="Robot description launch file."/>
 
   <!-- Common parameters -->
   <!-- determine whether we should pass these on to 'robot_description_file' -->
@@ -21,17 +19,6 @@
   <!-- Gazebo parameters -->
   <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts Gazebo gui" />
-
-  <!-- Load robot model onto the parameter server -->
-  <include file="$(arg robot_description_file)">
-    <arg name="kinematics_params" value="$(arg kinematics_params)"/>
-  </include>
-
-  <!-- Robot state publisher -->
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="50.0" />
-    <param name="tf_prefix" value="$(arg tf_prefix)" />
-  </node>
 
   <!-- Start the 'driver' (ie: Gazebo in this case) -->
   <include file="$(find ur_gazebo)/launch/ur_control.launch">
