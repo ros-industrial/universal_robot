@@ -5,7 +5,6 @@
   -->
   <arg name="controller_config_file" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="kinematics_params" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
-  <!-- vel_based_pos_traj_controller ? -->
   <arg name="controllers" default="joint_state_controller pos_traj_controller" doc="Controllers that are activated by default."/>
   <arg name="stopped_controllers" default="joint_group_pos_controller" doc="Controllers that are initally loaded, but not started."/>
 
