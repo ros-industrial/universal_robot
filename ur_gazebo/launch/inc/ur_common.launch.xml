@@ -20,7 +20,7 @@
   <arg name="gui" default="true" doc="Starts Gazebo gui" />
 
   <!-- Start the 'driver' (ie: Gazebo in this case) -->
-  <include file="$(find ur_gazebo)/launch/ur_control.launch">
+  <include file="$(dirname)/ur_control.launch.xml">
     <arg name="controller_config_file" value="$(arg controller_config_file)"/>
     <arg name="controllers" value="$(arg controllers)"/>
     <arg name="gui" value="$(arg gui)"/>
