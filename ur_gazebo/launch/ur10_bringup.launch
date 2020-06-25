@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- gazebo parameters-->
+  <!-- Gazebo parameters-->
   <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts Gazebo gui" />
 
@@ -9,7 +9,7 @@
   <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur10_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
 
-  <!--ur10 parameters files -->
+  <!--Parameter files -->
   <arg name="joint_limit_params" default="$(find ur_description)/config/ur10/joint_limits.yaml"/>
   <arg name="kinematics_params" default="$(find ur_description)/config/ur10/default_kinematics.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur10/physical_parameters.yaml"/>

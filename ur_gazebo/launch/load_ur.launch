@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <launch>
-  <!--ur parameters files -->
+  <!--Parameter files -->
   <arg name="joint_limit_params" doc="YAML file containing the joint limit values"/>
   <arg name="kinematics_params" doc="YAML file containing the robot's kinematic parameters. These will be different for each robot as they contain the robot's calibration."/>
   <arg name="physical_params" doc="YAML file containing the phycical parameters of the robots"/>
   <arg name="visual_params" doc="YAML file containing the visual model of the robots"/>
-  <!--common parameters  -->
+
+  <!--Common parameters  -->
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
   <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
   <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
