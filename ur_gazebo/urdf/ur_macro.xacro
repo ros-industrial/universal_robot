@@ -39,16 +39,6 @@
   -->
 
 
-  <!--
-    Import the xacro macro for the REAL robot (which we'll augment with Gazebo
-    specific elements in the wrapper macro below).
-
-    NOTE: this imports the '_macro.xacro' from ur_description, as that contains
-    the definitions for the real robot.
-  -->
-  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
-
-
   <!-- Definition of the main macro -->
   <xacro:macro name="ur_robot_gazebo" params="
    prefix
@@ -59,6 +49,16 @@
    transmission_hw_interface:=hardware_interface/PositionJointInterface
    safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20"
   >
+    <!--
+      Import the xacro macro for the REAL robot (which we'll augment with Gazebo
+      specific elements in the wrapper macro below).
+
+      NOTE: this imports the '_macro.xacro' from ur_description, as that contains
+      the definitions for the real robot.
+    -->
+    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+
     <!-- Instantiate model for the REAL robot. -->
     <xacro:ur_robot
       prefix="${prefix}"
