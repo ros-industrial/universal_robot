@@ -23,9 +23,11 @@
     connect everything by adding the appropriate joints.
   -->
 
-  <!-- Import main macro.
-       Note: this imports the Gazebo-wrapper main macro, NOT the regular
-       xacro macro (which is hosted by ur_description).
+  <!--
+    Import main macro.
+
+    NOTE: this imports the Gazebo-wrapper main macro, NOT the regular
+          xacro macro (which is hosted by ur_description).
   -->
   <xacro:include filename="$(find ur_gazebo)/urdf/ur_macro.xacro"/>
 
@@ -34,10 +36,14 @@
   <xacro:arg name="physical_params" default=""/>
   <xacro:arg name="kinematics_params" default=""/>
   <xacro:arg name="visual_params" default=""/>
-  <!-- legal values:
+  <!--
+    legal values:
       - hardware_interface/PositionJointInterface
       - hardware_interface/VelocityJointInterface
       - hardware_interface/EffortJointInterface
+
+    NOTE: this value must correspond to the controller configured in the
+          controller .yaml files in the 'config' directory.
   -->
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
   <xacro:arg name="safety_limits" default="false"/>
@@ -54,14 +60,16 @@
     transmission_hw_interface="$(arg transmission_hw_interface)"
     safety_limits="$(arg safety_limits)"
     safety_pos_margin="$(arg safety_pos_margin)"
-    safety_k_position="$(arg safety_k_position)"/>
+    safety_k_position="$(arg safety_k_position)"
+  />
 
-  <!-- Attach the Gazebo model to Gazebo's world frame.
+  <!--
+    Attach the Gazebo model to Gazebo's world frame.
 
-       Note: if you're looking to integrate a UR into a larger scene and need
-       to add EEFs or other parts, DO NOT change this file or the 'world' link
-       here. Create a NEW xacro instead and decide whether you need to add
-       a 'world' link there.
+    Note: if you're looking to integrate a UR into a larger scene and need
+    to add EEFs or other parts, DO NOT change this file or the 'world' link
+    here. Create a NEW xacro instead and decide whether you need to add
+    a 'world' link there.
   -->
   <link name="world"/>
   <joint name="world_joint" type="fixed">
