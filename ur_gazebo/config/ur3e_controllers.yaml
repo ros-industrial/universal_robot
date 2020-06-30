@@ -1,6 +1,6 @@
 joint_state_controller:
   type: joint_state_controller/JointStateController
-  publish_rate: &loop_hz 125
+  publish_rate: &loop_hz 500
 
 pos_traj_controller:
   type: position_controllers/JointTrajectoryController
