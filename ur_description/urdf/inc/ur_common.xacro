@@ -28,12 +28,19 @@
           and as such should be considered to be for internal use only.
   -->
   <xacro:macro name="read_model_data" params="joint_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file">
-    <xacro:property name="__limits" value="${joint_limits_parameters_file['joint_limits']}"/>
-    <xacro:property name="__dh_parameters" value="${physical_parameters_file['dh_parameters']}"/>
-    <xacro:property name="__offsets" value="${physical_parameters_file['offsets']}"/>
-    <xacro:property name="__inertia_parameters" value="${physical_parameters_file['inertia_parameters']}" />
-    <xacro:property name="__mesh_files" value="${visual_parameters_file['mesh_files']}" />
-    <xacro:property name="__kinematics" value="${kinematics_parameters_file['kinematics']}" />
+    <!-- Read .yaml files from disk, load content into properties -->
+    <xacro:property name="__joint_limit_parameters" value="${load_yaml(joint_limits_parameters_file)}"/>
+    <xacro:property name="__kinematics_parameters" value="${load_yaml(kinematics_parameters_file)}"/>
+    <xacro:property name="__physical_parameters" value="${load_yaml(physical_parameters_file)}"/>
+    <xacro:property name="__visual_parameters" value="${load_yaml(visual_parameters_file)}"/>
+
+    <!-- Extract subsections from yaml dictionaries -->
+    <xacro:property name="__limits" value="${__joint_limit_parameters['joint_limits']}"/>
+    <xacro:property name="__dh_parameters" value="${__physical_parameters['dh_parameters']}"/>
+    <xacro:property name="__offsets" value="${__physical_parameters['offsets']}"/>
+    <xacro:property name="__inertia_parameters" value="${__physical_parameters['inertia_parameters']}" />
+    <xacro:property name="__mesh_files" value="${__visual_parameters['mesh_files']}" />
+    <xacro:property name="__kinematics" value="${__kinematics_parameters['kinematics']}" />
 
     <!-- JOINTS LIMIT PARAMETERS -->
     <xacro:property name="shoulder_pan_lower_limit" value="${__limits['shoulder_pan']['min_position']}" scope="parent"/>
