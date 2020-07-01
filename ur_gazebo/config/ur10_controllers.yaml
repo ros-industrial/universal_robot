@@ -2,7 +2,7 @@ joint_state_controller:
   type: joint_state_controller/JointStateController
   publish_rate: &loop_hz 125
 
-pos_traj_controller:
+pos_joint_traj_controller:
   type: position_controllers/JointTrajectoryController
   joints: &robot_joints
     - shoulder_pan_joint
