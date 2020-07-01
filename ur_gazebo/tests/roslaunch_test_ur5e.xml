@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="ur5e__">
+    <include file="$(find ur_gazebo)/launch/inc/load_ur5e.launch.xml"/>
+  </group>
+
+  <group ns="ur5e_bringup__">
+    <include file="$(find ur_gazebo)/launch/ur5e_bringup.launch"/>
+  </group>
+</launch>
