@@ -7,7 +7,7 @@
   <arg name="visual_params" default="$(find ur_description)/config/ur10/visual_parameters.yaml"/>
 
   <!--Common parameters -->
-  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" doc="The hardware_interface to expose for each joint in the simulated robot (one of: [PositionJointInterface, VelocityJointInterface, EffortJointInterface])"/>
+  <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface" doc="The hardware_interface to expose for each joint in the simulated robot (one of: [PositionJointInterface, VelocityJointInterface, EffortJointInterface])"/>
   <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
   <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
   <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
