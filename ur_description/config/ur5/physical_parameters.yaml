@@ -62,26 +62,97 @@ inertia_parameters:
 
   center_of_mass:
     shoulder_cog:
-      x: 0.0
-      y: 0.00193
-      z: -0.02561
+      x: 0.0       # model.x
+      y: -0.00193  # -model.z
+      z: -0.02561  # model.y
     upper_arm_cog:
-      x: 0.0
-      y: -0.024201
-      z: 0.2125
+      x: -0.2125   # model.x - upper_arm_length
+      y: 0.0       # model.y
+      z: 0.11336   # model.z
     forearm_cog:
-      x: 0.0
-      y: 0.0265
-      z: 0.11993
+      x: -0.24225  # model.x - forearm_length
+      y: 0.0       # model.y
+      z: 0.0265    # model.z
     wrist_1_cog:
-      x: 0.0
-      y: 0.110949
-      z: 0.01634
+      x: 0.0       # model.x
+      y: -0.01634  # -model.z
+      z: -0.0018   # model.y
     wrist_2_cog:
-      x: 0.0
-      y: 0.0018
-      z: 0.11099
+      x: 0.0       # model.x
+      y: 0.01634   # model.z
+      z: -0.0018   # -model.y
     wrist_3_cog:
-      x: 0.0
-      y: 0.001159
-      z: 0.0
+      x: 0.0       # model.x
+      y: 0.0       # model.y
+      z: -0.001159 # model.z
+
+  rotation:
+    shoulder:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    upper_arm:
+      roll: 0
+      pitch: 1.570796326794897
+      yaw: 0
+    forearm:
+      roll: 0
+      pitch: 1.570796326794897
+      yaw: 0
+    wrist_1:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    wrist_2:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    wrist_3:
+      roll: 0
+      pitch: 0
+      yaw: 0
+
+  # generated using cylinder approximation
+  tensor:
+    shoulder:
+      ixx: 0.014972358333333331
+      ixy: 0
+      ixz: 0
+      iyy: 0.014972358333333331
+      iyz: 0
+      izz: 0.01040625
+    upper_arm:
+      ixx: 0.13388583541666665
+      ixy: 0
+      ixz: 0
+      iyy: 0.13388583541666665
+      iyz: 0
+      izz: 0.0151074
+    forearm:
+      ixx: 0.031216803515624995
+      ixy: 0
+      ixz: 0
+      iyy: 0.031216803515624995
+      iyz: 0
+      izz: 0.004095
+    wrist_1:
+      ixx: 0.002013889583333333
+      ixy: 0
+      ixz: 0
+      iyy: 0.002013889583333333
+      iyz: 0
+      izz: 0.0021942
+    wrist_2:
+      ixx: 0.0018310395833333333
+      ixy: 0
+      ixz: 0
+      iyy: 0.0018310395833333333
+      iyz: 0
+      izz: 0.0021942
+    wrist_3:
+      ixx: 8.062475833333332e-05
+      ixy: 0
+      ixz: 0
+      iyy: 8.062475833333332e-05
+      iyz: 0
+      izz: 0.0001321171875
