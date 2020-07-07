@@ -46,7 +46,7 @@
    kinematics_parameters_file
    physical_parameters_file
    visual_parameters_file
-   transmission_hw_interface:=hardware_interface/PositionJointInterface
+   transmission_hw_interface:=hardware_interface/EffortJointInterface
    safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20"
   >
     <!--

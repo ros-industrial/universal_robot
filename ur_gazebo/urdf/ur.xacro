@@ -45,7 +45,7 @@
     NOTE: this value must correspond to the controller configured in the
           controller .yaml files in the 'config' directory.
   -->
-  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+  <xacro:arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
   <xacro:arg name="safety_limits" default="false"/>
   <xacro:arg name="safety_pos_margin" default="0.15"/>
   <xacro:arg name="safety_k_position" default="20"/>
