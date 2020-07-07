@@ -164,6 +164,68 @@
     <xacro:property name="wrist_1_cog" value="${__wrist_1_cog['x']} ${__wrist_1_cog['y']} ${__wrist_1_cog['z']}" scope="parent"/>
     <xacro:property name="wrist_2_cog" value="${__wrist_2_cog['x']} ${__wrist_2_cog['y']} ${__wrist_2_cog['z']}" scope="parent"/>
     <xacro:property name="wrist_3_cog" value="${__wrist_3_cog['x']} ${__wrist_3_cog['y']} ${__wrist_3_cog['z']}" scope="parent"/>
+
+    <!-- inertia rotation -->
+    <xacro:property name="__shoulder_inertia_rotation" value="${__inertia_parameters['rotation']['shoulder']}" scope="parent"/>
+    <xacro:property name="__upper_arm_inertia_rotation" value="${__inertia_parameters['rotation']['upper_arm']}" scope="parent"/>
+    <xacro:property name="__forearm_inertia_rotation" value="${__inertia_parameters['rotation']['forearm']}" scope="parent"/>
+    <xacro:property name="__wrist_1_inertia_rotation" value="${__inertia_parameters['rotation']['wrist_1']}" scope="parent"/>
+    <xacro:property name="__wrist_2_inertia_rotation" value="${__inertia_parameters['rotation']['wrist_2']}" scope="parent"/>
+    <xacro:property name="__wrist_3_inertia_rotation" value="${__inertia_parameters['rotation']['wrist_3']}" scope="parent"/>
+
+    <xacro:property name="shoulder_inertia_rotation" value="${__shoulder_inertia_rotation['roll']} ${__shoulder_inertia_rotation['pitch']} ${__shoulder_inertia_rotation['yaw']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_rotation" value="${__upper_arm_inertia_rotation['roll']} ${__upper_arm_inertia_rotation['pitch']} ${__upper_arm_inertia_rotation['yaw']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_rotation" value="${__forearm_inertia_rotation['roll']} ${__forearm_inertia_rotation['pitch']} ${__forearm_inertia_rotation['yaw']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_rotation" value="${__wrist_1_inertia_rotation['roll']} ${__wrist_1_inertia_rotation['pitch']} ${__wrist_1_inertia_rotation['yaw']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_rotation" value="${__wrist_2_inertia_rotation['roll']} ${__wrist_2_inertia_rotation['pitch']} ${__wrist_2_inertia_rotation['yaw']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_rotation" value="${__wrist_3_inertia_rotation['roll']} ${__wrist_3_inertia_rotation['pitch']} ${__wrist_3_inertia_rotation['yaw']}" scope="parent"/>
+
+
+    <!-- tensors -->
+    <xacro:property name="__shoulder_inertia" value="${__inertia_parameters['tensor']['shoulder']}" scope="parent"/>
+    <xacro:property name="__upper_arm_inertia" value="${__inertia_parameters['tensor']['upper_arm']}" scope="parent"/>
+    <xacro:property name="__forearm_inertia" value="${__inertia_parameters['tensor']['forearm']}" scope="parent"/>
+    <xacro:property name="__wrist_1_inertia" value="${__inertia_parameters['tensor']['wrist_1']}" scope="parent"/>
+    <xacro:property name="__wrist_2_inertia" value="${__inertia_parameters['tensor']['wrist_2']}" scope="parent"/>
+    <xacro:property name="__wrist_3_inertia" value="${__inertia_parameters['tensor']['wrist_3']}" scope="parent"/>
+
+    <xacro:property name="shoulder_inertia_ixx" value="${__shoulder_inertia['ixx']}" scope="parent"/>
+    <xacro:property name="shoulder_inertia_ixy" value="${__shoulder_inertia['ixy']}" scope="parent"/>
+    <xacro:property name="shoulder_inertia_ixz" value="${__shoulder_inertia['ixz']}" scope="parent"/>
+    <xacro:property name="shoulder_inertia_iyy" value="${__shoulder_inertia['iyy']}" scope="parent"/>
+    <xacro:property name="shoulder_inertia_iyz" value="${__shoulder_inertia['iyz']}" scope="parent"/>
+    <xacro:property name="shoulder_inertia_izz" value="${__shoulder_inertia['izz']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_ixx" value="${__upper_arm_inertia['ixx']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_ixy" value="${__upper_arm_inertia['ixy']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_ixz" value="${__upper_arm_inertia['ixz']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_iyy" value="${__upper_arm_inertia['iyy']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_iyz" value="${__upper_arm_inertia['iyz']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_izz" value="${__upper_arm_inertia['izz']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_ixx" value="${__forearm_inertia['ixx']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_ixy" value="${__forearm_inertia['ixy']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_ixz" value="${__forearm_inertia['ixz']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_iyy" value="${__forearm_inertia['iyy']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_iyz" value="${__forearm_inertia['iyz']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_izz" value="${__forearm_inertia['izz']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_ixx" value="${__wrist_1_inertia['ixx']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_ixy" value="${__wrist_1_inertia['ixy']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_ixz" value="${__wrist_1_inertia['ixz']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_iyy" value="${__wrist_1_inertia['iyy']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_iyz" value="${__wrist_1_inertia['iyz']}" scope="parent"/>
+    <xacro:property name="wrist_1_inertia_izz" value="${__wrist_1_inertia['izz']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_ixx" value="${__wrist_2_inertia['ixx']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_ixy" value="${__wrist_2_inertia['ixy']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_ixz" value="${__wrist_2_inertia['ixz']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_iyy" value="${__wrist_2_inertia['iyy']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_iyz" value="${__wrist_2_inertia['iyz']}" scope="parent"/>
+    <xacro:property name="wrist_2_inertia_izz" value="${__wrist_2_inertia['izz']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_ixx" value="${__wrist_3_inertia['ixx']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_ixy" value="${__wrist_3_inertia['ixy']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_ixz" value="${__wrist_3_inertia['ixz']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_iyy" value="${__wrist_3_inertia['iyy']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_iyz" value="${__wrist_3_inertia['iyz']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_izz" value="${__wrist_3_inertia['izz']}" scope="parent"/>
+
     <!-- cylinder radius -->
     <xacro:property name="shoulder_radius" value="${__inertia_parameters['shoulder_radius']}" scope="parent"/>
     <xacro:property name="upper_arm_radius" value="${__inertia_parameters['upper_arm_radius']}" scope="parent"/>

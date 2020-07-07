@@ -78,3 +78,74 @@ inertia_parameters:
       x: 0.0 # model.x
       y: 0.0 # model.y
       z: -0.044 # model.z
+
+  rotation:
+    shoulder:
+      roll: 1.570796326794897
+      pitch: 0
+      yaw: 0
+    upper_arm:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    forearm:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    wrist_1:
+      roll: 1.570796326794897
+      pitch: 0
+      yaw: 0
+    wrist_2:
+      roll: -1.570796326794897
+      pitch: 0
+      yaw: 0
+    wrist_3:
+      roll: 0
+      pitch: 0
+      yaw: 0
+
+  # extracted from URSim
+  tensor:
+    shoulder:
+      ixx: 0.03351
+      ixy: 0.00002
+      ixz: -0.00001
+      iyy: 0.03374
+      iyz: 0.00374
+      izz: 0.02100
+    upper_arm:
+      ixx: 0.02796
+      ixy: -0.00010
+      ixz: -0.00720
+      iyy: 0.47558
+      iyz: 0.00003
+      izz: 0.47635
+    forearm:
+      ixx: 0.01091
+      ixy: 0.00006
+      ixz: 0.01012
+      iyy: 0.12060
+      iyz: 0.00001
+      izz: 0.11714
+    wrist_1:
+      ixx: 0.00609
+      ixy: -0.00001
+      ixz: 0.0
+      iyy: 0.00245
+      iyz: 0.00083
+      izz: 0.00579
+    wrist_2:
+      ixx: 0.00389
+      ixy: 0.00001
+      ixz: 0.0
+      iyy: 0.00219
+      iyz: -0.00045
+      izz: 0.00363
+    wrist_3:
+      ixx: 0.00117
+      ixy: 0.0
+      ixz: 0.0
+      iyy: 0.00118
+      iyz: 0.0
+      izz: 0.00084

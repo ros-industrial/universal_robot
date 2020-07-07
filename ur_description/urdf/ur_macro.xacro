@@ -113,9 +113,18 @@
           <mesh filename="${shoulder_collision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${shoulder_inertia_radius}" length="${shoulder_inertia_length}" mass="${shoulder_mass}">
-        <origin xyz="${shoulder_cog}" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      <inertial>
+        <mass value="${shoulder_mass}"/>
+        <origin rpy="${shoulder_inertia_rotation}" xyz="${shoulder_cog}"/>
+        <inertia
+            ixx="${shoulder_inertia_ixx}"
+            ixy="${shoulder_inertia_ixy}"
+            ixz="${shoulder_inertia_ixz}"
+            iyy="${shoulder_inertia_iyy}"
+            iyz="${shoulder_inertia_iyz}"
+            izz="${shoulder_inertia_izz}"
+        />
+      </inertial>
     </link>
     <link name="${prefix}upper_arm_link">
       <visual>
@@ -133,9 +142,18 @@
           <mesh filename="${upper_arm_collision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${upperarm_inertia_radius}" length="${upperarm_inertia_length}" mass="${upper_arm_mass}">
-        <origin xyz="${upper_arm_cog}" rpy="0 ${pi/2} 0" />
-      </xacro:cylinder_inertial>
+      <inertial>
+        <mass value="${upper_arm_mass}"/>
+        <origin rpy="${upper_arm_inertia_rotation}" xyz="${upper_arm_cog}"/>
+        <inertia
+            ixx="${upper_arm_inertia_ixx}"
+            ixy="${upper_arm_inertia_ixy}"
+            ixz="${upper_arm_inertia_ixz}"
+            iyy="${upper_arm_inertia_iyy}"
+            iyz="${upper_arm_inertia_iyz}"
+            izz="${upper_arm_inertia_izz}"
+        />
+      </inertial>
     </link>
     <link name="${prefix}forearm_link">
       <visual>
@@ -153,9 +171,18 @@
           <mesh filename="${forearm_collision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${forearm_inertia_radius}" length="${forearm_inertia_length}"  mass="${forearm_mass}">
-        <origin xyz="${forearm_cog}" rpy="0 ${pi/2} 0" />
-      </xacro:cylinder_inertial>
+      <inertial>
+        <mass value="${forearm_mass}"/>
+        <origin rpy="${forearm_inertia_rotation}" xyz="${forearm_cog}"/>
+        <inertia
+            ixx="${forearm_inertia_ixx}"
+            ixy="${forearm_inertia_ixy}"
+            ixz="${forearm_inertia_ixz}"
+            iyy="${forearm_inertia_iyy}"
+            iyz="${forearm_inertia_iyz}"
+            izz="${forearm_inertia_izz}"
+        />
+      </inertial>
     </link>
     <link name="${prefix}wrist_1_link">
       <visual>
@@ -174,9 +201,18 @@
           <mesh filename="${wrist_1_collision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${wrist_1_inertia_radius}" length="${wrist_1_inertia_length}"  mass="${wrist_1_mass}">
-        <origin xyz="${wrist_1_cog}" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      <inertial>
+        <mass value="${wrist_1_mass}"/>
+        <origin rpy="${wrist_1_inertia_rotation}" xyz="${wrist_1_cog}"/>
+        <inertia
+            ixx="${wrist_1_inertia_ixx}"
+            ixy="${wrist_1_inertia_ixy}"
+            ixz="${wrist_1_inertia_ixz}"
+            iyy="${wrist_1_inertia_iyy}"
+            iyz="${wrist_1_inertia_iyz}"
+            izz="${wrist_1_inertia_izz}"
+        />
+      </inertial>
     </link>
     <link name="${prefix}wrist_2_link">
       <visual>
@@ -194,9 +230,18 @@
           <mesh filename="${wrist_2_collision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${wrist_2_inertia_radius}" length="${wrist_2_inertia_length}"  mass="${wrist_2_mass}">
-        <origin xyz="${wrist_2_cog}" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      <inertial>
+        <mass value="${wrist_2_mass}"/>
+        <origin rpy="${wrist_2_inertia_rotation}" xyz="${wrist_2_cog}"/>
+        <inertia
+            ixx="${wrist_2_inertia_ixx}"
+            ixy="${wrist_2_inertia_ixy}"
+            ixz="${wrist_2_inertia_ixz}"
+            iyy="${wrist_2_inertia_iyy}"
+            iyz="${wrist_2_inertia_iyz}"
+            izz="${wrist_2_inertia_izz}"
+        />
+      </inertial>
     </link>
     <link name="${prefix}wrist_3_link">
       <visual>
@@ -214,9 +259,18 @@
           <mesh filename="${wrist_3_collision_mesh}"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="${wrist_3_inertia_radius}" length="${wrist_3_inertia_length}"  mass="${wrist_3_mass}">
-        <origin xyz="${wrist_3_cog}" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      <inertial>
+        <mass value="${wrist_3_mass}"/>
+        <origin rpy="${wrist_3_inertia_rotation}" xyz="${wrist_3_cog}"/>
+        <inertia
+            ixx="${wrist_3_inertia_ixx}"
+            ixy="${wrist_3_inertia_ixy}"
+            ixz="${wrist_3_inertia_ixz}"
+            iyy="${wrist_3_inertia_iyy}"
+            iyz="${wrist_3_inertia_iyz}"
+            izz="${wrist_3_inertia_izz}"
+        />
+      </inertial>
     </link>
 
     <!-- joints: main serial chain -->
