@@ -13,18 +13,9 @@ env:
   global:
     - CCACHE_DIR=$HOME/.ccache
   matrix:
-    - ROS_DISTRO="kinetic" ROS_REPO=main
-    - ROS_DISTRO="kinetic" ROS_REPO=testing
-    - ROS_DISTRO="kinetic" PRERELEASE=true
-    - ROS_DISTRO="melodic" ROS_REPO=main UPSTREAM_WORKSPACE='github:ros-industrial/ur_msgs@1.3.1'
+    - ROS_DISTRO="melodic" ROS_REPO=main 
     - ROS_DISTRO="melodic" ROS_REPO=testing
-    - ROS_DISTRO="melodic" PRERELEASE=true UPSTREAM_WORKSPACE='github:ros-industrial/ur_msgs@1.3.1'
-
-matrix:
-  allow_failures:
-    - env: ROS_DISTRO="kinetic" ROS_REPO=main
-    - env: ROS_DISTRO="kinetic" ROS_REPO=testing
-    - env: ROS_DISTRO="kinetic" PRERELEASE=true
+    - ROS_DISTRO="melodic" PRERELEASE=true
 
 install:
   - git clone --quiet --depth=1 -b master https://github.com/ros-industrial/industrial_ci.git .industrial_ci
