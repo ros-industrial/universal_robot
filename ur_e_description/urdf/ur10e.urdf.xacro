@@ -34,8 +34,8 @@
     <xacro:property name="__kinematics" value="${kinematics_file['kinematics']}"/>
 
     <!-- Inertia parameters -->
-    <xacro:property name="base_mass" value="4.0" />  <!-- This mass might be incorrect -->
-    <xacro:property name="shoulder_mass" value="7.778" />
+    <xacro:property name="base_mass" value="12.93" />  <!-- This mass might be incorrect -->
+    <xacro:property name="shoulder_mass" value="12.93" />
     <xacro:property name="upper_arm_mass" value="12.93" />
     <xacro:property name="forearm_mass" value="3.87" />
     <xacro:property name="wrist_1_mass" value="1.96" />
@@ -78,7 +78,7 @@
           <mesh filename="package://ur_e_description/meshes/ur10e/collision/base.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.038" mass="${base_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="${-1*__kinematics['wrist_1']['x']}" mass="${base_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
@@ -119,7 +119,7 @@
           <mesh filename="package://ur_e_description/meshes/ur10e/collision/shoulder.stl"/>
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.178" mass="${shoulder_mass}">
+      <xacro:cylinder_inertial radius="0.075" length="${-1*__kinematics['forearm']['x']}" mass="${shoulder_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial>
     </link>
