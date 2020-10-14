@@ -26,7 +26,7 @@
     wrist_1_lower_limit:=${-pi}    wrist_1_upper_limit:=${pi}
     wrist_2_lower_limit:=${-pi}    wrist_2_upper_limit:=${pi}
     wrist_3_lower_limit:=${-pi}    wrist_3_upper_limit:=${pi}
-    transmission_hw_interface:=hardware_interface/PositionJointInterface
+    transmission_hw_interface:=hardware_interface/VelocityJointInterface
     safety_limits:=false safety_pos_margin:=0.15
     safety_k_position:=20
     kinematics_file">
