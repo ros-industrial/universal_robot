@@ -77,3 +77,18 @@ install(DIRECTORY include/${PROJECT_NAME}/
 install(FILES ur_moveit_plugins.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+#############
+## Testing ##
+#############
+if(${CATKIN_ENABLE_TESTING})
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(utest
+    test/kinematics_plugin.test
+    test/utest.cpp
+  )
+  target_link_libraries(utest
+    ${catkin_LIBRARIES}
+    ur5_moveit_plugin
+  )
+endif()
