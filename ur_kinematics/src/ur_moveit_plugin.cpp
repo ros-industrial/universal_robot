@@ -1,7 +1,7 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
 *
-* Copyright (c) 2014, Georgia Tech
+* Copyright (c) 2014, 2017 Georgia Tech
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 * POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Kelsey Hawkins */
+/* Author: Kelsey Hawkins, Andrew Price */
 
 /* Based on orignal source from Willow Garage. License copied below */
 
@@ -94,7 +94,56 @@ CLASS_LOADER_REGISTER_CLASS(ur_kinematics::URKinematicsPlugin, kinematics::Kinem
 namespace ur_kinematics
 {
 
-  URKinematicsPlugin::URKinematicsPlugin():active_(false) {}
+typedef std::vector<double> Solution;
+typedef std::vector<std::vector<double> > SolutionContainer;
+typedef moveit_msgs::KinematicSolverInfo::_limits_type Limits;
+
+void enumerateSolutionsHelper(const Solution& initial_sln, const Limits& limits, Solution& partial_sln, SolutionContainer& container, const int num_joints, const int j)
+{
+  if (j == num_joints)
+  {
+    // A new solution is constructed and ready to be inserted
+    container.push_back(partial_sln);
+  }
+  else
+  {
+    double q = initial_sln[j];
+
+    // Add the current joint to the partial solution
+    if (limits[j].min_position <= q && q <= limits[j].max_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+    }
+
+    // Search up the configuration space
+    q = initial_sln[j] + 2.0*M_PI;
+    while (q <= limits[j].max_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+      q += 2.0*M_PI;
+    }
+
+    // Search down the configuration space
+    q = initial_sln[j] - 2.0*M_PI;
+    while (q >= limits[j].min_position)
+    {
+      partial_sln[j] = q;
+      enumerateSolutionsHelper(initial_sln, limits, partial_sln, container, num_joints, j+1);
+      q -= 2.0*M_PI;
+    }
+  }
+}
+
+void enumeratePeriodicSolutions(const Solution& initial_sln, const Limits& limits, SolutionContainer& container, const int num_joints)
+{
+  assert(limits.size() == num_joints);
+  Solution partial(num_joints, 0.0);
+  enumerateSolutionsHelper(initial_sln, limits, partial, container, num_joints, 0);
+}
+
+URKinematicsPlugin::URKinematicsPlugin():active_(false) {}
 
 void URKinematicsPlugin::getRandomConfiguration(KDL::JntArray &jnt_array, bool lock_redundancy) const
 {
@@ -175,8 +224,8 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
 
   ros::NodeHandle private_handle("~");
   rdf_loader::RDFLoader rdf_loader(robot_description_);
-  const boost::shared_ptr<srdf::Model> &srdf = rdf_loader.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader.getURDF();
+  const srdf::ModelSharedPtr &srdf = rdf_loader.getSRDF();
+  const urdf::ModelInterfaceSharedPtr &urdf_model = rdf_loader.getURDF();
 
   if (!urdf_model || !srdf)
   {
@@ -474,6 +523,18 @@ bool URKinematicsPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
                           options);
 }
 
+bool URKinematicsPlugin::getPositionIK(const std::vector< geometry_msgs::Pose > &ik_poses, 
+                                       const std::vector< double > &ik_seed_state,
+                                       std::vector< std::vector< double > > &solutions,
+                                       kinematics::KinematicsResult &result,
+                                       const kinematics::KinematicsQueryOptions &options) const
+{
+  if (ik_poses.size() == 1)
+    return getAllPositionIK(ik_poses.front(), ik_seed_state, solutions);
+  else
+    return false;
+}
+
 bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
@@ -647,7 +708,6 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                        jnt_pos_test(ur_joint_inds_start_+5));
     
     
-    uint16_t num_valid_sols;
     std::vector< std::vector<double> > q_ik_valid_sols;
     for(uint16_t i=0; i<num_sols; i++)
     {
@@ -768,6 +828,78 @@ bool URKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
   ROS_DEBUG_NAMED("kdl","An IK that satisifes the constraints and is collision free could not be found");
   error_code.val = error_code.NO_IK_SOLUTION;
   return false;
+}
+
+bool URKinematicsPlugin::getAllPositionIK(const geometry_msgs::Pose &ik_pose,
+                                          const std::vector<double> &ik_seed_state,
+                                          std::vector<std::vector<double> > &solutions) const
+{
+  if(!active_) {
+    ROS_ERROR_NAMED("kdl","kinematics not active");
+    return false;
+  }
+
+  if(ik_seed_state.size() != dimension_) {
+    ROS_ERROR_STREAM_NAMED("kdl","Seed state must have size " << dimension_ << " instead of size " << ik_seed_state.size());
+    return false;
+  }
+
+  KDL::JntArray jnt_seed_state(dimension_);
+  for(int i=0; i<dimension_; i++)
+    jnt_seed_state(i) = ik_seed_state[i];
+
+  std::vector<double> solution;
+  solution.resize(dimension_);
+
+  KDL::ChainFkSolverPos_recursive fk_solver_base(kdl_base_chain_);
+  KDL::ChainFkSolverPos_recursive fk_solver_tip(kdl_tip_chain_);
+
+  KDL::JntArray jnt_pos_test(jnt_seed_state);
+  KDL::JntArray jnt_pos_base(ur_joint_inds_start_);
+  KDL::JntArray jnt_pos_tip(dimension_ - 6 - ur_joint_inds_start_);
+  KDL::Frame pose_base, pose_tip;
+
+  KDL::Frame kdl_ik_pose;
+  KDL::Frame kdl_ik_pose_ur_chain;
+  double homo_ik_pose[4][4];
+  double q_ik_sols[8][6]; // maximum of 8 IK solutions
+  uint16_t num_sols;
+
+  /////////////////////////////////////////////////////////////////////////////
+  // find transformation from robot base to UR base and UR tip to robot tip
+  for(uint32_t i=0; i<jnt_pos_base.rows(); i++)
+    jnt_pos_base(i) = jnt_pos_test(i);
+  for(uint32_t i=0; i<jnt_pos_tip.rows(); i++)
+    jnt_pos_tip(i) = jnt_pos_test(i + ur_joint_inds_start_ + 6);
+  for(uint32_t i=0; i<jnt_seed_state.rows(); i++)
+    solution[i] = jnt_pos_test(i);
+
+  if(fk_solver_base.JntToCart(jnt_pos_base, pose_base) < 0) {
+    ROS_ERROR_NAMED("kdl", "Could not compute FK for base chain");
+    return false;
+  }
+
+  if(fk_solver_tip.JntToCart(jnt_pos_tip, pose_tip) < 0) {
+    ROS_ERROR_NAMED("kdl", "Could not compute FK for tip chain");
+    return false;
+  }
+
+  // Convert into query for analytic solver
+  tf::poseMsgToKDL(ik_pose, kdl_ik_pose);
+  kdl_ik_pose_ur_chain = pose_base.Inverse() * kdl_ik_pose * pose_tip.Inverse();
+  
+  kdl_ik_pose_ur_chain.Make4x4((double*) homo_ik_pose);
+
+  // Do the analytic IK
+  num_sols = inverse((double*) homo_ik_pose, (double*) q_ik_sols, 
+                     jnt_pos_test(ur_joint_inds_start_+5));
+
+  
+  for(uint16_t i=0; i<num_sols; i++) {
+    std::vector<double> kinematic_solution(q_ik_sols[i], q_ik_sols[i] + 6);
+    enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, q_ik_valid_sols, 6);
+  }
+  return solutions.size() > 0;
 }
 
 bool URKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_names,
