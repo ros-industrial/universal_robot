@@ -2,6 +2,28 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.7 (2019-11-23)
+------------------
+* Modernize python 2 codes (`#457 <https://github.com/ros-industrial/universal_robot/issues/457>`_)
+* Contributors: cclauss, gavanderhoorn
+
+1.2.6 (2019-11-19)
+------------------
+* Simplify FK equations (`#372 <https://github.com/ros-industrial/universal_robot/issues/372>`_)
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch, Levi Armstrong, Qiang Qiu
+
+1.2.5 (2019-04-05)
+------------------
+* Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
+* Removed non-existent moveit KDL libraries from ur_kinematics includes
+* Update maintainer and author information.
+* Missed python module definition and setup.py script (`#364 <https://github.com/ros-industrial/universal_robot/issues/364>`_)
+* Use the new proposed API to query params from correct namespaces (`#334 <https://github.com/ros-industrial/universal_robot/issues/334>`_)
+* Setting default ik_weights to 1.0 (`#346 <https://github.com/ros-industrial/universal_robot/issues/346>`_)
+* ur_moveit_plugin: fix compile error with GCC6
+* Contributors: Alexander Rössler, gavanderhoorn, Henning Kayser, Mike Lautman, Nadia Hammoudeh García, jwhendy
+
 1.2.1 (2018-01-06)
 ------------------
 * Merge pull request `#303 <https://github.com//ros-industrial/universal_robot/issues/303>`_ from marcoesposito1988/pr-urdf-pointer-type

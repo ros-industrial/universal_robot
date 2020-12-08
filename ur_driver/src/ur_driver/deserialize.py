@@ -1,3 +1,4 @@
+from __future__ import print_function
 import struct
 
 class PackageType(object):
@@ -79,7 +80,7 @@ class RobotModeData(object):
         elif plen == 38:
             return RobotModeData_V30.unpack(buf)
         else:
-            print "RobotModeData has wrong length: " + str(plen)
+            print("RobotModeData has wrong length: " + str(plen))
             return rmd
 
 #this parses RobotModeData for versions <= v1.8 (i.e. 1.6, 1.7, 1.8)
@@ -159,8 +160,8 @@ class MasterboardData(object):
         elif (plen == 72) or (plen == 92): # Euromap67 interface = 20 bytes
             return MasterboardData_V30.unpack(buf)
         else:
-            print "MasterboardData has wrong length: " + str(plen)
-            print "Euromap67Interface is ignored"
+            print("MasterboardData has wrong length: " + str(plen))
+            print("Euromap67Interface is ignored")
             return md
 
 #this parses MasterboardData for versions <= v1.8 (i.e. 1.6, 1.7, 1.8)
@@ -282,7 +283,7 @@ class AdditionalInfo(object):
         elif plen == 7:
             return AdditionalInfoNew.unpack(buf)
         else:
-            print "AdditionalInfo has wrong length: " + str(plen)
+            print("AdditionalInfo has wrong length: " + str(plen))
             return ai
 
 class AdditionalInfoOld(object):
@@ -319,8 +320,8 @@ class RobotState(object):
             raise Exception("Could not unpack packet: length field is incorrect")
         if mtype != 16:
             if mtype == 20:
-                print "Likely a syntax error:"
-                print buf[:2048]
+                print("Likely a syntax error:")
+                print(buf[:2048])
             raise Exception("Fatal error when unpacking RobotState packet")
 
         rs = RobotState()
@@ -359,14 +360,14 @@ def pstate(o, indent=''):
     for s in o.__slots__:
         child = getattr(o, s, None)
         if child is None:
-            print "%s%s: None" % (indent, s)
+            print("%s%s: None" % (indent, s))
         elif hasattr(child, '__slots__'):
-            print "%s%s:" % (indent, s)
+            print("%s%s:" % (indent, s))
             pstate(child, indent + '    ')
         elif hasattr(child, '__iter__'):
-            print "%s%s:" % (indent, s)
+            print("%s%s:" % (indent, s))
             for i, c in enumerate(child):
-                print "%s  [%i]:" % (indent, i)
+                print("%s  [%i]:" % (indent, i))
                 pstate(c, indent + '    ')
         else:
-            print "%s%s: %s" % (indent, s, child)
+            print("%s%s: %s" % (indent, s, child))

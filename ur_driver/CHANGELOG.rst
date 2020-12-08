@@ -2,6 +2,22 @@
 Changelog for package ur_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.7 (2019-11-23)
+------------------
+* Modernize python 2 codes (`#457 <https://github.com/ros-industrial/universal_robot/issues/457>`_)
+* Contributors: cclauss, gavanderhoorn
+
+1.2.6 (2019-11-19)
+------------------
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch
+
+1.2.5 (2019-04-05)
+------------------
+* Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
+* update maintainer and author information.
+* Contributors: gavanderhoorn
+
 1.2.1 (2018-01-06)
 ------------------
 

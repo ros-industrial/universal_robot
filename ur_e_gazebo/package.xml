@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ur_e_gazebo</name>
+  <version>1.2.7</version>
+  <description>
+      Gazebo wrapper for the Universal UR5/10 robot arms.
+  </description>
+
+
+  <author>Alexander Bubeck</author>
+  <author>Shaun Edwards</author>
+  <author>Felix Messmer</author>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/ur_e_gazebo</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>roslaunch</test_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>effort_controllers</exec_depend>
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>joint_trajectory_controller</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo_ros_control</exec_depend>
+  <exec_depend>position_controllers</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rostopic</exec_depend>
+  <exec_depend>ur_e_description</exec_depend>
+
+
+  <export>
+  </export>
+</package>

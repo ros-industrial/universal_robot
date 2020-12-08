@@ -2,6 +2,22 @@
 Changelog for package ur3_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.7 (2019-11-23)
+------------------
+
+1.2.6 (2019-11-19)
+------------------
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch, Qiang Qiu
+
+1.2.5 (2019-04-05)
+------------------
+* Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
+* MoveGroupExecuteService is Deprecated by MoveIt! (`#391 <https://github.com/ros-industrial/universal_robot/issues/391>`_)
+* Update maintainer and author information.
+* Add roslaunch tests (`#362 <https://github.com/ros-industrial/universal_robot/issues/362>`_)
+* Contributors: gavanderhoorn, Nadia Hammoudeh García, 薯片半价
+
 1.2.1 (2018-01-06)
 ------------------
 * Reduce longest valid segment fraction to accomodate non-limited version of the UR5 (`#266 <https://github.com//ros-industrial/universal_robot/issues/266>`_)
