@@ -897,7 +897,7 @@ bool URKinematicsPlugin::getAllPositionIK(const geometry_msgs::Pose &ik_pose,
   
   for(uint16_t i=0; i<num_sols; i++) {
     std::vector<double> kinematic_solution(q_ik_sols[i], q_ik_sols[i] + 6);
-    enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, q_ik_valid_sols, 6);
+    enumeratePeriodicSolutions(kinematic_solution, ik_chain_info_.limits, solutions, 6);
   }
   return solutions.size() > 0;
 }
