@@ -2,14 +2,13 @@
 <launch>
 
   <group>
-    <include file="$(find ur10_moveit_config)/launch/ur10_moveit_planning_execution.launch">
-      <arg name="sim" value="false" />
+    <include file="$(find ur10_moveit_config)/launch/move_group.launch">
     </include>
   </group>
 
   <group ns="sim">
-    <include file="$(find ur10_moveit_config)/launch/ur10_moveit_planning_execution.launch">
-      <arg name="sim" value="true" />
+    <remap from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+    <include file="$(find ur10_moveit_config)/launch/move_group.launch">
     </include>
   </group>
 
