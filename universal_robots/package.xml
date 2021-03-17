@@ -20,7 +20,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>ur10_e_moveit_config</exec_depend>
+  <exec_depend>ur10e_moveit_config</exec_depend>
   <exec_depend>ur10_moveit_config</exec_depend>
   <exec_depend>ur3_e_moveit_config</exec_depend>
   <exec_depend>ur3_moveit_config</exec_depend>
