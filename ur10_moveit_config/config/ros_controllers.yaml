@@ -22,7 +22,7 @@ joint_state_controller:
   type: joint_state_controller/JointStateController
   publish_rate: 50
 controller_list:
-- name: ""
+- name: "scaled_pos_joint_traj_controller"
   action_ns: follow_joint_trajectory
   type: FollowJointTrajectory
   joints:
