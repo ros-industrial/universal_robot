@@ -7,7 +7,7 @@
   </group>
 
   <group ns="sim">
-    <remap from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+    <remap from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
     <include file="$(find ur3_moveit_config)/launch/move_group.launch">
     </include>
   </group>
