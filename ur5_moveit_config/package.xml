@@ -30,5 +30,6 @@
 
   <test_depend>roslaunch</test_depend>
   <buildtool_depend>catkin</buildtool_depend>
-  
+
+  <exec_depend>trac_ik_kinematics_plugin</exec_depend>
 </package>
