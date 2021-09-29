@@ -1,6 +1,5 @@
 # Universal Robot
 
-[![Build Status](http://build.ros.org/job/Kdev__universal_robot__ubuntu_xenial_amd64/badge/icon)](http://build.ros.org/job/Kdev__universal_robot__ubuntu_xenial_amd64)
 [![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/universal_robot/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=melodic-devel)](https://github.com/ros-industrial/universal_robot/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
 [![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/universal_robot/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=melodic-devel)](https://github.com/ros-industrial/universal_robot/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
 
