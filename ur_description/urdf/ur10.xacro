@@ -18,5 +18,14 @@
     Refer to 'inc/ur_macro.xacro' for more information.
   -->
   <xacro:include filename="$(find ur_description)/urdf/inc/ur10_macro.xacro"/>
-  <xacro:ur10_robot prefix="" />
+  <xacro:ur10_robot prefix=""
+    joint_limits_parameters_file="$(arg joint_limits_parameters_file)"
+    kinematics_parameters_file="$(arg kinematics_parameters_file)"
+    physical_parameters_file="$(arg physical_parameters_file)"
+    visual_parameters_file="$(arg visual_parameters_file)"
+    transmission_hw_interface="$(arg transmission_hw_interface)"
+    safety_limits="$(arg safety_limits)"
+    safety_pos_margin="$(arg safety_pos_margin)"
+    safety_k_position="$(arg safety_k_position)"
+    />
 </robot>
