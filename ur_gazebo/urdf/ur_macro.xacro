@@ -47,8 +47,8 @@
    physical_parameters_file
    visual_parameters_file
    transmission_hw_interface:=hardware_interface/PositionJointInterface
-   safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20"
-  >
+   safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20
+   load_gazebo_ros_control_plugin:=true">
     <!--
       Import the xacro macro for the REAL robot (which we'll augment with Gazebo
       specific elements in the wrapper macro below).
@@ -56,21 +56,11 @@
       NOTE: this imports the '_macro.xacro' from ur_description, as that contains
       the definitions for the real robot.
     -->
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro"/>
+    <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro" />
 
 
     <!-- Instantiate model for the REAL robot. -->
-    <xacro:ur_robot
-      prefix="${prefix}"
-      joint_limits_parameters_file="${joint_limits_parameters_file}"
-      kinematics_parameters_file="${kinematics_parameters_file}"
-      physical_parameters_file="${physical_parameters_file}"
-      visual_parameters_file="${visual_parameters_file}"
-      transmission_hw_interface="${transmission_hw_interface}"
-      safety_limits="${safety_limits}"
-      safety_pos_margin="${safety_pos_margin}"
-      safety_k_position="${safety_k_position}"
-    />
+    <xacro:ur_robot prefix="${prefix}" joint_limits_parameters_file="${joint_limits_parameters_file}" kinematics_parameters_file="${kinematics_parameters_file}" physical_parameters_file="${physical_parameters_file}" visual_parameters_file="${visual_parameters_file}" transmission_hw_interface="${transmission_hw_interface}" safety_limits="${safety_limits}" safety_pos_margin="${safety_pos_margin}" safety_k_position="${safety_k_position}" />
 
     <!-- Configure self collision properties per link -->
     <gazebo reference="${prefix}shoulder_link">
@@ -99,11 +89,13 @@
       Inject Gazebo ROS Control plugin, which allows us to use ros_control
       controllers to control the virtual robot hw.
     -->
-    <gazebo>
-      <plugin name="ros_control" filename="libgazebo_ros_control.so">
-        <!--robotNamespace>/</robotNamespace-->
-        <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
-      </plugin>
-    </gazebo>
+    <xacro:if value="${load_gazebo_ros_control_plugin}">
+      <gazebo>
+        <plugin name="ros_control" filename="libgazebo_ros_control.so">
+          <!--robotNamespace>/</robotNamespace-->
+          <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+        </plugin>
+      </gazebo>
+    </xacro:if>
   </xacro:macro>
 </robot>
