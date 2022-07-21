@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group>
+    <include file="$(find ur16e_moveit_config)/launch/move_group.launch">
+    </include>
+  </group>
+
+  <group ns="sim">
+    <remap from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+    <include file="$(find ur16e_moveit_config)/launch/move_group.launch">
+    </include>
+  </group>
+
+</launch>
+
