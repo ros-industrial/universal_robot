@@ -171,7 +171,7 @@ bool URKinematicsPlugin::initialize(const moveit::core::RobotModel& robot_model,
 {
   storeValues(robot_model, group_name, base_frame, tip_frames, search_discretization);
 
-  robot_model::JointModelGroup* joint_model_group = robot_model_->getJointModelGroup(group_name);
+  const robot_model::JointModelGroup* joint_model_group = robot_model_->getJointModelGroup(group_name);
   if (!joint_model_group)
     return false;
   

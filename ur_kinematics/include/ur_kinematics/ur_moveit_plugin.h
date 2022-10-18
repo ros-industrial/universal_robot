@@ -251,8 +251,6 @@ namespace ur_kinematics
 
     mutable random_numbers::RandomNumberGenerator random_number_generator_;
 
-    robot_model::RobotModelPtr robot_model_;
-
     robot_state::RobotStatePtr state_, state_2_;
 
     int num_possible_redundant_joints_;
@@ -260,7 +258,7 @@ namespace ur_kinematics
 
     // Storage required for when the set of redundant joints is reset
     bool position_ik_; //whether this solver is only being used for position ik
-    robot_model::JointModelGroup* joint_model_group_;
+    const robot_model::JointModelGroup* joint_model_group_;
     double max_solver_iterations_;
     double epsilon_;
     std::vector<kdl_kinematics_plugin::JointMimic> mimic_joints_;
