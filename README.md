@@ -8,7 +8,7 @@
 
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
-[ROS-Industrial](http://wiki.ros.org/Industrial) Universal Robot meta-package. See the [ROS wiki](http://wiki.ros.org/universal_robots) page for compatibility information and other more information.
+[ROS-Industrial](https://wiki.ros.org/Industrial) Universal Robot meta-package. See the [ROS wiki](https://wiki.ros.org/universal_robots) page for compatibility information and other more information.
 
 
 __Installation__
@@ -33,7 +33,7 @@ There *will soon be* releases available for ROS Melodic and Noetic. However, for
 
 **NOTE**: please prefer using the binary release (see previous section) over building from source where possible. Source installs will not be automatically updated by new package releases and require more work to setup.
 
-The following instructions assume that a [Catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace) has been created at `$HOME/catkin_ws` and that the source space is at `$HOME/catkin_ws/src`. Update paths appropriately if they are different on the build machine.
+The following instructions assume that a [Catkin workspace](https://wiki.ros.org/catkin/Tutorials/create_a_workspace) has been created at `$HOME/catkin_ws` and that the source space is at `$HOME/catkin_ws/src`. Update paths appropriately if they are different on the build machine.
 
 In all other cases the packages will have to be build from sources in a Catkin workspace:
 
