@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur_robot_gazebo">
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="$(arg robot_model)_robot">
   <!--
     This is a top-level xacro instantiating the Gazebo-specific version of the
     'ur_robot' macro (ie: 'ur_robot_gazebo') and passing it values for all its
