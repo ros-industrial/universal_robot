@@ -65,6 +65,9 @@ For using real hardware, please use the
 [`ur_robot_driver`](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver). Installation
 and startup instructions are available there separately.
 
+If you have a particular old robot running Software CB1 or CB2, please use the
+[`ur_modern_driver`](https://github.com/ros-industrial/ur_modern_driver) instead.
+
 CAUTION:
 Remember that you should always have your hands on the big red button in case there is something in the way or anything unexpected happens.
 
