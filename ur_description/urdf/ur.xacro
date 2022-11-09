@@ -6,10 +6,10 @@
    <!-- Parameters -->
    <xacro:arg name="robot_model" default="ur5"/>
    <xacro:arg name="prefix" default=""/>
-   <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/ur$(arg model)/joint_limits.yaml"/>
-   <xacro:arg name="kinematics_params" default="$(find ur_description)/config/ur$(arg model)/default_kinematics.yaml"/>
-   <xacro:arg name="physical_params" default="$(find ur_description)/config/ur$(arg model)/physical_parameters.yaml"/>
-   <xacro:arg name="visual_params" default="$(find ur_description)/config/ur$(arg model)/visual_parameters.yaml"/>
+   <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/$(arg model)/joint_limits.yaml"/>
+   <xacro:arg name="kinematics_params" default="$(find ur_description)/config/$(arg model)/default_kinematics.yaml"/>
+   <xacro:arg name="physical_params" default="$(find ur_description)/config/$(arg model)/physical_parameters.yaml"/>
+   <xacro:arg name="visual_params" default="$(find ur_description)/config/$(arg model)/visual_parameters.yaml"/>
    <!-- Legal values:
          - hardware_interface/PositionJointInterface
          - hardware_interface/VelocityJointInterface
