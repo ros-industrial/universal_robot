@@ -3,19 +3,20 @@
    <!-- Import main macro -->
    <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro"/>
 
-   <!-- Parameters -->
-   <xacro:arg name="robot_model" default="ur5"/>
-   <xacro:arg name="prefix" default=""/>
-   <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/$(arg model)/joint_limits.yaml"/>
-   <xacro:arg name="kinematics_params" default="$(find ur_description)/config/$(arg model)/default_kinematics.yaml"/>
-   <xacro:arg name="physical_params" default="$(find ur_description)/config/$(arg model)/physical_parameters.yaml"/>
-   <xacro:arg name="visual_params" default="$(find ur_description)/config/$(arg model)/visual_parameters.yaml"/>
-   <!-- Legal values:
-         - hardware_interface/PositionJointInterface
-         - hardware_interface/VelocityJointInterface
-         - hardware_interface/EffortJointInterface
-   -->
+   <!-- Type/series of used UR robot (ur3, ur3e, ur5, ur5e, ur10, ur10e, ur16e) -->
+   <xacro:arg name="robot_model" default="$(arg robot_model)"/>
+   
+   <!-- Transmission hardware interfaces:               hardware_interface/PositionJointInterface
+                                                        hardware_interface/VelocityJointInterface
+                                                        hardware_interface/EffortJointInterface  -->
    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+   
+   <!-- Parameters -->
+   <xacro:arg name="prefix" default=""/>
+   <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/$(arg robot_model)/joint_limits.yaml"/>
+   <xacro:arg name="kinematics_params" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
+   <xacro:arg name="physical_params" default="$(find ur_description)/config/$(arg robot_model)/physical_parameters.yaml"/>
+   <xacro:arg name="visual_params" default="$(find ur_description)/config/$(arg robot_model)/visual_parameters.yaml"/>
    <xacro:arg name="safety_limits" default="false"/>
    <xacro:arg name="safety_pos_margin" default="0.15"/>
    <xacro:arg name="safety_k_position" default="20"/>

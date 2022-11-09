@@ -17,6 +17,6 @@
 
     Refer to 'inc/ur_macro.xacro' for more information.
   -->
-  <xacro:arg name="model" default="5e"/>
+  <xacro:arg name="robot_model" default="ur5e"/>
   <xacro:include filename="$(find ur_description)/urdf/ur.xacro"/>
 </robot>
