@@ -4,7 +4,7 @@
    <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro"/>
 
    <!-- Parameters -->
-   <xacro:arg name="model" default="5"/>
+   <xacro:arg name="robot_model" default="ur5"/>
    <xacro:arg name="prefix" default=""/>
    <xacro:arg name="joint_limit_params" default="$(find ur_description)/config/ur$(arg model)/joint_limits.yaml"/>
    <xacro:arg name="kinematics_params" default="$(find ur_description)/config/ur$(arg model)/default_kinematics.yaml"/>
