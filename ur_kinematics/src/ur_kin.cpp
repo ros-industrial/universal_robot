@@ -13,6 +13,16 @@ namespace ur_kinematics {
     }
     const double PI = M_PI;
 
+    //#define UR16e_PARAMS
+    #ifdef UR16e_PARAMS
+    const double d1 =  0.1807;
+    const double a2 = -0.4784;
+    const double a3 = -0.36;
+    const double d4 =  0.17415;
+    const double d5 =  0.11985;
+    const double d6 =  0.11655;
+    #endif
+
     //#define UR10_PARAMS
     #ifdef UR10_PARAMS
     const double d1 =  0.1273;
@@ -21,6 +31,16 @@ namespace ur_kinematics {
     const double d4 =  0.163941;
     const double d5 =  0.1157;
     const double d6 =  0.0922;
+    #endif
+
+    //#define UR10e_PARAMS
+    #ifdef UR10e_PARAMS
+    const double d1 =  0.1807;
+    const double a2 = -0.6127;
+    const double a3 = -0.57155;
+    const double d4 =  0.17415;
+    const double d5 =  0.11985;
+    const double d6 =  0.11655;
     #endif
 
     //#define UR5_PARAMS
@@ -32,7 +52,17 @@ namespace ur_kinematics {
     const double d5 =  0.09465;
     const double d6 =  0.0823;
     #endif
-    
+
+    //#define UR5e_PARAMS
+    #ifdef UR5e_PARAMS
+    const double d1 =  0.1625;
+    const double a2 = -0.425;
+    const double a3 = -0.3922;
+    const double d4 =  0.1333;
+    const double d5 =  0.0997;
+    const double d6 =  0.0996;
+    #endif
+
     //#define UR3_PARAMS
     #ifdef UR3_PARAMS
     const double d1 =  0.1519;
@@ -41,6 +71,16 @@ namespace ur_kinematics {
     const double d4 =  0.11235;
     const double d5 =  0.08535;
     const double d6 =  0.0819;
+    #endif
+
+    //#define UR3e_PARAMS
+    #ifdef UR3e_PARAMS
+    const double d1 =  0.15185;
+    const double a2 = -0.24355;
+    const double a3 = -0.2132;
+    const double d4 =  0.13105;
+    const double d5 =  0.08535;
+    const double d6 =  0.0921;
     #endif
   }
 
