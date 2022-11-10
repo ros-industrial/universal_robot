@@ -2,8 +2,8 @@
 Changelog for package ur_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2022-11-10)
+------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
 * Merge pull request `#619 <https://github.com/ros-industrial/universal_robot/issues/619>`_ from fmauch/gazebo_effort_controllers
   Gazebo effort controllers

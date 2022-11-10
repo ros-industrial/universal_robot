@@ -2,8 +2,8 @@
 Changelog for package ur3e_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2022-11-10)
+------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
 * Use effort controllers for Gazebo `#619 <https://github.com/ros-industrial/universal_robot/issues/619>`_ from fmauch/gazebo_effort_controllers
 * [moveit_configs] Change default sim controller to effort controller

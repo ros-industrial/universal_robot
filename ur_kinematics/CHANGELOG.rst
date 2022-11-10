@@ -2,8 +2,8 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2022-11-10)
+------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
 * Update ur kinematics (`#616 <https://github.com/ros-industrial/universal_robot/issues/616>`_)
   * Add ur_kinematics parameter sets for all e-Series robots

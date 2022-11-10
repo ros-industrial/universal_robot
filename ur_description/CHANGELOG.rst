@@ -2,8 +2,8 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2022-11-10)
+------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
 * ur_description: Make robot name configurable on load_ur.launch (`#612 <https://github.com/ros-industrial/universal_robot/issues/612>`_)
   In 9d02ccadc8fb9b5cfeaf0d5b0c0c7708d2461447 robot launchfiles were forwarded

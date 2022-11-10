@@ -2,8 +2,8 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2022-11-10)
+------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
 * Update MoveIt! support (`#538 <https://github.com/ros-industrial/universal_robot/issues/538>`_)
   Update dependencies of meta package
