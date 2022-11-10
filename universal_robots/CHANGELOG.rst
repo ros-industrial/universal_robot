@@ -2,6 +2,23 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
+* Update MoveIt! support (`#538 <https://github.com/ros-industrial/universal_robot/issues/538>`_)
+  Update dependencies of meta package
+* Increase minimum CMake version to allow builds on Focal Fossa (Noetic) (`#586 <https://github.com/ros-industrial/universal_robot/issues/586>`_)
+* Remove ur_msgs package from the metapackage (`#542 <https://github.com/ros-industrial/universal_robot/issues/542>`_)
+  There are no direct dependants any more in this repository.
+* Merge pull request `#498 <https://github.com/ros-industrial/universal_robot/issues/498>`_ from gavanderhoorn/remove_ur_driver
+  Remove obsolete driver and bringup pkgs
+* meta: remove driver and bringup.
+* Merge pull request `#371 <https://github.com/ros-industrial/universal_robot/issues/371>`_ from ipa-led/ur_description_args
+  Urdf with args and yaml configuration
+* deleted ur_e specific repositories
+  * moved ur_e_description meshes files to ur_description
+* Contributors: Felix Exner, Felix Exner (fexner), G.A. vd. Hoorn, Ludovic Delval, Nadia Hammoudeh García, gavanderhoorn
+
 1.2.5 (2019-04-05)
 ------------------
 * First release (of this package)

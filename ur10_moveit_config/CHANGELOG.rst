@@ -2,6 +2,26 @@
 Changelog for package ur10_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
+* Use effort controllers for Gazebo `#619 <https://github.com/ros-industrial/universal_robot/issues/619>`_ from fmauch/gazebo_effort_controllers
+* [moveit_configs] Change default sim controller to effort controller
+* Update ur kinematics (`#616 <https://github.com/ros-industrial/universal_robot/issues/616>`_)
+  * Add ur_kinematics parameter sets for all e-Series robots
+  * Add a README with a notice to ur_kinematics
+  * Set correct IKFast plugin name in kinematics.yaml
+  * Add ignore files for releasing ur_kinematics
+* Update MoveIt! support (`#538 <https://github.com/ros-industrial/universal_robot/issues/538>`_)
+  Update MoveIt! configurations to new description structure.
+  Co-authored-by: Luke Dennis <luke.j.dennis@gmail.com>
+  Co-authored-by: gavanderhoorn <g.a.vanderhoorn@tudelft.nl>
+  Co-authored-by: RobertWilbrandt <wilbrandt@fzi.de>
+* Increase minimum CMake version to allow builds on Focal Fossa (Noetic) (`#586 <https://github.com/ros-industrial/universal_robot/issues/586>`_)
+* migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Merge branch 'kinetic-devel' into patch-1
+* Contributors: Felix Exner, Felix Exner (fexner), Felix Mauch, Nadia Hammoudeh García, Qiang Qiu, RobertWilbrandt
+
 1.2.5 (2019-04-05)
 ------------------
 * Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
