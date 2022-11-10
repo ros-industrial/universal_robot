@@ -1,0 +1,78 @@
+# Physical parameters
+
+dh_parameters:
+  d1: 0.163
+  a2: -0.42500
+  a3: -0.39225
+  d4: 0.134         # wrist1_length = d4 - elbow_offset - shoulder_offset 
+  d5: 0.100
+  d6: 0.100
+
+offsets:
+  shoulder_offset: 0.138 # measured from model
+  elbow_offset: 0.007 # measured from model
+
+inertia_parameters:
+  base_mass: 4.0  # This mass might be incorrect
+  shoulder_mass: 3.7000
+  upper_arm_mass: 8.3930
+  upper_arm_inertia_offset: 0.138 # measured from model
+  forearm_mass: 2.2750
+  wrist_1_mass: 1.2190
+  wrist_2_mass: 1.2190
+  wrist_3_mass: 0.1879
+
+  shoulder_radius: 0.060   # manually measured
+  upper_arm_radius: 0.054  # manually measured
+  elbow_radius: 0.060      # manually measured
+  forearm_radius: 0.040    # manually measured
+  wrist_radius: 0.045      # manually measured
+
+  links:
+    base:
+      radius: 0.06
+      length: 0.05
+    shoulder:
+      radius: 0.06
+      length: 0.15
+    upperarm:
+      radius: 0.06
+      length: 0.425
+    forearm:
+      radius: 0.06
+      length: 0.3922
+    wrist_1:
+      radius: 0.06
+      length: 0.12
+    wrist_2:
+      radius: 0.06
+      length: 0.12
+    wrist_3:
+      radius: 0.0375
+      length: 0.0458
+
+  center_of_mass:
+    shoulder_cog:
+      x: 0.0
+      y: 0.00193
+      z: -0.02561
+    upper_arm_cog:
+      x: 0.0
+      y: -0.024201
+      z: 0.2125
+    forearm_cog:
+      x: 0.0
+      y: 0.0265
+      z: 0.11993
+    wrist_1_cog:
+      x: 0.0
+      y: 0.110949
+      z: 0.01634
+    wrist_2_cog:
+      x: 0.0
+      y: 0.0018
+      z: 0.11099
+    wrist_3_cog:
+      x: 0.0
+      y: 0.001159
+      z: 0.0

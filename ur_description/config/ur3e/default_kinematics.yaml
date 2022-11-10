@@ -1,0 +1,44 @@
+kinematics:
+  shoulder:
+    x: 0
+    y: 0
+    z: 0.15185
+    roll: 0
+    pitch: 0
+    yaw: 0
+  upper_arm:
+    x: 0
+    y: 0
+    z: 0
+    roll: 1.570796327
+    pitch: 0
+    yaw: 0
+  forearm:
+    x: -0.24355
+    y: 0
+    z: 0
+    roll: 0
+    pitch: 0
+    yaw: 0
+  wrist_1:
+    x: -0.2132
+    y: 0
+    z: 0.13105
+    roll: 0
+    pitch: 0
+    yaw: 0
+  wrist_2:
+    x: 0
+    y: -0.08535
+    z: -1.750557762378351e-11
+    roll: 1.570796327
+    pitch: 0
+    yaw: 0
+  wrist_3:
+    x: 0
+    y: 0.0921
+    z: -1.8890025766262e-11
+    roll: 1.570796326589793
+    pitch: 3.141592653589793
+    yaw: 3.141592653589793
+  hash: calib_16756443741236045476

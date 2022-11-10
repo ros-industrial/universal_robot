@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <!--Parameter files -->
+  <arg name="joint_limit_params" default="$(find ur_description)/config/ur3e/joint_limits.yaml"/>
+  <arg name="kinematics_params" default="$(find ur_description)/config/ur3e/default_kinematics.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur3e/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur3e/visual_parameters.yaml"/>
+
+  <!--Common parameters -->
+  <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface" doc="The hardware_interface to expose for each joint in the simulated robot (one of: [PositionJointInterface, VelocityJointInterface, EffortJointInterface])"/>
+  <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>
+  <arg name="safety_pos_margin" default="0.15" doc="The lower/upper limits in the safety controller" />
+  <arg name="safety_k_position" default="20" doc="Used to set k position in the safety controller" />
+
+  <!-- Use common launch file and pass all arguments to it -->
+  <include file="$(dirname)/load_ur.launch.xml" pass_all_args="true">
+    <arg name="robot_model" value="ur3e" />
+  </include>
+</launch>

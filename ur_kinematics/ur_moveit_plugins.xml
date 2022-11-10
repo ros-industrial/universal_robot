@@ -8,6 +8,16 @@
   </class>
 </library>
 
+<library path="lib/libur3e_moveit_plugin">
+  <class name="ur_kinematics/UR3eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Analytic kinematics for the Universal Robots UR3e.
+      Developed by Kelsey Hawkins from Georgia Tech.
+      See http://hdl.handle.net/1853/50782 for details.
+    </description>
+  </class>
+</library>
+
 <library path="lib/libur5_moveit_plugin">
   <class name="ur_kinematics/UR5KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
@@ -18,10 +28,40 @@
   </class>
 </library>
 
+<library path="lib/libur5e_moveit_plugin">
+  <class name="ur_kinematics/UR5eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Analytic kinematics for the Universal Robots UR5e.
+      Developed by Kelsey Hawkins from Georgia Tech.
+      See http://hdl.handle.net/1853/50782 for details.
+    </description>
+  </class>
+</library>
+
 <library path="lib/libur10_moveit_plugin">
   <class name="ur_kinematics/UR10KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR10.
+      Developed by Kelsey Hawkins from Georgia Tech.
+      See http://hdl.handle.net/1853/50782 for details.
+    </description>
+  </class>
+</library>
+
+<library path="lib/libur10e_moveit_plugin">
+  <class name="ur_kinematics/UR10eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Analytic kinematics for the Universal Robots UR10e.
+      Developed by Kelsey Hawkins from Georgia Tech.
+      See http://hdl.handle.net/1853/50782 for details.
+    </description>
+  </class>
+</library>
+
+<library path="lib/libur16e_moveit_plugin">
+  <class name="ur_kinematics/UR16eKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Analytic kinematics for the Universal Robots UR16e.
       Developed by Kelsey Hawkins from Georgia Tech.
       See http://hdl.handle.net/1853/50782 for details.
     </description>

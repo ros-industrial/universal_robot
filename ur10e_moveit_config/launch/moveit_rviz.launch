@@ -1,0 +1,15 @@
+<launch>
+
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <arg name="config" default="" />
+  <arg unless="$(eval config=='')" name="command_args" value="-d $(arg config)" />
+  <arg     if="$(eval config=='')" name="command_args" value="-d $(find ur10e_moveit_config)/launch/moveit.rviz"/>
+
+  <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
+        args="$(arg command_args)" output="screen">
+  </node>
+
+</launch>

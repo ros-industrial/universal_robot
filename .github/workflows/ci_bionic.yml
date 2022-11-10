@@ -1,0 +1,46 @@
+name: CI - Ubuntu Bionic
+
+on:
+  # direct pushes to protected branches are not supported
+  pull_request:
+  # run every day, at 7am UTC
+  schedule:
+    - cron: '0 7 * * *'
+  # allow manually starting this workflow
+  workflow_dispatch:
+
+jobs:
+  industrial_ci:
+    name: ROS Melodic (${{ matrix.ros_repo }})
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distro: [ melodic ]
+        ros_repo: [ main, testing ]
+
+    env:
+      CCACHE_DIR: "${{ github.workspace }}/.ccache"
+
+    steps:
+      - name: Fetch repository
+        uses: actions/checkout@v2
+
+      - name: ccache cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          # we always want the ccache cache to be persisted, as we cannot easily
+          # determine whether dependencies have changed, and ccache will manage
+          # updating the cache for us. Adding 'run_id' to the key will force an
+          # upload at the end of the job.
+          key: ccache-${{ matrix.ros_distro }}-${{ matrix.ros_repo }}-${{github.run_id}}
+          restore-keys: |
+            ccache-${{ matrix.ros_distro }}-${{ matrix.ros_repo }}
+
+      - name: Run industrial_ci
+        uses: ros-industrial/industrial_ci@master
+        env:
+          ROS_DISTRO: ${{ matrix.ros_distro }}
+          ROS_REPO: ${{ matrix.ros_repo }}

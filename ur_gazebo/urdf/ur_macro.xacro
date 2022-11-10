@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <!--
+    Main xacro macro definition of the "Gazebo robot" model.
+
+    This wraps the model of the real robot and adds all elements and parameters
+    required by Gazebo.
+
+    It also adds the gazebo_ros_control plugin.
+
+    NOTE: this is NOT a URDF. It cannot directly be loaded by consumers
+    expecting a flattened '.urdf' file. See the top-level '.xacro' for that
+    (but note: that .xacro must still be processed by the xacro command).
+
+    For use in '.launch' files: use one of the 'load_urX.launch' convenience
+    launch files.
+
+    NOTE: this Gazebo model makes use of the same set of parameter files as the
+    main xacro macro (in ur_description). It is therefor possible to use the
+    kinematic calibration exported from a REAL UR robot. Please refer to the
+    ur_macro.xacro in ur_description for more information about this.
+
+    Main author of the migration to yaml configs: Ludovic Delval.
+
+    Contributors to previous versions (in no particular order):
+
+     - Felix Messmer
+     - Kelsey Hawkins
+     - Shaun Edwards
+     - Alexander Bubeck
+     - Nadia Hammoudeh Garcia
+     - G. vd. Hoorn
+     - Dave Niewinski
+     - Andy Zelenak
+     - Miguel Prada
+     - Mathias Luedtke
+     - Hans-Joachim Krauch
+     - Felix Exner
+  -->
+
+
+  <!-- Definition of the main macro -->
+  <xacro:macro name="ur_robot_gazebo" params="
+   prefix
+   joint_limits_parameters_file
+   kinematics_parameters_file
+   physical_parameters_file
+   visual_parameters_file
+   transmission_hw_interface:=hardware_interface/EffortJointInterface
+   safety_limits:=false safety_pos_margin:=0.15 safety_k_position:=20"
+  >
+    <!--
+      Import the xacro macro for the REAL robot (which we'll augment with Gazebo
+      specific elements in the wrapper macro below).
+
+      NOTE: this imports the '_macro.xacro' from ur_description, as that contains
+      the definitions for the real robot.
+    -->
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro"/>
+
+
+    <!-- Instantiate model for the REAL robot. -->
+    <xacro:ur_robot
+      prefix="${prefix}"
+      joint_limits_parameters_file="${joint_limits_parameters_file}"
+      kinematics_parameters_file="${kinematics_parameters_file}"
+      physical_parameters_file="${physical_parameters_file}"
+      visual_parameters_file="${visual_parameters_file}"
+      transmission_hw_interface="${transmission_hw_interface}"
+      safety_limits="${safety_limits}"
+      safety_pos_margin="${safety_pos_margin}"
+      safety_k_position="${safety_k_position}"
+    />
+
+    <!-- Configure self collision properties per link -->
+    <gazebo reference="${prefix}shoulder_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}upper_arm_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}forearm_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}wrist_1_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}wrist_3_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}wrist_2_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}ee_link">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <!--
+      Inject Gazebo ROS Control plugin, which allows us to use ros_control
+      controllers to control the virtual robot hw.
+    -->
+    <gazebo>
+      <plugin name="ros_control" filename="libgazebo_ros_control.so">
+        <!--robotNamespace>/</robotNamespace-->
+        <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+</robot>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <!--
+    Convenience wrapper for the 'ur_robot' macro which provides default values
+    for the various "parameters files" parameters for a UR10e.
+
+    This file can be used when composing a more complex scene with one or more
+    UR10e robots.
+
+    While the generic 'ur_robot' macro could also be used, it would require
+    the user to provide values for all parameters, as that macro does not set
+    any model-specific defaults (not even for the generic parameters, such as
+    the visual and physical parameters and joint limits).
+
+    Refer to the main 'ur_macro.xacro' in this package for information about
+    use, contributors and limitations.
+
+    NOTE: users will most likely want to override *at least* the
+          'kinematics_parameters_file' parameter. Otherwise, a default kinematic
+          model will be used, which will almost certainly not correspond to any
+          real robot.
+  -->
+  <xacro:macro name="ur10e_robot" params="
+   prefix
+   joint_limits_parameters_file:='$(find ur_description)/config/ur10e/joint_limits.yaml'
+   kinematics_parameters_file:='$(find ur_description)/config/ur10e/default_kinematics.yaml'
+   physical_parameters_file:='$(find ur_description)/config/ur10e/physical_parameters.yaml'
+   visual_parameters_file:='$(find ur_description)/config/ur10e/visual_parameters.yaml'
+   transmission_hw_interface:=hardware_interface/PositionJointInterface
+   safety_limits:=false
+   safety_pos_margin:=0.15
+   safety_k_position:=20"
+  >
+    <xacro:include filename="$(find ur_description)/urdf/inc/ur_macro.xacro"/>
+    <xacro:ur_robot
+      prefix="${prefix}"
+      joint_limits_parameters_file="${joint_limits_parameters_file}"
+      kinematics_parameters_file="${kinematics_parameters_file}"
+      physical_parameters_file="${physical_parameters_file}"
+      visual_parameters_file="${visual_parameters_file}"
+      transmission_hw_interface="${transmission_hw_interface}"
+      safety_limits="${safety_limits}"
+      safety_pos_margin="${safety_pos_margin}"
+      safety_k_position="${safety_k_position}"
+    />
+  </xacro:macro>
+</robot>
