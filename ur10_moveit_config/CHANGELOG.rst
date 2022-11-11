@@ -2,6 +2,9 @@
 Changelog for package ur10_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.1 (2022-11-11)
+------------------
+
 1.3.0 (2022-11-10)
 ------------------
 * Merge melodic-devel-staging `#617 <https://github.com/ros-industrial/universal_robot/issues/617>`_ from ros-industrial/melodic-devel-staging
