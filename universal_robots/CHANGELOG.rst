@@ -2,8 +2,8 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.1 (2022-11-11)
+------------------
 * [meta]: Remove ur_kinematics package for now (`#620 <https://github.com/ros-industrial/universal_robot/issues/620>`_)
   With the dependency we cannot release the metapackage for now, since it is not released.
 * Contributors: Felix Exner (fexner)
