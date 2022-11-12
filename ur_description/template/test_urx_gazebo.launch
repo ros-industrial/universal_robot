@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="${robot_model}__">
+    <include file="$(find ur_gazebo)/launch/load_${robot_model}.launch"/>
+  </group>
+
+  <group ns="${robot_model}_bringup__">
+    <include file="$(find ur_gazebo)/launch/${robot_model}_bringup.launch"/>
+  </group>
+</launch>

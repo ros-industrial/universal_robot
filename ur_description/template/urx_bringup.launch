@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!--
-    Main entry point for loading a single ur3e into Gazebo, in isolation, in the
+    Main entry point for loading a single ${robot_model} into Gazebo, in isolation, in the
     empty world.
 
     A set of ros_control controllers similar to those loaded by ur_robot_driver
@@ -10,7 +10,7 @@
     This bringup .launch file is intentionally given the same name as the one in
     the ur_robot_driver package, as it fulfills a similar role: loading the
     configuration and starting the necessary ROS nodes which in the end provide
-    a ROS API to a Universal Robots ur3e. Only in this case, instead of a real
+    a ROS API to a Universal Robots ${robot_model}. Only in this case, instead of a real
     robot, a virtual model in Gazebo is used.
 
     NOTE 1: as this is not a real robot, there are limits to the faithfulness
@@ -20,7 +20,7 @@
     simulate a Control Box. This means: no Dashboard server, no URScript topic
     and no force-torque sensor among other things.
 
-    NOTE 2: users wishing to integrate a ur3e with other models into a more
+    NOTE 2: users wishing to integrate a ${robot_model} with other models into a more
     complex simulation should NOT modify this file. Instead, if it would be
     desirable to reuse this file with a custom simulation, they should create a
     copy and update this copy so as to accomodate required changes.
@@ -31,14 +31,14 @@
   -->
 
   <!--Robot description and related parameter files -->
-  <arg name="robot_description_file" default="$(dirname)/load_ur3e.launch" doc="Launch file which populates the 'robot_description' parameter."/>
+  <arg name="robot_description_file" default="$(dirname)/load_${robot_model}.launch" doc="Launch file which populates the 'robot_description' parameter."/>
   <arg name="joint_limit_params" default="" doc="YAML file containing the joint limit values"/>
   <arg name="kinematics_params" default="" doc="YAML file containing the robot's kinematic parameters. These will be different for each robot as they contain the robot's calibration."/>
   <arg name="physical_params" default="" doc="YAML file containing the phycical parameters of the robots"/>
   <arg name="visual_params" default="" doc="YAML file containing the visual model of the robots"/>
 
   <!-- Controller configuration -->
-  <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur3e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="controller_config_file" default="$(find ur_gazebo)/config/${robot_model}_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="controllers" default="joint_state_controller eff_joint_traj_controller" doc="Controllers that are activated by default."/>
   <arg name="stopped_controllers" default="joint_group_eff_controller" doc="Controllers that are initally loaded, but not started."/>
 

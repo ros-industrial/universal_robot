@@ -2,6 +2,6 @@
 <launch>
   <!-- Use common launch file and pass all arguments to it -->
   <include file="$(dirname)/load_ur.launch" pass_all_args="true">
-    <arg name="robot_model" value="ur5e"/>
+    <arg name="robot_model" value="${robot_model}"/>
   </>
 </launch>

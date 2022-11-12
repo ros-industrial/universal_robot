@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur10e_robot">
   <!--
-    This is a convenience top-level xacro which loads the macro for the UR10e
+    This is a convenience top-level xacro which loads the macro for the ur10e
     which defines the default values for the various "parameters files"
-    parameters for a UR10e.
+    parameters for a ur10e.
 
     This file is only useful when loading a stand-alone, completely isolated
     robot with only default values for all parameters such as the kinematics,
@@ -17,6 +17,31 @@
 
     Refer to 'inc/ur_macro.xacro' for more information.
   -->
+
+  <!-- Parameters -->
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="joint_limit_params" default=""/>
+  <xacro:arg name="kinematics_params" default=""/>
+  <xacro:arg name="physical_params" default=""/>
+  <xacro:arg name="visual_params" default=""/>
+  <xacro:arg name="transmission_hw_interface" default=""/>
+  <xacro:arg name="safety_limits" default=""/>
+  <xacro:arg name="safety_pos_margin" default=""/>
+  <xacro:arg name="safety_k_position" default=""/>
+
+  <!-- Import ur10e macro -->
   <xacro:include filename="$(find ur_description)/urdf/inc/ur10e_macro.xacro"/>
-  <xacro:ur10e_robot prefix="" />
+
+  <!-- Call ur10e macro -->
+  <xacro:ur10e_robot
+    prefix="$(arg prefix)"
+    joint_limits_parameters_file="$(arg joint_limit_params)"
+    kinematics_parameters_file="$(arg kinematics_params)"
+    physical_parameters_file="$(arg physical_params)"
+    visual_parameters_file="$(arg visual_params)"
+    transmission_hw_interface="$(arg transmission_hw_interface)"
+    safety_limits="$(arg safety_limits)"
+    safety_pos_margin="$(arg safety_pos_margin)"
+    safety_k_position="$(arg safety_k_position)"
+  />
 </robot>

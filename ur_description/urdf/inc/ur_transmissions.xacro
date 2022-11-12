@@ -6,12 +6,25 @@
           this location. Nor can they rely on the existence of the macro.
   -->
 
-  <xacro:macro name="ur_arm_transmission" params="prefix hw_interface">
+  <xacro:macro name="ur_arm_transmission" params="prefix:=^ transmission_hw_interface:=^">
+  
+    <!-- transmission_hw_interface only has to contain parts of position, velocity or effort -->
+    <xacro:if value="${'e' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/EffortJointInterface"/>
+    </xacro:if>
+	
+    <xacro:if value="${'v' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/VelocityJointInterface"/>
+    </xacro:if>
+	
+    <xacro:if value="${'p' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/PositionJointInterface"/>
+    </xacro:if>
 
     <transmission name="${prefix}shoulder_pan_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_pan_joint">
-        <hardwareInterface>${hw_interface}</hardwareInterface>
+        <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
       </joint>
       <actuator name="${prefix}shoulder_pan_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -21,7 +34,7 @@
     <transmission name="${prefix}shoulder_lift_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_lift_joint">
-        <hardwareInterface>${hw_interface}</hardwareInterface>
+        <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
       </joint>
       <actuator name="${prefix}shoulder_lift_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -31,7 +44,7 @@
     <transmission name="${prefix}elbow_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}elbow_joint">
-        <hardwareInterface>${hw_interface}</hardwareInterface>
+        <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
       </joint>
       <actuator name="${prefix}elbow_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -41,7 +54,7 @@
     <transmission name="${prefix}wrist_1_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_1_joint">
-        <hardwareInterface>${hw_interface}</hardwareInterface>
+        <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
       </joint>
       <actuator name="${prefix}wrist_1_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -51,7 +64,7 @@
     <transmission name="${prefix}wrist_2_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_2_joint">
-        <hardwareInterface>${hw_interface}</hardwareInterface>
+        <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
       </joint>
       <actuator name="${prefix}wrist_2_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -61,7 +74,7 @@
     <transmission name="${prefix}wrist_3_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_3_joint">
-        <hardwareInterface>${hw_interface}</hardwareInterface>
+        <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
       </joint>
       <actuator name="${prefix}wrist_3_motor">
         <mechanicalReduction>1</mechanicalReduction>
