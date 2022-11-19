@@ -10,14 +10,13 @@
   -->
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
-      <mass value="${mass}" />
-      <xacro:insert_block name="origin" />
-      <inertia ixx="${0.0833333 * mass * (3 * radius * radius + length * length)}" ixy="0.0" ixz="0.0"
-        iyy="${0.0833333 * mass * (3 * radius * radius + length * length)}" iyz="0.0"
-        izz="${0.5 * mass * radius * radius}" />
+      <mass value="${mass}"/>
+      <xacro:insert_block name="origin"/>
+      <inertia ixx="${mass / 12 * (3 * radius**2 + length**2)}" ixy="0" ixz="0"
+               iyy="${mass / 12 * (3 * radius**2 + length**2)}" iyz="0"
+               izz="${mass / 2 * radius**2}"/>
     </inertial>
   </xacro:macro>
-
 
   <!--
     NOTE: this macro stores the defined properties in the scope of the caller.
