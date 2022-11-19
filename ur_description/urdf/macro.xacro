@@ -105,12 +105,15 @@
       physical_parameters_file="${physical_parameters_file}"
       visual_parameters_file="${visual_parameters_file}"/>
 
-    <!-- Add URDF transmission elements (for ros_control) -->
+    <!-- Links: main serial chain -->
     <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
 
     <!-- links: main serial chain -->
     <link name="${prefix}base_link"/>
-    <link name="${prefix}base_link_inertia">
+
+    <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
+    <link name="${prefix}base"/>
+
       <visual>
         <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
         <geometry>
