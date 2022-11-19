@@ -19,12 +19,12 @@ mesh_files:
 
   upper_arm:
     visual:
-      mesh: "package://ur_description/meshes/ur3/visual/upperarm.dae"
+      mesh: "package://ur_description/meshes/ur3/visual/upper_arm.dae"
       material:
         name: "LightGrey"
         color: "0.7 0.7 0.7 1.0"
     collision:
-      mesh: "package://ur_description/meshes/ur3/collision/upperarm.stl"
+      mesh: "package://ur_description/meshes/ur3/collision/upper_arm.stl"
       mesh_files:
 
   forearm:

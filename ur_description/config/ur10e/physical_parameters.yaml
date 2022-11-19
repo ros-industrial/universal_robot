@@ -4,7 +4,7 @@ dh_parameters:
   d1: 0.181
   a2: -0.613
   a3: -0.571
-  d4: 0.174        # wrist1_length = d4 - elbow_offset - shoulder_offset 
+  d4: 0.174        # wrist1_length = d4 - elbow_offset - shoulder_offset
   d5: 0.120
   d6: 0.117
 
@@ -35,7 +35,7 @@ inertia_parameters:
     shoulder:
       radius: 0.075
       length: 0.178
-    upperarm:
+    upper_arm:
       radius: 0.075
       length: 0.612
     forearm:
