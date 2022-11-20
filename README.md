@@ -92,7 +92,7 @@ Don't forget to source the correct setup shell files and use a new terminal for 
 
 To bring up the simulated robot in Gazebo, run:
 
-```roslaunch ur_gazebo ur5_bringup.launch```
+```roslaunch ur_gazebo bringup.launch model:=ur5```
 
 
 ___MoveIt! with a simulated robot___

@@ -7,8 +7,8 @@
     expecting a flattened '.urdf' file. See the top-level '.xacro' for that
     (but note: that .xacro must still be processed by the xacro command).
 
-    For use in '.launch' files: use one of the 'load_urX.launch' convenience
-    launch files.
+    For use in '.launch' files: use the 'load.launch' convenience
+    launch file.
 
     This file models the base kinematic chain of a UR robot, which then gets
     parameterised by various configuration files to convert it into a UR3(e),
@@ -51,23 +51,56 @@
      - Muhammad Asif Rana
   -->
 
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur_transmissions.xacro" />
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur_common.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/transmissions.xacro" />
 
-  <xacro:macro name="ur_robot" params="
-    prefix
-    joint_limits_parameters_file
-    kinematics_parameters_file
-    physical_parameters_file
-    visual_parameters_file
+  <xacro:macro name="ur" params="
+    model:=^|''
+    prefix:=^|''
+    joint_limits_parameters_file:=^|''
+    kinematics_parameters_file:=^|''
+    physical_parameters_file:=^|''
+    visual_parameters_file:=^|''
     transmission_hw_interface:=hardware_interface/PositionJointInterface
-    safety_limits:=false
-    safety_pos_margin:=0.15
-    safety_k_position:=20"
-  >
+    safety_limits:=^|''
+    safety_pos_margin:=^|''
+    safety_k_position:=^|''
+  ">
+    <!-- Override empty parameters with default values -->
+    <xacro:if value="${not joint_limits_parameters_file}">
+      <xacro:property name="joint_limits_parameters_file" value="$(find ur_description)/config/${model}/joint_limits.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not kinematics_parameters_file}">
+      <xacro:property name="kinematics_parameters_file" value="$(find ur_description)/config/${model}/default_kinematics.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not physical_parameters_file}">
+      <xacro:property name="physical_parameters_file" value="$(find ur_description)/config/${model}/physical_parameters.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not visual_parameters_file}">
+      <xacro:property name="visual_parameters_file" value="$(find ur_description)/config/${model}/visual_parameters.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not safety_limits}">
+      <xacro:property name="safety_limits" value="false"/>
+    </xacro:if>
+
+    <xacro:if value="${not safety_pos_margin}">
+      <xacro:property name="safety_pos_margin" value="0.15"/>
+    </xacro:if>
+
+    <xacro:if value="${not safety_k_position}">
+      <xacro:property name="safety_k_position" value="20"/>
+    </xacro:if>
+
+    <!-- Non empty prefix ends with "_" -->
+    <xacro:property name="prefix" value="${prefix + '_' if prefix and not prefix.endswith('_') else ''}" lazy_eval="false"/>
+
     <!-- Load configuration data from the provided .yaml files -->
+    <xacro:include filename="$(find ur_description)/urdf/common.xacro" />
     <xacro:read_model_data
-      joint_limits_parameters_file="${joint_limits_parameters_file}" 
+      joint_limits_parameters_file="${joint_limits_parameters_file}"
       kinematics_parameters_file="${kinematics_parameters_file}"
       physical_parameters_file="${physical_parameters_file}"
       visual_parameters_file="${visual_parameters_file}"/>

@@ -16,9 +16,9 @@
   -->
 
   <!-- Parameters we share with ur_robot_driver -->
-  <arg name="controller_config_file" doc="Config file used for defining the ROS-Control controllers."/>
-  <arg name="controllers" default="joint_state_controller eff_joint_traj_controller"/>
-  <arg name="stopped_controllers" default="joint_group_eff_controller"/>
+  <arg name="controller_config_file" default="$(find ur_gazebo)/controllers/$(arg model).yaml" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="controllers" default="joint_state_controller eff_joint_traj_controller" doc="Controllers that are activated by default."/>
+  <arg name="stopped_controllers" default="joint_group_eff_controller" doc="Controllers that are initally loaded, but not started."/>
 
   <!-- Gazebo parameters -->
   <arg name="gazebo_model_name" default="robot" doc="The name to give to the model in Gazebo (after spawning it)." />
@@ -26,7 +26,7 @@
   <arg name="gui" default="true" doc="If true, Gazebo UI is started. If false, only start Gazebo server." />
   <arg name="paused" default="false" doc="If true, start Gazebo in paused mode. If false, start simulation as soon as Gazebo has loaded." />
   <arg name="robot_description_param_name" default="robot_description" doc="Name of the parameter which contains the robot description (ie: URDF) which should be spawned into Gazebo." />
-  <arg name="spawn_z" default="0.1" doc="At which height the model should be spawned. NOTE: lower values will cause the robot to collide with the ground plane." />
+  <arg name="gazebo_model_name" default="$(arg model)" doc="The name to give to the model in Gazebo (after spawning it)."/>
   <arg name="start_gazebo" default="true" doc="If true, Gazebo will be started. If false, Gazebo will be assumed to have been started elsewhere." />
 
   <!-- Load controller settings -->

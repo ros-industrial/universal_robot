@@ -1,8 +1,8 @@
 moveit_setup_assistant_config:
   URDF:
     package: ur_description
-    relative_path: urdf/ur10e.xacro
-    xacro_args: ""
+    relative_path: urdf/ur.xacro
+    xacro_args: model:=ur10e
   SRDF:
     relative_path: config/ur10e.srdf
   CONFIG:

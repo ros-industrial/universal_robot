@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
-  <group ns="ur3__">
-    <include file="$(find ur_gazebo)/launch/inc/load_ur3.launch.xml"/>
+  <group ns="load_$(arg model)__">
+    <include file="$(dirname)/load.launch" pass_all_args="true"/>
   </group>
-
-  <group ns="ur3_bringup__">
-    <include file="$(find ur_gazebo)/launch/ur3_bringup.launch"/>
+  <group ns="bringup_$(arg model)__">
+    <include file="$(dirname)/bringup.launch" pass_all_args="true"/>
   </group>
 </launch>
+
