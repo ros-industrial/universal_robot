@@ -67,28 +67,20 @@
     <!-- Instantiate model for the REAL robot. -->
     <xacro:ur/>
 
-    <!-- Configure self collision properties per link -->
-    <gazebo reference="${prefix}shoulder_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
-    <gazebo reference="${prefix}upper_arm_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
-    <gazebo reference="${prefix}forearm_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
-    <gazebo reference="${prefix}wrist_1_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
-    <gazebo reference="${prefix}wrist_3_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
-    <gazebo reference="${prefix}wrist_2_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
-    <gazebo reference="${prefix}ee_link">
-      <selfCollide>true</selfCollide>
-    </gazebo>
+    <!-- Gazebo properties of each link -->
+    <xacro:macro name="reference" params="link">
+      <gazebo reference="${prefix}${link}">
+         <selfCollide>true</selfCollide>
+      </gazebo>
+    </xacro:macro>
+	
+    <xacro:reference link="shoulder_link"/>
+    <xacro:reference link="upper_arm_link"/>
+    <xacro:reference link="forearm_link"/>
+    <xacro:reference link="wrist_1_link"/>
+    <xacro:reference link="wrist_2_link"/>
+    <xacro:reference link="wrist_3_link"/>
+    <xacro:reference link="ee_link"/>
 
     <!--
       Inject Gazebo ROS Control plugin, which allows us to use ros_control
@@ -96,8 +88,6 @@
     -->
     <gazebo>
       <plugin name="ros_control" filename="libgazebo_ros_control.so">
-        <!--robotNamespace>/</robotNamespace-->
-        <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
       </plugin>
     </gazebo>
   </xacro:macro>
