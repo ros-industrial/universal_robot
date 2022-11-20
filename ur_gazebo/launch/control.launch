@@ -21,39 +21,42 @@
   <arg name="stopped_controllers" default="joint_group_eff_controller" doc="Controllers that are initally loaded, but not started."/>
 
   <!-- Gazebo parameters -->
-  <arg name="gazebo_model_name" default="robot" doc="The name to give to the model in Gazebo (after spawning it)." />
-  <arg name="gazebo_world" default="worlds/empty.world" doc="The '.world' file to load in Gazebo." />
-  <arg name="gui" default="true" doc="If true, Gazebo UI is started. If false, only start Gazebo server." />
-  <arg name="paused" default="false" doc="If true, start Gazebo in paused mode. If false, start simulation as soon as Gazebo has loaded." />
-  <arg name="robot_description_param_name" default="robot_description" doc="Name of the parameter which contains the robot description (ie: URDF) which should be spawned into Gazebo." />
+  <arg name="world_name" default="worlds/empty.world" doc="The '.world' file to load in Gazebo."/>
+  <arg name="world_pose" default="-x 0 -y 0 -z 0.1 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at. NOTE: lower heights will cause the robot to collide with the ground plane."/>
+  <arg name="initial_joint_positions" default=" -J elbow_joint 0 -J shoulder_lift_joint 0 -J shoulder_pan_joint 0 -J wrist_1_joint 0 -J wrist_2_joint 0 -J wrist_3_joint 0" doc="Initial joint configuration of the robot"/>
+  <arg name="gui" default="true" doc="If true, Gazebo UI is started. If false, only start Gazebo server."/>
+  <arg name="paused" default="false" doc="If true, start Gazebo in paused mode. If false, start simulation as soon as Gazebo has loaded."/>
   <arg name="gazebo_model_name" default="$(arg model)" doc="The name to give to the model in Gazebo (after spawning it)."/>
-  <arg name="start_gazebo" default="true" doc="If true, Gazebo will be started. If false, Gazebo will be assumed to have been started elsewhere." />
+  <arg name="robot_description_param_name" default="robot_description" doc="Name of the parameter which contains the robot description (ie: URDF) which should be spawned into Gazebo."/>
+  <arg name="start_gazebo" default="true" doc="If true, Gazebo will be started. If false, Gazebo will be assumed to have been started elsewhere."/>
 
   <!-- Load controller settings -->
   <rosparam file="$(arg controller_config_file)" command="load"/>
 
-  <!-- Start Gazebo and load the empty world if requested to do so -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg start_gazebo)">
-    <arg name="world_name" value="$(arg gazebo_world)"/>
-    <arg name="paused" value="$(arg paused)"/>
-    <arg name="gui" value="$(arg gui)"/>
+  <!-- Start Gazebo paused to allow the controllers to pickup the initial pose -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args="true" if="$(arg start_gazebo)">
+    <arg name="paused" value="true"/>
   </include>
+
+  <!-- Unpause the simulation after loading the robot model -->
+  <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />
 
   <!-- Spawn the model loaded earlier in the simulation just started -->
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
     args="
       -urdf
       -param $(arg robot_description_param_name)
-      -model $(arg gazebo_model_name)
-      -z $(arg spawn_z)"
-    output="screen" respawn="false" />
+      $(arg unpause)
+      $(arg world_pose)
+      $(arg initial_joint_positions)
+      -model $(arg gazebo_model_name)"
+    output="screen" respawn="false"/>
 
   <!-- Load and start the controllers listed in the 'controllers' arg. -->
   <node name="ros_control_controller_spawner" pkg="controller_manager" type="spawner"
-    args="$(arg controllers)" output="screen" respawn="false" />
+    args="$(arg controllers)" output="screen" respawn="false"/>
 
   <!-- Load other controllers, but do not start them -->
   <node name="ros_control_stopped_spawner" pkg="controller_manager" type="spawner"
-    args="--stopped $(arg stopped_controllers)" output="screen" respawn="false" />
-
+    args="--stopped $(arg stopped_controllers)" output="screen" respawn="false"/>
 </launch>
