@@ -187,15 +187,21 @@
     <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
     <link name="${prefix}tool0"/>
 
-    <!-- joints: main serial chain -->
-    <joint name="${prefix}base_link-base_link_inertia" type="fixed">
-      <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
-           frames of the robot/controller have X+ pointing backwards.
-           Use the joint between 'base_link' and 'base_link_inertia' (a dummy
-           link/frame) to introduce the necessary rotation over Z (of pi rad).
-      -->
-      <origin xyz="0 0 0" rpy="0 0 ${pi}" />
-    </joint>
+    <!-- Joints: main serial chain -->
+    <!-- Fixed joint macro -->
+    <xacro:macro name="joint_fixed" params="parent child rpy">
+      <joint name="${prefix}${parent}-${child}" type="fixed">
+        <parent link="${prefix}${parent}"/>
+        <child link="${prefix}${child}"/>
+        <origin xyz="0 0 0" rpy="${rpy}"/>
+      </joint>
+    </xacro:macro>
+
+    <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
+         frames of the robot/controller have X+ pointing backwards.
+         Use the joint between 'base_link' and 'base_inertia_link' (a dummy
+         link/frame) to introduce the necessary rotation over Z (of pi rad). -->
+    <xacro:joint_fixed parent="base_link" child="base_inertia_link" rpy="0 0 ${pi}"/>
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
       <parent link="${prefix}base_link_inertia" />
       <child link="${prefix}shoulder_link" />
@@ -276,7 +282,7 @@
            aligned (ie: has X+ forward, Y+ left and Z+ up), this is needed
            to correctly align 'base' with the 'Base' coordinate system of
            the UR controller.
-      -->
+    <xacro:joint_fixed parent="base_link" child="base" rpy="0 0 ${pi}"/>
       <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
       <parent link="${prefix}base_link"/>
       <child link="${prefix}base"/>
@@ -290,13 +296,9 @@
       <origin xyz="0 0 0" rpy="0 ${-pi/2.0} ${-pi/2.0}" />
     </joint>
 
-    <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
-    <link name="${prefix}tool0"/>
-    <joint name="${prefix}flange-tool0" type="fixed">
-      <!-- default toolframe: X+ left, Y+ up, Z+ front -->
-      <origin xyz="0 0 0" rpy="${pi/2.0} 0 ${pi/2.0}"/>
-      <parent link="${prefix}flange"/>
-      <child link="${prefix}tool0"/>
-    </joint>
+    <xacro:joint_fixed parent="wrist_3_link" child="flange" rpy="0 ${-pi/2} ${-pi/2}"/>
+
+    <!-- Default toolframe: X+ left, Y+ up, Z+ front -->
+    <xacro:joint_fixed parent="flange" child="tool0" rpy="${pi/2} 0 ${pi/2}"/>
   </xacro:macro>
 </robot>
