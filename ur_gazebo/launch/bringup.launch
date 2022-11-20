@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<launch>
+  <!--
+    Main entry point for loading a single $(arg model) into Gazebo, in isolation, in the
+    empty world.
+
+    A set of ros_control controllers similar to those loaded by ur_robot_driver
+    will be loaded by 'control.launch' (note: *similar*, *not* identical).
+
+    This bringup .launch file is intentionally given the same name as the one in
+    the ur_robot_driver package, as it fulfills a similar role: loading the
+    configuration and starting the necessary ROS nodes which in the end provide
+    a ROS API to a Universal Robots $(arg model). Only in this case, instead of a real
+    robot, a virtual model in Gazebo is used.
+
+    NOTE 1: as this is not a real robot, there are limits to the faithfulness
+    of the simulation. Dynamic behaviour will be different from a real robot.
+    Only a subset of topics, actions and services is supported. Specifically,
+    interaction with the Control Box itself is not supported, as Gazebo does not
+    simulate a Control Box. This means: no Dashboard server, no URScript topic
+    and no force-torque sensor among other things.
+
+    NOTE 2: users wishing to integrate a $(arg model) with other models into a more
+    complex simulation should NOT modify this file. Instead, if it would be
+    desirable to reuse this file with a custom simulation, they should create a
+    copy and update this copy so as to accomodate required changes.
+
+    In those cases, treat this file as an example, showing one way how a Gazebo
+    simulation for UR robots *could* be launched. It is not necessary to mimic
+    this setup completely.
+  -->
+
+  <!-- robot_state_publisher configuration -->
+  <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
+  <arg name="publish_frequency" default="125" doc="Rate at which robot_state_publisher should publish transforms."/>
+
+  <!-- Load robot_description on the parameter server -->
+  <include file="$(dirname)/load.launch" pass_all_args="true"/>
+
+  <!-- Robot state publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="tf_prefix" value="$(arg tf_prefix)"/>
+    <param name="publish_frequency" type="double" value="$(arg publish_frequency)"/>
+  </node>
+
+  <!-- Start the 'driver' (ie: Gazebo in this case) -->
+  <include file="$(dirname)/control.launch" pass_all_args="true"/>
+</launch>

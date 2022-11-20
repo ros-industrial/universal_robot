@@ -9,6 +9,8 @@ mesh_files:
         color: "0.7 0.7 0.7 1.0"
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/base.stl"
+    offset:
+      yaw: 3.14159265359
 
   shoulder:
     visual:
@@ -18,16 +20,21 @@ mesh_files:
         color: "0.7 0.7 0.7 1.0"
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/shoulder.stl"
+    offset:
+      yaw: 3.14159265359
 
   upper_arm:
     visual:
-      mesh: "package://ur_description/meshes/ur10e/visual/upperarm.dae"
+      mesh: "package://ur_description/meshes/ur10e/visual/upper_arm.dae"
       material:
         name: "LightGrey"
         color: "0.7 0.7 0.7 1.0"
     collision:
-      mesh: "package://ur_description/meshes/ur10e/collision/upperarm.stl"
-      mesh_files:
+      mesh: "package://ur_description/meshes/ur10e/collision/upper_arm.stl"
+    offset:
+      z: 0.1762 # shoulder_offset measured from model
+      roll: 1.57079632679
+      yaw: -1.57079632679
 
   forearm:
     visual:
@@ -37,6 +44,10 @@ mesh_files:
         color: "0.7 0.7 0.7 1.0"
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/forearm.stl"
+    offset:
+      z: 0.0393 # elbow_offset measured from model
+      roll: 1.57079632679
+      yaw: -1.57079632679
 
   wrist_1:
     visual:
@@ -46,7 +57,9 @@ mesh_files:
         color: "0.7 0.7 0.7 1.0"
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/wrist1.stl"
-    visual_offset: -0.135
+    offset:
+      z: -0.135
+      roll: 1.57079632679
 
   wrist_2:
     visual:
@@ -56,7 +69,8 @@ mesh_files:
         color: "0.7 0.7 0.7 1.0"
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/wrist2.stl"
-    visual_offset: -0.12
+    offset:
+      z: -0.12
 
   wrist_3:
     visual:
@@ -66,4 +80,6 @@ mesh_files:
         color: "0.7 0.7 0.7 1.0"
     collision:
       mesh: "package://ur_description/meshes/ur10e/collision/wrist3.stl"
-    visual_offset: -0.1168
+    offset:
+      z: -0.1168
+      roll: 1.57079632679

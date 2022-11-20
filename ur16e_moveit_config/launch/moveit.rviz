@@ -80,7 +80,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          base_link_inertia:
+          base_inertia_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -176,7 +176,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          base_link_inertia:
+          base_inertia_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false

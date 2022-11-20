@@ -37,7 +37,7 @@ inertia_parameters:
     shoulder:
       radius: 0.075
       length: 0.178
-    upperarm:
+    upper_arm:
       radius: 0.075
       length: 0.4784
     forearm:

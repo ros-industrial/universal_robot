@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://wiki.ros.org/xacro" name="$(arg robot_model)_robot">
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="$(arg model)_robot">
   <!--
     This is a top-level xacro instantiating the Gazebo-specific version of the
-    'ur_robot' macro (ie: 'ur_robot_gazebo') and passing it values for all its
+    'ur_robot' macro (ie: 'ur_gazebo') and passing it values for all its
     required arguments.
 
     This file should be considered the Gazebo-specific variant of the file
@@ -29,30 +29,26 @@
     NOTE: this imports the Gazebo-wrapper main macro, NOT the regular
           xacro macro (which is hosted by ur_description).
   -->
-  <xacro:include filename="$(find ur_gazebo)/urdf/ur_macro.xacro"/>
+  <xacro:include filename="$(find ur_gazebo)/urdf/macro.xacro"/>
 
   <!--Declare arguments -->
+  <xacro:arg name="prefix" default=""/>
   <xacro:arg name="joint_limit_params" default=""/>
   <xacro:arg name="physical_params" default=""/>
   <xacro:arg name="kinematics_params" default=""/>
   <xacro:arg name="visual_params" default=""/>
-  <!--
-    legal values:
-      - hardware_interface/PositionJointInterface
-      - hardware_interface/VelocityJointInterface
-      - hardware_interface/EffortJointInterface
-
+  <!-- transmission_hw_interface: position, velocity or effort
     NOTE: this value must correspond to the controller configured in the
-          controller .yaml files in the 'config' directory.
-  -->
-  <xacro:arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
-  <xacro:arg name="safety_limits" default="false"/>
-  <xacro:arg name="safety_pos_margin" default="0.15"/>
-  <xacro:arg name="safety_k_position" default="20"/>
+          controller .yaml files in the 'config' directory. -->
+  <xacro:arg name="transmission_hw_interface" default=""/>
+  <xacro:arg name="safety_limits" default=""/>
+  <xacro:arg name="safety_pos_margin" default=""/>
+  <xacro:arg name="safety_k_position" default=""/>
 
   <!-- Instantiate the Gazebo robot and pass it all the required arguments. -->
-  <xacro:ur_robot_gazebo
-    prefix=""
+  <xacro:ur_gazebo
+    model="$(arg model)"
+    prefix="$(arg prefix)"
     joint_limits_parameters_file="$(arg joint_limit_params)"
     kinematics_parameters_file="$(arg kinematics_params)"
     physical_parameters_file="$(arg physical_params)"
@@ -72,6 +68,7 @@
     a 'world' link there.
   -->
   <link name="world"/>
+
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>

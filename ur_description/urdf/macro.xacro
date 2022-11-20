@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <!--
+    Base UR robot series xacro macro.
+
+    NOTE: this is NOT a URDF. It cannot directly be loaded by consumers
+    expecting a flattened '.urdf' file. See the top-level '.xacro' for that
+    (but note: that .xacro must still be processed by the xacro command).
+
+    For use in '.launch' files: use the 'load.launch' convenience
+    launch file.
+
+    This file models the base kinematic chain of a UR robot, which then gets
+    parameterised by various configuration files to convert it into a UR3(e),
+    UR5(e), UR10(e) or UR16e.
+
+    NOTE: the default kinematic parameters (ie: link lengths, frame locations,
+    offets, etc) do not correspond to any particular robot. They are defaults
+    only. There WILL be non-zero offsets between the Forward Kinematics results
+    in TF (ie: robot_state_publisher) and the values reported by the Teach
+    Pendant.
+
+    For accurate (and robot-specific) transforms, the 'kinematics_parameters_file'
+    parameter MUST point to a .yaml file containing the appropriate values for
+    the targetted robot.
+
+    If using the UniversalRobots/Universal_Robots_ROS_Driver, follow the steps
+    described in the readme of that repository to extract the kinematic
+    calibration from the controller and generate the required .yaml file.
+
+    Main author of the migration to yaml configs: Ludovic Delval.
+
+    Contributors to previous versions (in no particular order):
+
+     - Felix Messmer
+     - Kelsey Hawkins
+     - Wim Meeussen
+     - Shaun Edwards
+     - Nadia Hammoudeh Garcia
+     - Dave Hershberger
+     - G. vd. Hoorn
+     - Philip Long
+     - Dave Coleman
+     - Miguel Prada
+     - Mathias Luedtke
+     - Marcel Schnirring
+     - Felix von Drigalski
+     - Felix Exner
+     - Jimmy Da Silva
+     - Ajit Krisshna N L
+     - Muhammad Asif Rana
+  -->
+
+  <xacro:macro name="ur" params="
+    model:=^|''
+    prefix:=^|''
+    joint_limits_parameters_file:=^|''
+    kinematics_parameters_file:=^|''
+    physical_parameters_file:=^|''
+    visual_parameters_file:=^|''
+    transmission_hw_interface:=^|''
+    safety_limits:=^|''
+    safety_pos_margin:=^|''
+    safety_k_position:=^|''
+  ">
+    <!-- Override empty parameters with default values -->
+    <xacro:if value="${not joint_limits_parameters_file}">
+      <xacro:property name="joint_limits_parameters_file" value="$(find ur_description)/config/${model}/joint_limits.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not kinematics_parameters_file}">
+      <xacro:property name="kinematics_parameters_file" value="$(find ur_description)/config/${model}/default_kinematics.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not physical_parameters_file}">
+      <xacro:property name="physical_parameters_file" value="$(find ur_description)/config/${model}/physical_parameters.yaml"/>
+    </xacro:if>
+
+    <xacro:if value="${not visual_parameters_file}">
+      <xacro:property name="visual_parameters_file" value="$(find ur_description)/config/${model}/visual_parameters.yaml"/>
+    </xacro:if>
+
+    <!-- transmission_hw_interface: position (default), velocity or effort -->
+    <xacro:if value="${'e' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/EffortJointInterface"/>
+    </xacro:if>
+
+    <xacro:if value="${'v' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/VelocityJointInterface"/>
+    </xacro:if>
+
+    <xacro:if value="${'p' in transmission_hw_interface.lower() or not transmission_hw_interface}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/PositionJointInterface"/>
+    </xacro:if>
+
+    <xacro:if value="${not safety_limits}">
+      <xacro:property name="safety_limits" value="false"/>
+    </xacro:if>
+
+    <xacro:if value="${not safety_pos_margin}">
+      <xacro:property name="safety_pos_margin" value="0.15"/>
+    </xacro:if>
+
+    <xacro:if value="${not safety_k_position}">
+      <xacro:property name="safety_k_position" value="20"/>
+    </xacro:if>
+
+    <!-- Non empty prefix ends with "_" -->
+    <xacro:property name="prefix" value="${prefix + '_' if prefix and not prefix.endswith('_') else ''}" lazy_eval="false"/>
+
+    <!-- Load configuration data from the provided .yaml files -->
+    <xacro:include filename="$(find ur_description)/urdf/common.xacro" />
+    <xacro:read_model_data
+      joint_limits_parameters_file="${joint_limits_parameters_file}"
+      kinematics_parameters_file="${kinematics_parameters_file}"
+      physical_parameters_file="${physical_parameters_file}"
+      visual_parameters_file="${visual_parameters_file}"/>
+
+    <!-- Links: main serial chain -->
+    <link name="${prefix}base_link"/>
+
+    <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
+    <link name="${prefix}base"/>
+
+    <!-- Link macro using configuration data -->
+    <xacro:macro name="link" params="name inertia_x:=0 inertia_y:=0 inertia_z:=0 inertia_roll:=0 inertia_pitch:=0 inertia_yaw:=0">
+      <!-- Mesh files -->
+      <xacro:property name="mesh" value="${mesh_files[name]}"/>
+      <xacro:property name="visual_mesh" value="${mesh['visual']['mesh']}"/>
+      <xacro:property name="visual_material_name" value="${mesh['visual']['material']['name']}"/>
+      <xacro:property name="visual_material_color" value="${mesh['visual']['material']['color']}"/>
+      <xacro:property name="collision_mesh" value="${mesh['collision']['mesh']}"/>
+
+      <!-- Mesh offset -->
+      <xacro:property name="mesh_offset" value="${mesh.get('offset')}"/>
+      <xacro:property name="mesh_x" value="${mesh_offset.get('x') or 0}"/>
+      <xacro:property name="mesh_y" value="${mesh_offset.get('y') or 0}"/>
+      <xacro:property name="mesh_z" value="${mesh_offset.get('z') or 0}"/>
+      <xacro:property name="mesh_roll" value="${mesh_offset.get('roll') or 0}"/>
+      <xacro:property name="mesh_pitch" value="${mesh_offset.get('pitch') or 0}"/>
+      <xacro:property name="mesh_yaw" value="${mesh_offset.get('yaw') or 0}"/>
+
+      <!-- Inertia -->
+      <xacro:property name="mass" value="${inertia_parameters[name+'_mass']}"/>
+      <xacro:property name="inertia" value="${inertia_parameters['links']}"/>
+      <xacro:property name="radius" value="${inertia[name]['radius']}"/>
+      <xacro:property name="length" value="${inertia[name]['length']}"/>
+
+      <link name="${prefix}${'base_inertia' if name == 'base' else name}_link">
+        <visual>
+          <origin xyz="${mesh_x} ${mesh_y} ${mesh_z}" rpy="${mesh_roll} ${mesh_pitch} ${mesh_yaw}"/>
+          <geometry>
+            <mesh filename="${visual_mesh}"/>
+          </geometry>
+          <material name="${visual_material_name}">
+            <color rgba="${visual_material_color}"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="${mesh_x} ${mesh_y} ${mesh_z}" rpy="${mesh_roll} ${mesh_pitch} ${mesh_yaw}"/>
+          <geometry>
+            <mesh filename="${collision_mesh}"/>
+          </geometry>
+        </collision>
+        <xacro:cylinder_inertial radius="${radius}" length="${length}" mass="${mass}">
+          <origin xyz="${inertia_x} ${inertia_y} ${inertia_z}" rpy="${inertia_roll} ${inertia_pitch} ${inertia_yaw}"/>
+        </xacro:cylinder_inertial>
+      </link>
+    </xacro:macro>
+
+    <xacro:link name="base"/>
+    <xacro:link name="shoulder"/>
+    <xacro:link name="upper_arm" inertia_x="${-upper_arm_inertia_length/2}" inertia_z="${upper_arm_inertia_offset}" inertia_pitch="${pi/2}"/>
+    <xacro:link name="forearm" inertia_x="${-forearm_inertia_length/2}" inertia_z="${elbow_offset}" inertia_pitch="${pi/2}"/>
+    <xacro:link name="wrist_1"/>
+    <xacro:link name="wrist_2"/>
+    <xacro:link name="wrist_3" inertia_z="${-wrist_3_inertia_length/2}"/>
+
+    <!-- ROS-Industrial 'flange' frame: attachment point for EEF models -->
+    <link name="${prefix}flange"/>
+
+    <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
+    <link name="${prefix}tool0"/>
+
+    <!-- Joints: main serial chain -->
+    <!-- Fixed joint macro -->
+    <xacro:macro name="joint_fixed" params="parent child rpy">
+      <joint name="${prefix}${parent}-${child}" type="fixed">
+        <parent link="${prefix}${parent}"/>
+        <child link="${prefix}${child}"/>
+        <origin xyz="0 0 0" rpy="${rpy}"/>
+      </joint>
+    </xacro:macro>
+
+    <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
+         frames of the robot/controller have X+ pointing backwards.
+         Use the joint between 'base_link' and 'base_inertia_link' (a dummy
+         link/frame) to introduce the necessary rotation over Z (of pi rad). -->
+    <xacro:joint_fixed parent="base_link" child="base_inertia_link" rpy="0 0 ${pi}"/>
+
+    <!-- Note the rotation over Z of pi radians: as base_link is REP-103
+         aligned (ie: has X+ forward, Y+ left and Z+ up), this is needed
+         to correctly align 'base' with the 'Base' coordinate system of
+         the UR controller. -->
+    <xacro:joint_fixed parent="base_link" child="base" rpy="0 0 ${pi}"/>
+
+    <!-- Controlled revolute joint macro using configuration data -->
+    <xacro:macro name="joint" params="name parent child">
+       <!-- Kinematics -->
+      <xacro:property name="kinematic" value="${kinematics[child]}"/>
+      <xacro:property name="x" value="${kinematic['x']}"/>
+      <xacro:property name="y" value="${kinematic['y']}"/>
+      <xacro:property name="z" value="${kinematic['z']}"/>
+      <xacro:property name="roll" value="${kinematic['roll']}"/>
+      <xacro:property name="pitch" value="${kinematic['pitch']}"/>
+      <xacro:property name="yaw" value="${kinematic['yaw']}"/>
+
+      <!-- Joint limits -->
+      <xacro:property name="limit" value="${limits[name]}"/>
+      <xacro:property name="lower_limit" value="${limit['min_position']}"/>
+      <xacro:property name="upper_limit" value="${limit['max_position']}"/>
+      <xacro:property name="velocity_limit" value="${limit['max_velocity']}"/>
+      <xacro:property name="effort_limit" value="${limit['max_effort']}"/>
+
+      <joint name="${prefix}${name}_joint" type="revolute">
+        <parent link="${prefix}${parent}_link"/>
+        <child link="${prefix}${child}_link"/>
+        <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="${lower_limit}" upper="${upper_limit}" effort="${effort_limit}" velocity="${velocity_limit}"/>
+        <xacro:if value="${safety_limits}">
+           <safety_controller soft_lower_limit="${lower_limit + safety_pos_margin}" soft_upper_limit="${upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0"/>
+        </xacro:if>
+      </joint>
+
+      <!-- Transmission for ros_control -->
+      <transmission name="${prefix}${name}_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${prefix}${name}_joint">
+          <hardwareInterface>${transmission_hw_interface}</hardwareInterface>
+        </joint>
+        <actuator name="${prefix}${name}_motor"/>
+      </transmission>
+    </xacro:macro>
+
+    <!-- Controlled revolute joins -->
+    <xacro:joint name="shoulder_pan" parent="base_inertia" child="shoulder"/>
+    <xacro:joint name="shoulder_lift" parent="shoulder" child="upper_arm"/>
+    <xacro:joint name="elbow" parent="upper_arm" child="forearm"/>
+    <xacro:joint name="wrist_1" parent="forearm" child="wrist_1"/>
+    <xacro:joint name="wrist_2" parent="wrist_1" child="wrist_2"/>
+    <xacro:joint name="wrist_3" parent="wrist_2" child="wrist_3"/>
+
+    <xacro:joint_fixed parent="wrist_3_link" child="flange" rpy="0 ${-pi/2} ${-pi/2}"/>
+
+    <!-- Default toolframe: X+ left, Y+ up, Z+ front -->
+    <xacro:joint_fixed parent="flange" child="tool0" rpy="${pi/2} 0 ${pi/2}"/>
+  </xacro:macro>
+</robot>

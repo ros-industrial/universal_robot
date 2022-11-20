@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <!--
+    NOTE: the macros defined in this file are NOT part of the public API of this
+          package. Users CANNOT rely on this file being available, or stored in
+          this location. Nor can they rely on the existence of the two macros.
+
+    Author: Ludovic Delval
+    Contributor: Felix Messmer
+  -->
+  <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
+    <inertial>
+      <mass value="${mass}"/>
+      <xacro:insert_block name="origin"/>
+      <inertia ixx="${mass / 12 * (3 * radius**2 + length**2)}" ixy="0" ixz="0"
+               iyy="${mass / 12 * (3 * radius**2 + length**2)}" iyz="0"
+               izz="${mass / 2 * radius**2}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!--
+    NOTE: this macro stores the defined properties in the scope of the caller.
+          However, users MUST NOT rely on these properties, their contents or
+          their names.
+
+          This macro is NOT part of the public API of the ur_description pkg,
+          and as such should be considered to be for internal use only.
+  -->
+  <xacro:macro name="read_model_data" params="joint_limits_parameters_file kinematics_parameters_file physical_parameters_file visual_parameters_file">
+    <!-- Read .yaml files from disk, load content into properties -->
+    <xacro:property name="config_joint_limit_parameters" value="${xacro.load_yaml(joint_limits_parameters_file)}" scope="parent"/>
+    <xacro:property name="config_kinematics_parameters" value="${xacro.load_yaml(kinematics_parameters_file)}" scope="parent"/>
+    <xacro:property name="config_physical_parameters" value="${xacro.load_yaml(physical_parameters_file)}" scope="parent"/>
+    <xacro:property name="config_visual_parameters" value="${xacro.load_yaml(visual_parameters_file)}" scope="parent"/>
+
+    <!-- Extract subsections from yaml dictionaries -->
+    <xacro:property name="limits" value="${config_joint_limit_parameters['joint_limits']}" scope="parent"/>
+    <xacro:property name="dh_parameters" value="${config_physical_parameters['dh_parameters']}" scope="parent"/>
+    <xacro:property name="offsets" value="${config_physical_parameters['offsets']}" scope="parent"/>
+    <xacro:property name="inertia_parameters" value="${config_physical_parameters['inertia_parameters']}" scope="parent"/>
+    <xacro:property name="mesh_files" value="${config_visual_parameters['mesh_files']}" scope="parent"/>
+    <xacro:property name="kinematics" value="${config_kinematics_parameters['kinematics']}" scope="parent"/>
+
+    <!-- DH PARAMETERS -->
+    <xacro:property name="d1" value="${dh_parameters['d1']}" scope="parent"/>
+    <xacro:property name="a2" value="${dh_parameters['a2']}" scope="parent"/>
+    <xacro:property name="a3" value="${dh_parameters['a3']}" scope="parent"/>
+    <xacro:property name="d4" value="${dh_parameters['d4']}" scope="parent"/>
+    <xacro:property name="d5" value="${dh_parameters['d5']}" scope="parent"/>
+    <xacro:property name="d6" value="${dh_parameters['d6']}" scope="parent"/>
+
+    <!-- INERTIA PARAMETERS -->
+    <!-- Mass offset -->
+    <xacro:property name="upper_arm_inertia_offset" value="${inertia_parameters['upper_arm_inertia_offset']}" scope="parent"/>
+
+    <!-- Link inertia parameter -->
+    <xacro:property name="intertia_links" value="${inertia_parameters['links']}" scope="parent"/>
+    <xacro:property name="upper_arm_inertia_length" value="${intertia_links['upper_arm']['length']}" scope="parent"/>
+    <xacro:property name="forearm_inertia_length" value="${intertia_links['forearm']['length']}" scope="parent"/>
+    <xacro:property name="wrist_3_inertia_length" value="${intertia_links['wrist_3']['length']}" scope="parent"/>
+
+    <!-- OFFSETS -->
+    <xacro:property name="shoulder_offset" value="${offsets['shoulder_offset']}" scope="parent"/>
+    <xacro:property name="elbow_offset" value="${offsets['elbow_offset']}" scope="parent"/>
+
+    <!-- Center of mass -->
+    <xacro:property name="prop_shoulder_cog" value="${inertia_parameters['center_of_mass']['shoulder_cog']}" scope="parent"/>
+    <xacro:property name="prop_upper_arm_cog" value="${inertia_parameters['center_of_mass']['upper_arm_cog']}" scope="parent"/>
+    <xacro:property name="prop_forearm_cog" value="${inertia_parameters['center_of_mass']['forearm_cog']}" scope="parent"/>
+    <xacro:property name="prop_wrist_1_cog" value="${inertia_parameters['center_of_mass']['wrist_1_cog']}" scope="parent"/>
+    <xacro:property name="prop_wrist_2_cog" value="${inertia_parameters['center_of_mass']['wrist_2_cog']}" scope="parent"/>
+    <xacro:property name="prop_wrist_3_cog" value="${inertia_parameters['center_of_mass']['wrist_3_cog']}" scope="parent"/>
+
+    <xacro:property name="shoulder_cog" value="${prop_shoulder_cog['x']} ${prop_shoulder_cog['y']} ${prop_shoulder_cog['z']}" scope="parent"/>
+    <xacro:property name="upper_arm_cog" value="${prop_upper_arm_cog['x']} ${prop_upper_arm_cog['y']} ${prop_upper_arm_cog['z']}" scope="parent"/>
+    <xacro:property name="forearm_cog" value="${prop_forearm_cog['x']} ${prop_forearm_cog['y']} ${prop_forearm_cog['z']}" scope="parent"/>
+    <xacro:property name="wrist_1_cog" value="${prop_wrist_1_cog['x']} ${prop_wrist_1_cog['y']} ${prop_wrist_1_cog['z']}" scope="parent"/>
+    <xacro:property name="wrist_2_cog" value="${prop_wrist_2_cog['x']} ${prop_wrist_2_cog['y']} ${prop_wrist_2_cog['z']}" scope="parent"/>
+    <xacro:property name="wrist_3_cog" value="${prop_wrist_3_cog['x']} ${prop_wrist_3_cog['y']} ${prop_wrist_3_cog['z']}" scope="parent"/>
+  </xacro:macro>
+</robot>

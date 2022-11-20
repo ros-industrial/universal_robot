@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="load_$(arg model)__">
+    <include file="$(dirname)/load.launch" pass_all_args="true"/>
+  </group>
+  <group ns="bringup_$(arg model)__">
+    <include file="$(dirname)/bringup.launch" pass_all_args="true"/>
+  </group>
+</launch>
+
