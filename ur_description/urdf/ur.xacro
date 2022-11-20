@@ -7,12 +7,7 @@
   <xacro:arg name="kinematics_params" default=""/>
   <xacro:arg name="physical_params" default=""/>
   <xacro:arg name="visual_params" default=""/>
-  <!-- legal values:
-         - hardware_interface/PositionJointInterface
-         - hardware_interface/VelocityJointInterface
-         - hardware_interface/EffortJointInterface
-  -->
-  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+  <xacro:arg name="transmission_hw_interface" default=""/> <!-- position, velocity or effort -->
   <xacro:arg name="safety_limits" default=""/>
   <xacro:arg name="safety_pos_margin" default=""/>
   <xacro:arg name="safety_k_position" default=""/>

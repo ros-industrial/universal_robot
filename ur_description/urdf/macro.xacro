@@ -60,7 +60,7 @@
     kinematics_parameters_file:=^|''
     physical_parameters_file:=^|''
     visual_parameters_file:=^|''
-    transmission_hw_interface:=hardware_interface/PositionJointInterface
+    transmission_hw_interface:=^|''
     safety_limits:=^|''
     safety_pos_margin:=^|''
     safety_k_position:=^|''
@@ -80,6 +80,19 @@
 
     <xacro:if value="${not visual_parameters_file}">
       <xacro:property name="visual_parameters_file" value="$(find ur_description)/config/${model}/visual_parameters.yaml"/>
+    </xacro:if>
+
+    <!-- transmission_hw_interface: position (default), velocity or effort -->
+    <xacro:if value="${'e' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/EffortJointInterface"/>
+    </xacro:if>
+
+    <xacro:if value="${'v' in transmission_hw_interface.lower()}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/VelocityJointInterface"/>
+    </xacro:if>
+
+    <xacro:if value="${'p' in transmission_hw_interface.lower() or not transmission_hw_interface}">
+      <xacro:property name="transmission_hw_interface" value="hardware_interface/PositionJointInterface"/>
     </xacro:if>
 
     <xacro:if value="${not safety_limits}">

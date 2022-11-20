@@ -37,16 +37,10 @@
   <xacro:arg name="physical_params" default=""/>
   <xacro:arg name="kinematics_params" default=""/>
   <xacro:arg name="visual_params" default=""/>
-  <!--
-    legal values:
-      - hardware_interface/PositionJointInterface
-      - hardware_interface/VelocityJointInterface
-      - hardware_interface/EffortJointInterface
-
+  <!-- transmission_hw_interface: position, velocity or effort
     NOTE: this value must correspond to the controller configured in the
-          controller .yaml files in the 'config' directory.
-  -->
-  <xacro:arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
+          controller .yaml files in the 'config' directory. -->
+  <xacro:arg name="transmission_hw_interface" default=""/>
   <xacro:arg name="safety_limits" default=""/>
   <xacro:arg name="safety_pos_margin" default=""/>
   <xacro:arg name="safety_k_position" default=""/>
