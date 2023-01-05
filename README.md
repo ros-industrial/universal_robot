@@ -21,7 +21,7 @@ ___Using apt (Ubuntu, Debian)___
 On supported Linux distributions (Ubuntu, 18.04 (Bionic) and 20.04 (Focal), `i386` and `amd64`) and ROS versions:
 
 ```
-sudo apt-get install ros-$ROS_DISTRO-universal-robot
+sudo apt-get install ros-$ROS_DISTRO-universal-robots
 ```
 
 replace `$ROS_DISTRO` with `melodic` or `noetic`, depending on which ROS version you have installed.
