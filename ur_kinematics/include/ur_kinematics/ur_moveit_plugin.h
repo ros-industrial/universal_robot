@@ -121,6 +121,12 @@ namespace ur_kinematics
                                moveit_msgs::MoveItErrorCodes &error_code,
                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
+    virtual bool getPositionIK(const std::vector< geometry_msgs::Pose > &ik_poses, 
+                               const std::vector< double > &ik_seed_state,
+                               std::vector< std::vector< double > > &solutions,
+                               kinematics::KinematicsResult &result,
+                               const kinematics::KinematicsQueryOptions &options) const;
+
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
@@ -200,6 +206,10 @@ namespace ur_kinematics
                           const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
     virtual bool setRedundantJoints(const std::vector<unsigned int> &redundant_joint_indices);
+
+    bool getAllPositionIK(const geometry_msgs::Pose &ik_pose,
+                          const std::vector<double> &ik_seed_state,
+                          std::vector<std::vector<double> > &solutions) const;
 
   private:
 
