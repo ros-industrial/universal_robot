@@ -12,7 +12,7 @@ catkin_python_setup()
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ur3_kin ur5_kin ur10_kin ur3_moveit_plugin ur5_moveit_plugin ur10_moveit_plugin
+  LIBRARIES ur3_kin ur5_kin ur10_kin ur3_moveit_plugin ur5_moveit_plugin ur10_moveit_plugin ur3e_kin ur5e_kin ur10e_kin ur16e_kin ur20_kin ur3e_moveit_plugin ur5e_moveit_plugin ur10e_moveit_plugin ur16e_moveit_plugin ur20_moveit_plugin
   CATKIN_DEPENDS roscpp geometry_msgs moveit_core moveit_kinematics moveit_ros_planning
     pluginlib tf_conversions
   DEPENDS Boost
@@ -46,6 +46,9 @@ set_target_properties(ur10e_kin PROPERTIES COMPILE_DEFINITIONS "UR10e_PARAMS")
 
 add_library(ur16e_kin src/ur_kin.cpp)
 set_target_properties(ur16e_kin PROPERTIES COMPILE_DEFINITIONS "UR16e_PARAMS")
+
+add_library(ur20_kin src/ur_kin.cpp)
+set_target_properties(ur20_kin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
 
 
 add_library(ur3_moveit_plugin src/ur_moveit_plugin.cpp)
@@ -97,6 +100,13 @@ target_link_libraries(ur16e_moveit_plugin
   ${Boost_LIBRARIES}
   ur16e_kin)
 
+add_library(ur20_moveit_plugin src/ur_moveit_plugin.cpp)
+set_target_properties(ur20_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
+target_link_libraries(ur20_moveit_plugin
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ur20_kin)
+
 
 #############
 ## Install ##
@@ -116,6 +126,7 @@ install(TARGETS
     ur10_moveit_plugin
     ur10e_moveit_plugin
     ur16e_moveit_plugin
+    ur20_moveit_plugin
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
