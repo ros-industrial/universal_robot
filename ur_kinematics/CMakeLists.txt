@@ -12,7 +12,7 @@ catkin_python_setup()
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ur3_kin ur5_kin ur10_kin ur3_moveit_plugin ur5_moveit_plugin ur10_moveit_plugin ur3e_kin ur5e_kin ur10e_kin ur16e_kin ur20_kin ur3e_moveit_plugin ur5e_moveit_plugin ur10e_moveit_plugin ur16e_moveit_plugin ur20_moveit_plugin
+  LIBRARIES ur3_kin ur5_kin ur10_kin ur3_moveit_plugin ur5_moveit_plugin ur10_moveit_plugin ur3e_kin ur5e_kin ur10e_kin ur16e_kin ur20_kin ur20_moveit_plugin
   CATKIN_DEPENDS roscpp geometry_msgs moveit_core moveit_kinematics moveit_ros_planning
     pluginlib tf_conversions
   DEPENDS Boost

@@ -72,7 +72,7 @@
   <class name="ur_kinematics/UR20KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
       Analytic kinematics for the Universal Robots UR20.
-      Developed by Kelsey Hawkins from Georgia Tech.
+      Original plugin developed by Kelsey Hawkins from Georgia Tech.
       See http://hdl.handle.net/1853/50782 for details.
     </description>
   </class>
