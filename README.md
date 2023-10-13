@@ -7,7 +7,8 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 The [UR20 meshes](ur_description/meshes/ur20) constitutes “Graphical Documentation” the use of which is subject to and governed by our “Terms and Conditions for use of Graphical Documentation”
-[![License](https://img.shields.io/badge/License-Universal%20Robots%20A/S%E2%80%99%20Terms%20and%20Conditions%20for%20Use%20of%20Graphical%20Documentation-blue.svg)](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)
+[![License](https://img.shields.io/badge/License-Universal%20Robots%20A/S%E2%80%99%20Terms%20and%20Conditions%20for%20Use%20of%20Graphical%20Documentation-blue.svg)](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)\
+If you have any questions regarding the license or the license doesn't fit you use-case, please contact [legal@universal-robots.com](mailto:legal@universal-robots.com)
 
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
