@@ -16,6 +16,7 @@
   <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
 
   <license>BSD</license>
+  <!-- The UR20 meshes are under a separate, non-oss license. Please check the license file before using the UR20 meshes -->
   <license file="meshes/ur20/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
   <!--<license file="meshes/ur20/LICENSE.txt" source-files="meshes/ur20/*" type="freeform">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>-->
 
