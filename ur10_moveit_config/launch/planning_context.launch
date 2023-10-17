@@ -13,7 +13,7 @@
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
-    <rosparam command="load" file="$(find ur10_moveit_config)/config/joint_limits.yaml"/>
+    <rosparam command="load" file="$(find ur_description)/config/ur10/joint_limits.yaml"/>
   </group>
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
