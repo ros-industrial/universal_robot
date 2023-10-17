@@ -15,6 +15,7 @@
 [ROS-Industrial](https://wiki.ros.org/Industrial) Universal Robot meta-package. See the [ROS wiki](https://wiki.ros.org/universal_robots) page for compatibility information and other more information.
 
 __License__
+
 The [UR20 meshes](ur_description/meshes/ur20) constitutes “Graphical Documentation” the use of which is subject to and governed by our “[Terms and Conditions for use of Graphical Documentation](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)”.\
 If you have any questions regarding the license or the license doesn't fit you use-case, please contact [legal@universal-robots.com](mailto:legal@universal-robots.com).
 
