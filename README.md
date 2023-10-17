@@ -6,7 +6,7 @@
 [![License - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-[![License](https://img.shields.io/badge/License-Universal%20Robots%20A/S%E2%80%99%20Terms%20and%20Conditions%20for%20Use%20of%20Graphical%20Documentation-blue.svg)](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)\
+[![License](https://img.shields.io/badge/License-Universal%20Robots%20A/S%E2%80%99%20Terms%20and%20Conditions%20for%20Use%20of%20Graphical%20Documentation-blue.svg)](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)
 
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
