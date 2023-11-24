@@ -10,8 +10,6 @@
 
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
-[![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
-
 [ROS-Industrial](https://wiki.ros.org/Industrial) Universal Robot meta-package. See the [ROS wiki](https://wiki.ros.org/universal_robots) page for compatibility information and other more information.
 
 __License__
