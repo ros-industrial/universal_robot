@@ -2,6 +2,11 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* UR20 description and meshes (`#657 <https://github.com/ros-industrial/universal_robot/issues/657>`_)
+* Contributors: Rune Søe-Knudsen
+
 1.3.1 (2022-11-11)
 ------------------
 

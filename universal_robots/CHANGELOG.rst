@@ -2,6 +2,11 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* UR20 description and meshes (`#657 <https://github.com/ros-industrial/universal_robot/issues/657>`_)
+* Contributors: Rune Søe-Knudsen
+
 1.3.1 (2022-11-11)
 ------------------
 * [meta]: Remove ur_kinematics package for now (`#620 <https://github.com/ros-industrial/universal_robot/issues/620>`_)

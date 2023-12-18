@@ -2,6 +2,12 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* UR20 description and meshes (`#657 <https://github.com/ros-industrial/universal_robot/issues/657>`_)
+* ur_kinematics: upgrade KinematicsBase API (`#644 <https://github.com/ros-industrial/universal_robot/issues/644>`_) from isys-vision/mikado
+* Contributors: Dave Coleman, Felix Exner (fexner), Rune Søe-Knudsen, Simon Schmeisser
+
 1.3.1 (2022-11-11)
 ------------------
 
