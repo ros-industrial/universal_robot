@@ -18,7 +18,7 @@
        to load it onto the parameter server.
   -->
 
-  <arg name="robot_model" doc="Type/series of used UR robot (ur3, ur3e, ur5, ur5e, ur10, ur10e, ur16e)" />
+  <arg name="robot_model" doc="Type/series of used UR robot (ur3, ur3e, ur5, ur5e, ur10, ur10e, ur16e, ur20)" />
 
   <!--Parameter files -->
   <arg name="joint_limit_params" doc="YAML file containing the joint limit values"/>
