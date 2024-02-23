@@ -2,8 +2,8 @@
 #
 # Sources:
 #
-#  - Universal Robots e-Series, User Manual, UR20, Version 5.14
-#    https://s3-eu-west-1.amazonaws.com/ur-support-site/203281/706-276-00_UR20_User_Manual_en_Global.pdf
+#  - Universal Robots e-Series, User Manual, UR30, Version 5.15
+#    https://s3-eu-west-1.amazonaws.com/ur-support-site/212022/714-421-00_UR30_User_Manual_en_Global.pdf
 joint_limits:
   shoulder_pan:
     # acceleration limits are not publicly available
