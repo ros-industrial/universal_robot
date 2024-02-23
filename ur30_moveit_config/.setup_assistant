@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ur_description
+    relative_path: urdf/ur30.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/ur30.srdf
+  CONFIG:
+    author_name: Vincenzo Di Pentima
+    author_email: dipentima@fzi.de
+    generated_timestamp: 1708592610
