@@ -12,7 +12,7 @@
 
     This file models the base kinematic chain of a UR robot, which then gets
     parameterised by various configuration files to convert it into a UR3(e),
-    UR5(e), UR10(e), UR16e or UR20.
+    UR5(e), UR10(e), UR16e, UR20 or UR30.
 
     NOTE: the default kinematic parameters (ie: link lengths, frame locations,
     offets, etc) do not correspond to any particular robot. They are defaults

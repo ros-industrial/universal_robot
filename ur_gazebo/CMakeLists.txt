@@ -16,6 +16,7 @@ if (CATKIN_ENABLE_TESTING)
   roslaunch_add_file_check(tests/roslaunch_test_ur10e.xml)
   roslaunch_add_file_check(tests/roslaunch_test_ur16e.xml)
   roslaunch_add_file_check(tests/roslaunch_test_ur20.xml)
+  roslaunch_add_file_check(tests/roslaunch_test_ur30.xml)
 endif()
 
 install(DIRECTORY config launch urdf

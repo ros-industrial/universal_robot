@@ -14,9 +14,9 @@
 
 __License__
 
-The [UR20 meshes](ur_description/meshes/ur20) constitute “Graphical Documentation” from Universal Robots which is subject to and governed by Universal Robots' "[Terms and Conditions for use of Graphical Documentation](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)".
+The [UR20 meshes](ur_description/meshes/ur20) and [UR30 meshes](ur_description/meshes/ur30) constitute “Graphical Documentation” from Universal Robots which is subject to and governed by Universal Robots' "[Terms and Conditions for use of Graphical Documentation](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt)".
 
-Universal Robots' [Terms and Conditions for use of Graphical Documentation](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt) do not fully comply with [OSI's definition of Open Source](https://opensource.org/osd/), but they do allow you to use, modify and share “Graphical Documentation”, including [UR20 meshes](ur_description/meshes/ur20), subject to certain restrictions.\
+Universal Robots' [Terms and Conditions for use of Graphical Documentation](https://www.universal-robots.com/legal/terms-and-conditions/terms_and_conditions_for_use_of_graphical_documentation.txt) do not fully comply with [OSI's definition of Open Source](https://opensource.org/osd/), but they do allow you to use, modify and share “Graphical Documentation”, including [UR20 meshes](ur_description/meshes/ur20) and [UR30 meshes](ur_description/meshes/ur30), subject to certain restrictions.\
 If you have any questions regarding this license or if this license doesn't fit your use-case, please contact [legal@universal-robots.com](mailto:legal@universal-robots.com).
 
 All other content is licensed under the BSD-3-Clause license or Apache-2.0 respectively.
