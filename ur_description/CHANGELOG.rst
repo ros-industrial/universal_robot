@@ -2,6 +2,12 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix default calibration file for UR30 (`#677 <https://github.com/ros-industrial/universal_robot/issues/677>`_)
+* UR30 description and meshes (`#674 <https://github.com/ros-industrial/universal_robot/issues/674>`_)
+* Contributors: Felix Exner, Vincenzo Di Pentima
+
 1.3.2 (2023-12-18)
 ------------------
 * UR20 description and meshes (`#657 <https://github.com/ros-industrial/universal_robot/issues/657>`_)
