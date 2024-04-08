@@ -2,8 +2,8 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.3 (2024-04-08)
+------------------
 * UR30 description and meshes (`#674 <https://github.com/ros-industrial/universal_robot/issues/674>`_)
 * Contributors: Vincenzo Di Pentima
 
