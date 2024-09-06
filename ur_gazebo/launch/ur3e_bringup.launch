@@ -36,6 +36,7 @@
   <arg name="kinematics_params" default="$(find ur_description)/config/ur3e/default_kinematics.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur3e/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur3e/visual_parameters.yaml"/>
+  <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface" doc="The hardware_interface to expose for each joint in the simulated robot (one of: [hardware_interface/PositionJointInterface, hardware_interface/VelocityJointInterface, hardware_interface/EffortJointInterface])"/>
 
   <!-- Controller configuration -->
   <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur3e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
@@ -56,6 +57,7 @@
     <arg name="kinematics_params" value="$(arg kinematics_params)"/>
     <arg name="physical_params" value="$(arg physical_params)"/>
     <arg name="visual_params" value="$(arg visual_params)"/>
+    <arg name="transmission_hw_interface" value="$(arg transmission_hw_interface)"/>
   </include>
 
   <!-- Robot state publisher -->
