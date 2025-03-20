@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="load_ur7e__">
+    <include file="$(find ur_description)/launch/load_ur7e.launch"/>
+  </group>
+
+  <group ns="view_ur7e__">
+    <include file="$(find ur_description)/launch/view_ur7e.launch"/>
+  </group>
+</launch>
