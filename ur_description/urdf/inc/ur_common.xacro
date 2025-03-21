@@ -215,5 +215,11 @@
     <xacro:property name="wrist_3_visual_material_color" value="${wrist_3_mesh['visual']['material']['color']}" scope="parent"/>
     <xacro:property name="wrist_3_collision_mesh" value="${wrist_3_mesh['collision']['mesh']}" scope="parent"/>
     <xacro:property name="wrist_3_visual_offset" value="${wrist_3_mesh['visual_offset']}" scope="parent"/>
+    <xacro:if value="${'visual_offset_xyz' in wrist_3_mesh}">
+      <xacro:property name="wrist_3_visual_offset_xyz" value="${wrist_3_mesh['visual_offset_xyz']}" scope="parent"/>
+    </xacro:if>
+    <xacro:unless value="${'visual_offset_xyz' in wrist_3_mesh}">
+      <xacro:property name="wrist_3_visual_offset_xyz" value='' scope="parent"/>
+    </xacro:unless>
   </xacro:macro>
 </robot>

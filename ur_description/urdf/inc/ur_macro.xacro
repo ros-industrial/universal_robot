@@ -199,8 +199,12 @@
       </xacro:cylinder_inertial>
     </link>
     <link name="${prefix}wrist_3_link">
+      <xacro:property name="mesh_offset" value="${wrist_3_visual_offset_xyz}" scope="parent"/>
+      <xacro:if value="${wrist_3_visual_offset_xyz == ''}">
+        <xacro:property name="mesh_offset" value="0 0 ${wrist_3_visual_offset}" scope="parent"/>
+      </xacro:if>
       <visual>
-        <origin xyz="0 0 ${wrist_3_visual_offset}" rpy="${pi/2} 0 0"/>
+        <origin xyz="${mesh_offset}" rpy="${pi/2} 0 0"/>
         <geometry>
           <mesh filename="${wrist_3_visual_mesh}"/>
         </geometry>
@@ -209,7 +213,7 @@
         </material>
       </visual>
       <collision>
-        <origin xyz="0 0 ${wrist_3_visual_offset}" rpy="${pi/2} 0 0"/>
+        <origin xyz="${mesh_offset}" rpy="${pi/2} 0 0"/>
         <geometry>
           <mesh filename="${wrist_3_collision_mesh}"/>
         </geometry>
