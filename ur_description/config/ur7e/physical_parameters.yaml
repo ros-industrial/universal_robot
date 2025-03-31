@@ -1,0 +1,124 @@
+# Physical parameters
+
+offsets:
+  shoulder_offset: 0.138 # measured from model
+  elbow_offset: 0.007 # measured from model
+
+inertia_parameters:
+  base_mass: 4.0  # This mass might be incorrect
+  shoulder_mass: 3.761
+  upper_arm_mass: 8.058
+  forearm_mass: 2.846
+  wrist_1_mass: 1.37
+  wrist_2_mass: 1.3
+  wrist_3_mass: 0.365
+
+  shoulder_radius: 0.060   # manually measured
+  upper_arm_radius: 0.054  # manually measured
+  elbow_radius: 0.060      # manually measured
+  forearm_radius: 0.040    # manually measured
+  wrist_radius: 0.045      # manually measured
+
+  links:
+    base:
+      radius: 0.06
+      length: 0.05
+
+  # model referring to https://www.universal-robots.com/articles/ur/application-installation/dh-parameters-for-calculations-of-kinematics-and-dynamics/
+  center_of_mass:
+    shoulder_cog:
+      x: 0.0        # model.x
+      y: -0.00193   # -model.z
+      z: -0.02561   # model.y
+    upper_arm_cog:
+      x: -0.2125    # model.x - upper_arm_length
+      y: 0.0        # model.y
+      z: 0.11336    # model.z
+    forearm_cog:
+      x: -0.2422    # model.x - forearm_length
+      y: 0.0        # model.y
+      z: 0.0265     # model.z
+    wrist_1_cog:
+      x: 0.0        # model.x
+      y: -0.01634   # -model.z
+      z: -0.0018    # model.y
+    wrist_2_cog:
+      x: 0.0        # model.x
+      y: 0.01634    # model.z
+      z: -0.0018    # -model.y
+    wrist_3_cog:
+      x: 0.0        # model.x
+      y: 0.0        # model.y
+      z: -0.001159  # model.z
+
+  # compatible with cylinder approximation
+  rotation:
+    shoulder:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    upper_arm:
+      roll: 0
+      pitch: 1.570796326794897
+      yaw: 0
+    forearm:
+      roll: 0
+      pitch: 1.570796326794897
+      yaw: 0
+    wrist_1:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    wrist_2:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    wrist_3:
+      roll: 0
+      pitch: 0
+      yaw: 0
+
+  # generated using cylinder approximation
+  tensor:
+    shoulder:
+      ixx: 0.010267499999999999
+      ixy: 0
+      ixz: 0
+      iyy: 0.010267499999999999
+      iyz: 0
+      izz: 0.00666
+    upper_arm:
+      ixx: 0.13388583541666665
+      ixy: 0
+      ixz: 0
+      iyy: 0.13388583541666665
+      iyz: 0
+      izz: 0.0151074
+    forearm:
+      ixx: 0.03120936758333333
+      ixy: 0
+      ixz: 0
+      iyy: 0.03120936758333333
+      iyz: 0
+      izz: 0.004095
+    wrist_1:
+      ixx: 0.0025599
+      ixy: 0
+      ixz: 0
+      iyy: 0.0025599
+      iyz: 0
+      izz: 0.0021942
+    wrist_2:
+      ixx: 0.0025599
+      ixy: 0
+      ixz: 0
+      iyy: 0.0025599
+      iyz: 0
+      izz: 0.0021942
+    wrist_3:
+      ixx: 9.890414008333333e-05
+      ixy: 0
+      ixz: 0
+      iyy: 9.890414008333333e-05
+      iyz: 0
+      izz: 0.0001321171875
