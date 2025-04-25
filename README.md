@@ -1,7 +1,6 @@
 # Universal Robot
 
-[![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/universal_robot/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=melodic-devel)](https://github.com/ros-industrial/universal_robot/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
-[![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/universal_robot/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=melodic-devel)](https://github.com/ros-industrial/universal_robot/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
+[![Build Status: ROS Noetic (Actions)](https://github.com/ros-industrial/universal_robot/workflows/CI%20-%20ROS%20Noetic/badge.svg?branch=noetic-devel)](https://github.com/ros-industrial/universal_robot/actions?query=workflow%3A%22CI+-+ROS+Noetic%22)
 
 [![License - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)

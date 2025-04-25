@@ -1,4 +1,4 @@
-name: CI - Ubuntu Bionic
+name: CI - ROS Noetic
 
 on:
   # direct pushes to protected branches are not supported
@@ -11,13 +11,13 @@ on:
 
 jobs:
   industrial_ci:
-    name: ROS Melodic (${{ matrix.ros_repo }})
-    runs-on: ubuntu-20.04
+    name: ROS Noetic (${{ matrix.ros_repo }})
+    runs-on: ubuntu-latest # the ICI job itself will be running in a container.
 
     strategy:
       fail-fast: false
       matrix:
-        ros_distro: [ melodic ]
+        ros_distro: [ noetic ]
         ros_repo: [ main, testing ]
 
     env:
