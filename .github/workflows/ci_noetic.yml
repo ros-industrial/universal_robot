@@ -12,7 +12,7 @@ on:
 jobs:
   industrial_ci:
     name: ROS Noetic (${{ matrix.ros_repo }})
-    runs-on: ubuntu-latest # the ICI job itself will be running in a container.
+    runs-on: ubuntu-24.04 # the ICI job itself will be running in a container.
 
     strategy:
       fail-fast: false
