@@ -1,0 +1,124 @@
+---
+# Physical parameters
+
+offsets:
+  shoulder_offset: 0.100  # measured from model
+  elbow_offset: 0.125     # measured from model
+
+inertia_parameters:
+  base_mass: 4.0  # This mass might be incorrect
+  shoulder_mass: 9.9883
+  upper_arm_mass: 14.9255
+  forearm_mass: 6.1015
+  wrist_1_mass: 2.089
+  wrist_2_mass: 2.0869
+  wrist_3_mass: 1.0666
+
+  shoulder_radius: x0.060   # FROM UR5 CURRENTLY NOT USED ANYMORE
+  upper_arm_radius: x0.054  # FROM UR5 CURRENTLY NOT USED ANYMORE
+  elbow_radius: x0.060      # FROM UR5 CURRENTLY NOT USED ANYMORE
+  forearm_radius: x0.040    # FROM UR5 CURRENTLY NOT USED ANYMORE
+  wrist_radius: x0.045      # FROM UR5 CURRENTLY NOT USED ANYMORE
+
+  # used to approximate the inertia tensor of the fixed base using a cylinder approximation. This
+  # is only relevant if the robot's base is moving e.g. when it's mounted on a mobile platform.
+  links:
+    base:
+      radius: 0.17
+      length: 0.1
+
+  center_of_mass:
+    shoulder_cog:
+      x: 0.000024  # model.x
+      y: -0.025304  # -model.z
+      z: -0.033309  # model.y
+    upper_arm_cog:
+      x: -0.228491  # model.x - upperarm_length
+      y: -0.000083  # model.y
+      z: 0.192787  # model.z
+    forearm_cog:
+      x: -0.210929  # model.x - forearm_length
+      y: 0.000019  # model.y
+      z: 0.070552  # model.z
+    wrist_1_cog:
+      x: 0.000025  # model.x
+      y: -0.016413  # -model.z
+      z: -0.019695  # model.y
+    wrist_2_cog:
+      x: 0.000025  # model.x
+      y: 0.015886  # model.z
+      z: -0.019960  # -model.y
+    wrist_3_cog:
+      x: -0.000018  # model.x
+      y: -0.000112  # model.y
+      z: -0.053397  # model.z
+
+  rotation:
+    shoulder:
+      roll: 1.570796326794897
+      pitch: 0
+      yaw: 0
+    upper_arm:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    forearm:
+      roll: 0
+      pitch: 0
+      yaw: 0
+    wrist_1:
+      roll: 1.570796326794897
+      pitch: 0
+      yaw: 0
+    wrist_2:
+      roll: -1.570796326794897
+      pitch: 0
+      yaw: 0
+    wrist_3:
+      roll: 0
+      pitch: 0
+      yaw: 0
+
+  tensor:
+    shoulder:
+      ixx: 0.051334
+      ixy: 0.000025
+      ixz: -0.000016
+      iyy: 0.047702
+      iyz: 0.008805
+      izz: 0.034263
+    upper_arm:
+      ixx: 0.048202
+      ixy: 0.000232
+      ixz: -0.032135
+      iyy: 1.188499
+      iyz: -0.000017
+      izz: 1.182771
+    forearm:
+      ixx: 0.018481
+      ixy: -0.000005
+      ixz: 0.013601
+      iyy: 0.303502
+      iyz: 0.000003
+      izz: 0.296843
+    wrist_1:
+      ixx: 0.004339
+      ixy: 0.000019
+      ixz: 0.000001
+      iyy: 0.002548
+      iyz: 0.000706
+      izz: 0.003912
+    wrist_2:
+      ixx: 0.004288
+      ixy: 0.000017
+      ixz: -0.000003
+      iyy: 0.002566
+      iyz: -0.000716
+      izz: 0.003927
+    wrist_3:
+      ixx: 0.001406
+      ixy: -0.000003
+      ixz: 0.000010
+      iyy: 0.001404
+      iyz: -0.000024
+      izz: 0.001002

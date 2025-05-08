@@ -1,0 +1,71 @@
+# Visualisation
+
+mesh_files:
+  base:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/base.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/base.stl"
+
+  shoulder:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/shoulder.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/shoulder.stl"
+
+  upper_arm:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/upperarm.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/upperarm.stl"
+      mesh_files:
+
+  forearm:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/forearm.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/forearm.stl"
+
+  wrist_1:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/wrist1.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/wrist1.stl"
+    visual_offset: -0.0502
+
+  wrist_2:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/wrist2.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/wrist2.stl"
+    visual_offset: -0.064
+
+  wrist_3:
+    visual:
+      mesh: "package://ur_description/meshes/ur15/visual/wrist3.dae"
+      material:
+        name: "LightGrey"
+        color: "0.7 0.7 0.7 1.0"
+    collision:
+      mesh: "package://ur_description/meshes/ur15/collision/wrist3.stl"
+    visual_offset: -0.0715
+
+
