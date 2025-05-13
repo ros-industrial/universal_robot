@@ -2,6 +2,11 @@
 Changelog for package ur5_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add License files to packages (`#695 <https://github.com/ros-industrial/universal_robot/issues/695>`_)
+* Contributors: Felix Exner
+
 1.4.0 (2025-03-31)
 ------------------
 

@@ -2,6 +2,16 @@
 Changelog for package ur_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add support for UR15 (`#702 <https://github.com/ros-industrial/universal_robot/issues/702>`_)
+* Fix materials for UR20 upper arm mesh (`#699 <https://github.com/ros-industrial/universal_robot/issues/699>`_)
+* Update the inertia matrices for the UR5e and UR3e (`#697 <https://github.com/ros-industrial/universal_robot/issues/697>`_)
+  They have been updated from the CAD model and should be more accurate than
+  the cylinder approximations
+* Add License files to packages (`#695 <https://github.com/ros-industrial/universal_robot/issues/695>`_)
+* Contributors: Felix Exner
+
 1.4.0 (2025-03-31)
 ------------------
 * Add support for ur7e and ur12e (`#692 <https://github.com/ros-industrial/universal_robot/issues/692>`_)

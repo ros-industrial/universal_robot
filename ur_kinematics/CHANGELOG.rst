@@ -2,6 +2,13 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update setup.py (`#701 <https://github.com/ros-industrial/universal_robot/issues/701>`_)
+* Add support for UR15 (`#702 <https://github.com/ros-industrial/universal_robot/issues/702>`_)
+* Add License files to packages (`#695 <https://github.com/ros-industrial/universal_robot/issues/695>`_)
+* Contributors: Felix Exner, Forest_Loong
+
 1.4.0 (2025-03-31)
 ------------------
 
