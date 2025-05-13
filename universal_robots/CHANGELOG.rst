@@ -2,8 +2,8 @@
 Changelog for package universal_robots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.5.0 (2025-05-13)
+------------------
 * Add support for UR15 (`#702 <https://github.com/ros-industrial/universal_robot/issues/702>`_)
 * Add License files to packages (`#695 <https://github.com/ros-industrial/universal_robot/issues/695>`_)
 * Contributors: Felix Exner

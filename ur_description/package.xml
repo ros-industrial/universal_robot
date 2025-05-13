@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>ur_description</name>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
   <description>
       URDF description for Universal UR3(e), UR5(e), UR7e, UR10(e), UR12e UR16e, UR15, UR20 and UR30 robots
   </description>

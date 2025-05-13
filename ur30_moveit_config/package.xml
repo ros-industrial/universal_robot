@@ -2,7 +2,7 @@
 <package format="2">
 
   <name>ur30_moveit_config</name>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur30 with the MoveIt Motion Planning Framework
   </description>
