@@ -21,6 +21,8 @@ catkin_package(
     ur5e_kin
     ur10e_kin
     ur16e_kin
+    ur8long_kin
+    ur8long_moveit_plugin
     ur15_kin
     ur15_moveit_plugin
     ur20_kin
@@ -60,6 +62,9 @@ set_target_properties(ur10e_kin PROPERTIES COMPILE_DEFINITIONS "UR10e_PARAMS")
 
 add_library(ur16e_kin src/ur_kin.cpp)
 set_target_properties(ur16e_kin PROPERTIES COMPILE_DEFINITIONS "UR16e_PARAMS")
+
+add_library(ur8long_kin src/ur_kin.cpp)
+set_target_properties(ur8long_kin PROPERTIES COMPILE_DEFINITIONS "UR8LONG_PARAMS")
 
 add_library(ur15_kin src/ur_kin.cpp)
 set_target_properties(ur15_kin PROPERTIES COMPILE_DEFINITIONS "UR15_PARAMS")

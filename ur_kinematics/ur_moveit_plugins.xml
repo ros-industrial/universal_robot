@@ -68,6 +68,16 @@
   </class>
 </library>
 
+<library path="lib/libur8long_moveit_plugin">
+  <class name="ur_kinematics/UR8LONGKinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Analytic kinematics for the Universal Robots UR8LONG.
+      Original plugin developed by Kelsey Hawkins from Georgia Tech.
+      See http://hdl.handle.net/1853/50782 for details.
+    </description>
+  </class>
+</library>
+
 <library path="lib/libur15_moveit_plugin">
   <class name="ur_kinematics/UR15KinematicsPlugin" type="ur_kinematics::URKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
     <description>
