@@ -124,6 +124,13 @@ target_link_libraries(ur16e_moveit_plugin
   ${Boost_LIBRARIES}
   ur16e_kin)
 
+add_library(ur8long_moveit_plugin src/ur_moveit_plugin.cpp)
+set_target_properties(ur8long_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR8LONG_PARAMS")
+target_link_libraries(ur8long_moveit_plugin
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ur8long_kin)
+
 add_library(ur15_moveit_plugin src/ur_moveit_plugin.cpp)
 set_target_properties(ur15_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR15_PARAMS")
 target_link_libraries(ur15_moveit_plugin
@@ -157,6 +164,11 @@ install(TARGETS
     ur5e_kin
     ur10_kin
     ur10e_kin
+    ur16e_kin
+    ur8long_kin
+    ur15_kin
+    ur20_kin
+    ur20_kin
     ur3_moveit_plugin
     ur3_moveit_plugin
     ur5_moveit_plugin
@@ -164,6 +176,7 @@ install(TARGETS
     ur10_moveit_plugin
     ur10e_moveit_plugin
     ur16e_moveit_plugin
+    ur8long_moveit_plugin
     ur15_moveit_plugin
     ur20_moveit_plugin
     ur30_moveit_plugin
