@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="ur18__">
+    <include file="$(find ur_gazebo)/launch/inc/load_ur18.launch.xml"/>
+  </group>
+
+  <group ns="ur18_bringup__">
+    <include file="$(find ur_gazebo)/launch/ur18_bringup.launch"/>
+  </group>
+</launch>
