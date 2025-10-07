@@ -4,7 +4,7 @@
   <name>ur_description</name>
   <version>1.5.0</version>
   <description>
-      URDF description for Universal UR3(e), UR5(e), UR7e, UR10(e), UR12e UR16e, UR8 Long, UR15, UR20 and UR30 robots
+      URDF description for Universal UR3(e), UR5(e), UR7e, UR10(e), UR12e UR16e, UR8 Long, UR15, UR18, UR20 and UR30 robots
   </description>
 
   <author>Wim Meeussen</author>
@@ -21,6 +21,7 @@
   <license file="meshes/ur20/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
   <license file="meshes/ur8long/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
   <license file="meshes/ur15/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
+  <license file="meshes/ur18/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
   <license file="meshes/ur30/LICENSE.txt">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>
   <!--<license file="meshes/ur20/LICENSE.txt" source-files="meshes/ur20/*" type="freeform">Universal Robots A/S' Terms and Conditions for Use of Graphical Documentation</license>-->
 
