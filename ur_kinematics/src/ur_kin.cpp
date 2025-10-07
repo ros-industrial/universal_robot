@@ -53,6 +53,16 @@ namespace ur_kinematics {
     const double d6 =  0.1434;
     #endif
 
+    //#define UR18_PARAMS
+    #ifdef UR18_PARAMS
+    const double d1 =  0.2186;
+    const double a2 = -0.4750;
+    const double a3 = -0.3389;
+    const double d4 =  0.1824;
+    const double d5 =  0.1361;
+    const double d6 =  0.1434;
+    #endif
+
     //#define UR16e_PARAMS
     #ifdef UR16e_PARAMS
     const double d1 =  0.1807;
