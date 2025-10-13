@@ -181,7 +181,7 @@ install(TARGETS
     ur15_kin
     ur18_kin
     ur20_kin
-    ur20_kin
+    ur30_kin
     ur3_moveit_plugin
     ur3_moveit_plugin
     ur5_moveit_plugin
