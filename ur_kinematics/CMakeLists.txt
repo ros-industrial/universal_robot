@@ -21,8 +21,12 @@ catkin_package(
     ur5e_kin
     ur10e_kin
     ur16e_kin
+    ur8long_kin
+    ur8long_moveit_plugin
     ur15_kin
     ur15_moveit_plugin
+    ur18_kin
+    ur18_moveit_plugin
     ur20_kin
     ur20_moveit_plugin
     ur30_kin
@@ -61,8 +65,14 @@ set_target_properties(ur10e_kin PROPERTIES COMPILE_DEFINITIONS "UR10e_PARAMS")
 add_library(ur16e_kin src/ur_kin.cpp)
 set_target_properties(ur16e_kin PROPERTIES COMPILE_DEFINITIONS "UR16e_PARAMS")
 
+add_library(ur8long_kin src/ur_kin.cpp)
+set_target_properties(ur8long_kin PROPERTIES COMPILE_DEFINITIONS "UR8LONG_PARAMS")
+
 add_library(ur15_kin src/ur_kin.cpp)
 set_target_properties(ur15_kin PROPERTIES COMPILE_DEFINITIONS "UR15_PARAMS")
+
+add_library(ur18_kin src/ur_kin.cpp)
+set_target_properties(ur18_kin PROPERTIES COMPILE_DEFINITIONS "UR18_PARAMS")
 
 add_library(ur20_kin src/ur_kin.cpp)
 set_target_properties(ur20_kin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
@@ -119,12 +129,26 @@ target_link_libraries(ur16e_moveit_plugin
   ${Boost_LIBRARIES}
   ur16e_kin)
 
+add_library(ur8long_moveit_plugin src/ur_moveit_plugin.cpp)
+set_target_properties(ur8long_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR8LONG_PARAMS")
+target_link_libraries(ur8long_moveit_plugin
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ur8long_kin)
+
 add_library(ur15_moveit_plugin src/ur_moveit_plugin.cpp)
 set_target_properties(ur15_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR15_PARAMS")
 target_link_libraries(ur15_moveit_plugin
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
   ur15_kin)
+
+add_library(ur18_moveit_plugin src/ur_moveit_plugin.cpp)
+set_target_properties(ur18_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR18_PARAMS")
+target_link_libraries(ur18_moveit_plugin
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ur18_kin)
 
 add_library(ur20_moveit_plugin src/ur_moveit_plugin.cpp)
 set_target_properties(ur20_moveit_plugin PROPERTIES COMPILE_DEFINITIONS "UR20_PARAMS")
@@ -152,6 +176,12 @@ install(TARGETS
     ur5e_kin
     ur10_kin
     ur10e_kin
+    ur16e_kin
+    ur8long_kin
+    ur15_kin
+    ur18_kin
+    ur20_kin
+    ur30_kin
     ur3_moveit_plugin
     ur3_moveit_plugin
     ur5_moveit_plugin
@@ -159,7 +189,9 @@ install(TARGETS
     ur10_moveit_plugin
     ur10e_moveit_plugin
     ur16e_moveit_plugin
+    ur8long_moveit_plugin
     ur15_moveit_plugin
+    ur18_moveit_plugin
     ur20_moveit_plugin
     ur30_moveit_plugin
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
