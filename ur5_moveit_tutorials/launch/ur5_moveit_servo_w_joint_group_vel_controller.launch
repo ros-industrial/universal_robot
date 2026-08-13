@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find ur5_moveit_tutorials)/launch/ur5_moveit_servo_common.launch">
+        <arg name="controller" value="joint_group_vel_controller"/>
+        <arg name="servo_params_file" value="$(find ur5_moveit_tutorials)/config/joint_group_vel_servo_params.yaml"/>
+        <arg name="transmission_hw_interface" value="hardware_interface/VelocityJointInterface"/>
+    </include>
+</launch>

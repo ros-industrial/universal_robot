@@ -1,0 +1,5 @@
+command_out_type: trajectory_msgs/JointTrajectory
+
+publish_joint_positions: true
+publish_joint_velocities: false
+command_out_topic: /pos_joint_traj_controller/command

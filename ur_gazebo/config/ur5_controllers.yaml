@@ -54,3 +54,7 @@ pos_joint_traj_controller:
 joint_group_pos_controller:
   type: position_controllers/JointGroupPositionController
   joints: *robot_joints
+
+joint_group_vel_controller:
+  type: velocity_controllers/JointGroupVelocityController
+  joints: *robot_joints

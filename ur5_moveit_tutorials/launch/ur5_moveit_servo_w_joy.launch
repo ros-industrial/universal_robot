@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find ur5_moveit_tutorials)/launch/ur5_moveit_servo_w_joint_group_vel_controller.launch"/>
+
+    <rosparam file="$(find ur5_moveit_tutorials)/config/joy_teleop_config.yaml" command="load" />
+    <node pkg="joy" type="joy_node" name="joy_node"/>
+    <node pkg="joy_teleop" type="joy_teleop.py" name="joy_teleop"/>
+</launch>

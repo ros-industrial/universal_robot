@@ -53,12 +53,12 @@
       "
     output="screen" respawn="false" />
 
-  <!-- Load and start the controllers listed in the 'controllers' arg. -->
-  <node name="ros_control_controller_spawner" pkg="controller_manager" type="spawner"
-    args="$(arg controllers)" output="screen" respawn="false" />
+    <!-- Load and start the controllers listed in the 'controllers' arg. -->
+    <node name="ros_control_controller_spawner" pkg="controller_manager" type="spawner"
+      args="$(arg controllers)" output="screen" respawn="false" if="$(eval arg('controllers') != '')"/>
 
-  <!-- Load other controllers, but do not start them -->
-  <node name="ros_control_stopped_spawner" pkg="controller_manager" type="spawner"
-    args="--stopped $(arg stopped_controllers)" output="screen" respawn="false" />
+    <!-- Load other controllers, but do not start them -->
+    <node name="ros_control_stopped_spawner" pkg="controller_manager" type="spawner"
+      args="--stopped $(arg stopped_controllers)" output="screen" respawn="false" if="$(eval arg('stopped_controllers') != '')"/>
 
 </launch>

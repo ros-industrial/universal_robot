@@ -1,0 +1,5 @@
+command_out_type: std_msgs/Float64MultiArray
+
+publish_joint_positions: false
+publish_joint_velocities: true
+command_out_topic: /joint_group_vel_controller/command # Publish outgoing commands here

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ur5_moveit_tutorials</name>
+  <version>1.2.7</version>
+  <description>The package that contains MoveIt tutorials with UR5</description>
+
+  <author>Tahsincan Köse</author>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
+  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
+  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>ur_gazebo</exec_depend>
+  <exec_depend>ur5_moveit_config</exec_depend>
+  <exec_depend>moveit_commander</exec_depend>
+  <exec_depend>moveit_servo</exec_depend>
+  <exec_depend>joy</exec_depend>
+
+  <export>
+  </export>
+</package>

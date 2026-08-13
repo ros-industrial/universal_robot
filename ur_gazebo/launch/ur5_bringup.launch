@@ -37,7 +37,7 @@
   <arg name="physical_params" default="$(find ur_description)/config/ur5/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur5/visual_parameters.yaml"/>
   <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface" doc="The hardware_interface to expose for each joint in the simulated robot (one of: [hardware_interface/PositionJointInterface, hardware_interface/VelocityJointInterface, hardware_interface/EffortJointInterface])"/>
-
+  
   <!-- Controller configuration -->
   <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur5_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="controllers" default="joint_state_controller eff_joint_traj_controller" doc="Controllers that are activated by default."/>
@@ -50,6 +50,7 @@
   <!-- Gazebo parameters -->
   <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts Gazebo gui" />
+  <arg name="initial_joint_positions" default=" -J shoulder_pan_joint 0.0  -J shoulder_lift_joint -1.57 -J elbow_joint 0.0 -J wrist_1_joint -1.57 -J wrist_2_joint 0.0 -J wrist_3_joint 0.0" doc="Initial joint configuration of the robot"/>
 
   <!-- Load urdf on the parameter server -->
   <include file="$(arg robot_description_file)">
@@ -73,5 +74,6 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
     <arg name="stopped_controllers" value="$(arg stopped_controllers)"/>
+    <arg name="initial_joint_positions" value="$(arg initial_joint_positions)"/>
   </include>
 </launch>

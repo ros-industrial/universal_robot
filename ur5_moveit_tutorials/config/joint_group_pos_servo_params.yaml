@@ -1,0 +1,5 @@
+command_out_type: std_msgs/Float64MultiArray
+
+publish_joint_positions: true
+publish_joint_velocities: false
+command_out_topic: /joint_group_pos_controller/command # Publish outgoing commands here

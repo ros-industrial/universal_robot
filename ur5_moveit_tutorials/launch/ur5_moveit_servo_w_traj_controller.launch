@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find ur5_moveit_tutorials)/launch/ur5_moveit_servo_common.launch">
+        <arg name="controller" value="pos_joint_traj_controller"/>
+        <arg name="servo_params_file" value="$(find ur5_moveit_tutorials)/config/pos_joint_traj_servo_params.yaml"/>
+    </include>
+</launch>
